@@ -1,57 +1,69 @@
 ```mermaid
 flowchart TD
-    %% Capas principales de Clean Architecture
-    subgraph Presentation["Presentation (UI, Widgets, Screens)"]
-        direction TB
-        P1[auth]
-        P2[mission]
-        P3[routes]
-        P4[profile]
-        P5[admin_panel]
-        P6[splash]
+    %% Módulos principales (Features)
+    subgraph Features["Módulos (Features)"]
+        direction LR
+        F1[auth: Login / Register]
+        F2[mission: Quiz / QR / Navigation]
+        F3[routes: City / Selection]
+        F4[profile: Home / Stats]
+        F5[admin_panel]
+        F6[splash]
     end
 
-    subgraph Domain["Domain (Casos de uso, entidades, lógica de negocio)"]
+    %% Capas de Clean Architecture
+    subgraph Presentation["Presentation"]
+        direction TB
+        P1[Widgets / Screens]
+    end
+
+    subgraph Domain["Domain"]
         direction TB
         D1[Use Cases]
         D2[Entities]
-        D3[Repositories (Abstracciones)]
+        D3[Repository Abstractions]
     end
 
-    subgraph Data["Data (Repositorios, fuentes de datos, servicios externos)"]
+    subgraph Data["Data"]
         direction TB
-        DA1[Repositorios (Implementaciones)]
+        DA1[Repository Implementations]
         DA2[Data Sources]
         DA3[Models]
     end
 
-    subgraph External["External (Firebase, APIs, Servicios)"]
-        direction TB
+    %% Servicios externos
+    subgraph External["External Services"]
+        direction LR
         E1[Firebase Auth]
         E2[Firestore DB]
         E3[Cloud Storage]
         E4[Analytics]
-        E5[GPS / Cámara / Maps]
+        E5[GPS]
+        E6[Cámara]
+        E7[Maps]
     end
 
-    %% Dependencias
-    P1 --> D1
-    P2 --> D1
-    P3 --> D1
-    P4 --> D1
-    P5 --> D1
-    P6 --> D1
+    %% Relaciones entre módulos y capas
+    F1 --> P1
+    F2 --> P1
+    F3 --> P1
+    F4 --> P1
+    F5 --> P1
+    F6 --> P1
 
+    P1 --> D1
     D1 --> D2
     D1 --> D3
-
     D3 --> DA1
     DA1 --> DA2
     DA1 --> DA3
 
+    %% Relación de Data con servicios externos
     DA2 --> E1
     DA2 --> E2
     DA2 --> E3
     DA2 --> E4
     DA2 --> E5
+    DA2 --> E6
+    DA2 --> E7
 ```
