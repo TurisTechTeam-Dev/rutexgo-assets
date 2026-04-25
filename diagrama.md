@@ -1,42 +1,57 @@
 ```mermaid
 flowchart TD
-    %% Definición de la App Móvil
-    subgraph Mobile ["App Móvil RuteX Go (Flutter)"]
+    %% Capas principales de Clean Architecture
+    subgraph Presentation["Presentation (UI, Widgets, Screens)"]
         direction TB
-        
-        subgraph Layers ["Arquitectura por Capas"]
-            direction LR
-            P[Presentation] --> D[Domain]
-            DT[Data] --> D
-        end
-
-        subgraph Modules ["Módulos (Features)"]
-            direction TB
-            M1[auth: Login / Register]
-            M2[mission: Quiz / QR / Navigation]
-            M3[routes: City / Selection]
-            M4[profile: Home / Stats]
-            M5[admin_panel]
-            M6[splash]
-        end
-        
-        Services[Servicios: GPS / Cámara / Maps]
+        P1[auth]
+        P2[mission]
+        P3[routes]
+        P4[profile]
+        P5[admin_panel]
+        P6[splash]
     end
 
-    %% Definición del Backend
-    subgraph Backend ["Infraestructura Firebase"]
+    subgraph Domain["Domain (Casos de uso, entidades, lógica de negocio)"]
         direction TB
-        Auth[Firebase Auth]
-        FS[Firestore DB]
-        ST[Cloud Storage]
-        AN[Analytics]
+        D1[Use Cases]
+        D2[Entities]
+        D3[Repositories (Abstracciones)]
     end
 
-    %% Relaciones de flujo
-    Modules --> Layers
-    Layers --> Services
-    Services --> Auth
-    Services --> FS
-    Services --> ST
-    Layers -.-> AN
+    subgraph Data["Data (Repositorios, fuentes de datos, servicios externos)"]
+        direction TB
+        DA1[Repositorios (Implementaciones)]
+        DA2[Data Sources]
+        DA3[Models]
+    end
+
+    subgraph External["External (Firebase, APIs, Servicios)"]
+        direction TB
+        E1[Firebase Auth]
+        E2[Firestore DB]
+        E3[Cloud Storage]
+        E4[Analytics]
+        E5[GPS / Cámara / Maps]
+    end
+
+    %% Dependencias
+    P1 --> D1
+    P2 --> D1
+    P3 --> D1
+    P4 --> D1
+    P5 --> D1
+    P6 --> D1
+
+    D1 --> D2
+    D1 --> D3
+
+    D3 --> DA1
+    DA1 --> DA2
+    DA1 --> DA3
+
+    DA2 --> E1
+    DA2 --> E2
+    DA2 --> E3
+    DA2 --> E4
+    DA2 --> E5
 ```
