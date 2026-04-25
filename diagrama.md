@@ -1,3 +1,4 @@
+```mermaid
 flowchart TD
     %% Definición de la App Móvil
     subgraph Mobile ["App Móvil RuteX Go (Flutter)"]
@@ -38,3 +39,4 @@ flowchart TD
     Services --> FS
     Services --> ST
     Layers -.-> AN
+```
