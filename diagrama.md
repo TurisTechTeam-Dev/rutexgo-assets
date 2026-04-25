@@ -17,7 +17,7 @@ flowchart TD
         P1[Widgets / Screens]
     end
 
-    subgraph Domain["Domain"]
+    subgraph Domain["Domain (Lógica de Negocio)"]
         direction TB
         D1[Use Cases]
         D2[Entities]
@@ -37,10 +37,9 @@ flowchart TD
         E1[Firebase Auth]
         E2[Firestore DB]
         E3[Cloud Storage]
-        E4[Analytics]
-        E5[GPS]
-        E6[Cámara]
-        E7[Maps]
+        E4[GPS]
+        E5[Cámara]
+        E6[Maps]
     end
 
     %% Relaciones entre módulos y capas
@@ -65,5 +64,4 @@ flowchart TD
     DA2 --> E4
     DA2 --> E5
     DA2 --> E6
-    DA2 --> E7
 ```
