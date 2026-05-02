@@ -65,3 +65,83 @@ flowchart TD
     DA2 --> E5
     DA2 --> E6
 ```
+
+
+
+```mermaid
+erDiagram
+    usuarios ||--o| config_rangos : "referencia campo 'rango'"
+    usuarios ||--o{ resultado : "referencia campo 'id_usuario'"
+    ciudades ||--o{ rutas : "referencia campo 'id_ciudad'"
+    rutas ||--o{ puntos_interes : "referencia array 'id_puntos_interes'"
+    puntos_interes ||--o| misiones : "referencia campo 'punto_interes_id'"
+    rutas ||--o{ resultado : "referencia campo 'id_ruta'"
+
+    usuarios {
+        string uid
+        string usuario
+        string nombre
+        string email
+        string rango
+        int64 puntos
+        array rutas_completadas
+        timestamp fecha_creacion
+        timestamp ultimo_acceso
+        boolean isAdmin
+        string avatar
+    }
+
+    ciudades {
+        string nombre
+        string provincia
+        string imagen
+        boolean isActive
+    }
+
+    rutas {
+        string nombre
+        string descripcion
+        string id_ciudad
+        array id_puntos_interes
+        string dificultad
+        string duracion
+        int puntos_totales
+        string imagen
+        boolean isActive
+    }
+
+    puntos_interes {
+        string nombre
+        string descripcion
+        geopoint localizacion
+        string qr_code
+        number radio_activacion
+        string imagen
+    }
+
+    misiones {
+        string titulo
+        string punto_interes_id
+        number puntos_premio
+        array_map preguntas
+    }
+
+    resultado {
+        string id_usuario
+        string id_ruta
+        string nombre_ruta
+        number puntuacion_intento
+        number mejor_puntuacion_anterior
+        number mejor_puntuacion_guardada
+        string tiempo_intento
+        int misiones_completadas
+        int puntos_interes_visitados
+        array_map respuestas
+        array puntos_interes_saltados
+        timestamp fecha_creacion
+    }
+
+    config_rangos {
+        array_map rangos
+    }
+```
