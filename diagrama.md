@@ -165,9 +165,14 @@ graph LR
         Storage["Firebase Storage (Imágenes)"]
     end
 
-    %% Interacciones
+    %% Interacciones Turista
     U1 -- "Realiza rutas y quizzes" --> App
-    U2 -- "Gestiona puntos y rutas" --> App
+    U1 -- "Visualiza progreso y rangos" --> App
+    
+    %% Interacciones Admin
+    U2 -- "Gestiona Ciudades y Rutas" --> App
+    U2 -- "Gestiona POIs y Quizzes" --> App
+    U2 -- "Control de usuarios y puntos" --> App
     
     App -- "Autentica usuarios" --> Auth
     App -- "Consulta/Guarda datos" --> Firestore
