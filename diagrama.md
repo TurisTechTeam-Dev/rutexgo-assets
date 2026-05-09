@@ -145,3 +145,33 @@ erDiagram
         array_map rangos
     }
 ```
+
+```mermaid
+graph LR
+    subgraph "Usuarios"
+        U1((Turista))
+        U2((Administrador))
+    end
+
+    subgraph "Sistema"
+        App[("RuteX Go (App Móvil)")]
+    end
+
+    subgraph "Sistemas Externos"
+        Auth["Firebase Auth (Email / Google)"]
+        Gmaps["Google Maps API (Vista Usuario)"]
+        OSM["OpenStreetMap (Vista Admin)"]
+        Firestore[("Cloud Firestore (Base de Datos)")]
+        Storage["Firebase Storage (Imágenes)"]
+    end
+
+    %% Interacciones
+    U1 -- "Realiza rutas y quizzes" --> App
+    U2 -- "Gestiona puntos y rutas" --> App
+    
+    App -- "Autentica usuarios" --> Auth
+    App -- "Consulta/Guarda datos" --> Firestore
+    App -- "Descarga contenido visual" --> Storage
+    App -- "Renderiza mapas turismo" --> Gmaps
+    App -- "Renderiza mapas gestión" --> OSM
+```
