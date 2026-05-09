@@ -9,7 +9,7 @@ flowchart TD
         F4[profile: Home / Stats]
         F5[admin_panel]
         F6[splash]
-        F7[explorer_diary: Generación PDF]
+        F7[explorer_diary: PDF]
     end
 
     %% Capas de Clean Architecture
@@ -41,7 +41,7 @@ flowchart TD
         E4[GPS]
         E5[Cámara]
         E6[Maps]
-        E7[PDF Generation Service]
+        E7[PDF Generator]
     end
 
     %% Relaciones entre módulos y capas
