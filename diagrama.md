@@ -70,79 +70,81 @@ flowchart TD
 
 ```mermaid
 erDiagram
-    usuarios ||--o| config_rangos : "referencia campo 'rango'"
-    usuarios ||--o{ resultado : "referencia campo 'id_usuario'"
-    ciudades ||--o{ rutas : "referencia campo 'id_ciudad'"
-    rutas ||--o{ puntos_interes : "referencia array 'id_puntos_interes'"
-    puntos_interes ||--o| misiones : "referencia campo 'punto_interes_id'"
-    rutas ||--o{ resultado : "referencia campo 'id_ruta'"
-
-    usuarios {
+    USUARIOS ||--o{ RESULTADO : genera
+    USUARIOS {
         string uid
-        string usuario
         string nombre
+        string usuario
         string email
-        string rango
-        int64 puntos
-        array rutas_completadas
         timestamp fecha_creacion
         timestamp ultimo_acceso
         boolean isAdmin
+        int64 puntos
+        string rango
+        array rutas_completadas
         string avatar
     }
 
-    ciudades {
+    CIUDADES ||--o{ RUTAS : contiene
+    CIUDADES {
         string nombre
         string provincia
-        string imagen
         boolean isActive
+        string imagen
     }
 
-    rutas {
+    RUTAS ||--o{ PUNTOS_DE_INTERES : agrupa
+    RUTAS {
         string nombre
         string descripcion
-        string id_ciudad
-        array id_puntos_interes
         string dificultad
         string duracion
-        int puntos_totales
-        string imagen
+        int64 puntos_totales
         boolean isActive
+        string id_ciudad
+        array id_puntos_interes
+        string imagen
     }
 
-    puntos_interes {
+    PUNTOS_DE_INTERES ||--|| MISIONES : vincula
+    PUNTOS_DE_INTERES {
         string nombre
         string descripcion
         geopoint localizacion
         string qr_code
-        number radio_activacion
+        int64 radio_activacion
         string imagen
     }
 
-    misiones {
+    MISIONES {
         string titulo
         string punto_interes_id
-        number puntos_premio
-        array_map preguntas
+        int64 puntos_premio
+        array preguntas
     }
 
-    resultado {
+    RESULTADO {
         string id_usuario
         string id_ruta
         string nombre_ruta
-        number puntuacion_intento
-        number mejor_puntuacion_anterior
-        number mejor_puntuacion_guardada
-        string tiempo_intento
-        int misiones_completadas
-        int puntos_interes_visitados
-        array_map respuestas
-        array puntos_interes_saltados
         timestamp fecha_creacion
+        int64 puntuacion_intento
+        int64 mejor_puntuacion_anterior
+        int64 mejor_puntuacion_guardada
+        int64 misiones_completadas
+        int64 puntos_interes_visitados
+        array puntos_interes_visitados_nombres
+        array puntos_interes_saltados
+        int64 total_puntos_interes
+        int64 puntos_totales_posibles
+        int64 respuestas_correctas
+        int64 total_respuestas
+        string tiempo_intento
+        array respuestas
     }
 
-    config_rangos {
-        array_map rangos
+    CONFIG_RANGOS {
+        array rangos
     }
 ```
 
