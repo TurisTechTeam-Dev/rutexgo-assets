@@ -9,6 +9,7 @@ flowchart TD
         F4[profile: Home / Stats]
         F5[admin_panel]
         F6[splash]
+        F7[explorer_diary: Generación PDF]
     end
 
     %% Capas de Clean Architecture
@@ -40,6 +41,7 @@ flowchart TD
         E4[GPS]
         E5[Cámara]
         E6[Maps]
+        E7[PDF Generation Service]
     end
 
     %% Relaciones entre módulos y capas
@@ -49,6 +51,7 @@ flowchart TD
     F4 --> P1
     F5 --> P1
     F6 --> P1
+    F7 --> P1
 
     P1 --> D1
     D1 --> D2
@@ -64,87 +67,91 @@ flowchart TD
     DA2 --> E4
     DA2 --> E5
     DA2 --> E6
+    DA2 --> E7
 ```
 
 
 
 ```mermaid
 erDiagram
-    USUARIOS ||--o{ RESULTADO : genera
-    USUARIOS {
+    usuarios ||--o| config_rangos : "referencia campo 'rango'"
+    usuarios ||--o{ resultado : "referencia campo 'id_usuario'"
+    ciudades ||--o{ rutas : "referencia campo 'id_ciudad'"
+    rutas ||--o{ puntos_interes : "referencia array 'id_puntos_interes'"
+    puntos_interes ||--o| misiones : "referencia campo 'punto_interes_id'"
+    rutas ||--o{ resultado : "referencia campo 'id_ruta'"
+
+    usuarios {
         string uid
-        string nombre
         string usuario
+        string nombre
         string email
+        string rango
+        int64 puntos
+        array rutas_completadas
         timestamp fecha_creacion
         timestamp ultimo_acceso
         boolean isAdmin
-        int64 puntos
-        string rango
-        array rutas_completadas
         string avatar
     }
 
-    CIUDADES ||--o{ RUTAS : contiene
-    CIUDADES {
+    ciudades {
         string nombre
         string provincia
-        boolean isActive
         string imagen
+        boolean isActive
     }
 
-    RUTAS ||--o{ PUNTOS_DE_INTERES : agrupa
-    RUTAS {
+    rutas {
         string nombre
         string descripcion
-        string dificultad
-        string duracion
-        int64 puntos_totales
-        boolean isActive
         string id_ciudad
         array id_puntos_interes
+        string dificultad
+        string duracion
+        int puntos_totales
         string imagen
+        boolean isActive
     }
 
-    PUNTOS_DE_INTERES ||--|| MISIONES : vincula
-    PUNTOS_DE_INTERES {
+    puntos_interes {
         string nombre
         string descripcion
         geopoint localizacion
         string qr_code
-        int64 radio_activacion
+        number radio_activacion
         string imagen
     }
 
-    MISIONES {
+    misiones {
         string titulo
         string punto_interes_id
-        int64 puntos_premio
-        array preguntas
+        number puntos_premio
+        array_map preguntas
     }
 
-    RESULTADO {
+    resultado {
         string id_usuario
         string id_ruta
         string nombre_ruta
-        timestamp fecha_creacion
-        int64 puntuacion_intento
-        int64 mejor_puntuacion_anterior
-        int64 mejor_puntuacion_guardada
-        int64 misiones_completadas
-        int64 puntos_interes_visitados
-        array puntos_interes_visitados_nombres
-        array puntos_interes_saltados
-        int64 total_puntos_interes
-        int64 puntos_totales_posibles
-        int64 respuestas_correctas
-        int64 total_respuestas
+        number puntuacion_intento
+        number mejor_puntuacion_anterior
+        number mejor_puntuacion_guardada
         string tiempo_intento
-        array respuestas
+        int misiones_completadas
+        int puntos_interes_visitados
+        array Puntos_interes_visitados_nombres
+        int total_puntos_interes
+        int puntos_totales_posibles
+        int respuestas_correctas
+        int total_respuestas
+        array_map respuestas
+        array puntos_interes_saltados
+        timestamp fecha_creacion
     }
 
-    CONFIG_RANGOS {
-        array rangos
+    config_rangos {
+        array_map rangos
     }
 ```
 
