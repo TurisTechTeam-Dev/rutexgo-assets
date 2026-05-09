@@ -148,35 +148,32 @@ erDiagram
 
 ```mermaid
 graph LR
-    subgraph "Usuarios"
-        U1((Turista))
-        U2((Administrador))
+    %% Actores
+    U1((Turista))
+    U2((Administrador))
+
+    %% Sistema Central
+    subgraph "Sistema RuteX Go"
+        App[Aplicación Móvil<br/>Flutter]
     end
 
-    subgraph "Sistema"
-        App[("RuteX Go (App Móvil)")]
+    %% Servicios Externos
+    subgraph "Servicios Externos (Firebase & APIs)"
+        Auth[Firebase Auth<br/>Email / Google]
+        Firestore[(Cloud Firestore<br/>Base de Datos NoSQL)]
+        Storage[Cloud Storage<br/>Multimedia / Fotos]
+        Maps[APIs de Mapas<br/>Google Maps / OSM]
     end
 
-    subgraph "Sistemas Externos"
-        Auth["Firebase Auth (Email / Google)"]
-        Gmaps["Google Maps API (Vista Usuario)"]
-        OSM["OpenStreetMap (Vista Admin)"]
-        Firestore[("Cloud Firestore (Base de Datos)")]
-        Storage["Firebase Storage (Imágenes)"]
-    end
+    %% Flujo de interacciones del Turista
+    U1 -- "Interacción UI" --> App
+    App -- "Validación Acceso" --> Auth
+    App -- "Consulta Rutas / Quizzes" --> Firestore
+    App -- "Carga Mapas Turísticos" --> Maps
 
-    %% Interacciones Turista
-    U1 -- "Realiza rutas y quizzes" --> App
-    U1 -- "Visualiza progreso y rangos" --> App
-    
-    %% Interacciones Admin
-    U2 -- "Gestiona Ciudades y Rutas" --> App
-    U2 -- "Gestiona POIs y Quizzes" --> App
-    U2 -- "Control de usuarios y puntos" --> App
-    
-    App -- "Autentica usuarios" --> Auth
-    App -- "Consulta/Guarda datos" --> Firestore
-    App -- "Descarga contenido visual" --> Storage
-    App -- "Renderiza mapas turismo" --> Gmaps
-    App -- "Renderiza mapas gestión" --> OSM
+    %% Flujo de interacciones del Admin
+    U2 -- "Gestión de Contenido" --> App
+    App -- "CRUD Ciudades / Rutas / POIs" --> Firestore
+    App -- "Subida de Imágenes" --> Storage
+    App -- "Localización de Puntos" --> Maps
 ```
