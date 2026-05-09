@@ -177,3 +177,36 @@ graph LR
     App -- "Subida de Imágenes" --> Storage
     App -- "Localización de Puntos" --> Maps
 ```
+
+```mermaid
+graph TB
+    %% Actores
+    User((Turista / Admin))
+
+    %% Contenedor Aplicación Móvil
+    subgraph "Dispositivo Móvil (App Flutter)"
+        UI[Capa de Interfaz<br/>Widgets / UI UX]
+        Logic[Lógica de Negocio<br/>Providers / Casos de Uso]
+        Data[Capa de Datos<br/>Repositorios / SDK Firebase]
+    end
+
+    %% Contenedor Backend
+    subgraph "Servicios Firebase (BaaS)"
+        Auth[Firebase Auth<br/>Autenticación]
+        Firestore[(Cloud Firestore<br/>Base de Datos NoSQL)]
+        Storage[Cloud Storage<br/>Repositorio Imágenes]
+    end
+
+    %% Servicios Externos
+    Maps[APIs de Mapas<br/>Google Maps / OSM]
+
+    %% Flujos de comunicación
+    User -- "Usa la interfaz" --> UI
+    UI -- "Llama a" --> Logic
+    Logic -- "Solicita datos a" --> Data
+
+    Data -- "Protocolo HTTPS" --> Auth
+    Data -- "Sincronización RealTime" --> Firestore
+    Data -- "Carga de archivos" --> Storage
+    UI -- "Visualiza mapas" --> Maps
+```
