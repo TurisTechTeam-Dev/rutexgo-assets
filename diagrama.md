@@ -221,25 +221,22 @@ graph TB
 ```
 ```mermaid
 graph LR
-    %% Definición de estilos para que parezca profesional
-    classDef actor fill:#fff,stroke:#333,stroke-width:2px
-    classDef box fill:#fff,stroke:#333,stroke-width:1px
-    classDef system fill:#f9f9f9,stroke:#333,stroke-width:2px,stroke-dasharray: 5 5
+    %% Actores en los extremos
+    Usuario((Usuario Explorador))
+    Admin((Administrador))
 
-    %% ACTOR IZQUIERDA
-    Usuario((Usuario Explorador)):::actor
-
-    %% COLUMNA CENTRAL: APP MÓVIL
+    %% COLUMNA 1: APP MÓVIL
     subgraph SistemaApp ["<< System >> Sistema App Móvil"]
         direction TB
         
         subgraph Autenticacion ["Autenticación"]
             direction TB
-            A1(Login Email/Google) --- A2(Detección de Rol)
-            A3(Registro Nuevo Usuario)
-            A4(Recuperar Contraseña)
-            A5(Logout)
-            A1 -.->|include| A2
+            A1(Login Email/Google)
+            A2(Registro de Nuevo Usuario)
+            A3(Recuperar Contraseña)
+            A4(Logout)
+            A5(Detección de Rol)
+            A1 -.->|include| A5
         end
 
         subgraph HomePerfil ["Home & Perfil"]
@@ -260,18 +257,17 @@ graph LR
         subgraph Mision ["Misión: Núcleo Gamificado"]
             direction TB
             M1(Navegar con Mapa)
-            M2(Detectar Llegada)
-            M3(Escanear QR)
+            M2(Detectar Llegada al POI)
+            M3(Escanear QR y Validar)
             M4(Responder Quiz)
-            M5(Finalizar Ruta)
-            M6(Ver Info Monumento)
-            M3 -.->|extend| M6
+            M5(Saltar Punto Opcional)
+            M6(Finalizar Ruta)
+            M7(Ver Info Monumento)
+            M3 -.->|extend| M7
         end
-        
-        R3 --> M1
     end
 
-    %% COLUMNA DERECHA: PANEL ADMIN
+    %% COLUMNA 2: PANEL ADMIN
     subgraph SistemaAdmin ["<< System >> Panel Admin Web"]
         direction TB
         subgraph PanelSolo ["Panel Admin - Solo Web"]
@@ -279,29 +275,28 @@ graph LR
             P1(CRUD Ciudades)
             P2(CRUD Rutas)
             P3(CRUD POIs y Misiones)
-            P4(Mapa Interactivo)
+            P4(Mapa Interactivo de POIs)
         end
     end
 
-    %% ACTOR DERECHA
-    Admin((Administrador)):::actor
-
-    %% PARTE INFERIOR: ACCESIBILIDAD
-    subgraph Accesibilidad ["<< System >> Accesibilidad"]
+    %% COLUMNA 3: ACCESIBILIDAD
+    subgraph SistemaAcc ["<< System >> Accesibilidad"]
         Acc(Transversal: AudioGuideWidget)
     end
 
-    %% CONEXIONES PRINCIPALES (Para mantener el orden horizontal)
+    %% CONEXIONES DE ACTORES (Limpias para no deformar)
     Usuario --- Autenticacion
     Usuario --- HomePerfil
     Usuario --- Rutas
     
     PanelSolo --- Admin
-
-    %% RELACIONES DE USO (TRANSVERSALES)
+    
+    %% Relación de uso transversal
     Usuario -.->|use| Acc
     Admin -.->|use| Acc
 
-    %% TRUCO DE ALINEACIÓN: Forzamos que los sistemas estén al mismo nivel
-    Autenticacion ~~~ PanelSolo
+    %% TRUCO MAESTRO DE ALINEACIÓN
+    %% Esto obliga a los 3 sistemas a ponerse uno al lado del otro
+    SistemaApp ~~~ SistemaAdmin
+    SistemaAdmin ~~~ SistemaAcc
 ```
