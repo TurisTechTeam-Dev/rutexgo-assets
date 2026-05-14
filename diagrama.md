@@ -221,84 +221,84 @@ graph TB
 ```
 ```mermaid
 graph LR
-    %% Definición de Actores
-    Usuario((Usuario Explorador))
-    Admin((Administrador))
+    %% ESTILOS PARA REPRODUCIR EL LOOK PROFESIONAL
+    classDef actor fill:#f9f9f9,stroke:#333,stroke-width:2px;
+    classDef system fill:#fff,stroke:#333,stroke-width:2px,stroke-dasharray: 5 5;
+    classDef usecase fill:#e1f5fe,stroke:#01579b,stroke-width:1px;
 
-    %% SISTEMA APP MÓVIL (CENTRO - IZQUIERDA)
-    subgraph SistemaApp ["<<System>> Sistema App Móvil"]
+    %% ACTORES
+    Usuario((Usuario Explorador)):::actor
+    Admin((Administrador)):::actor
+
+    %% SISTEMA APP MÓVIL
+    subgraph SistemaApp ["<< System >> Sistema App Móvil"]
         direction TB
         
         subgraph Autenticacion ["Autenticación"]
+            direction LR
             UC_Login(Login Email/Google)
-            UC_Reg(Registro de Nuevo Usuario)
-            UC_Rec(Recuperar Contraseña)
+            UC_Det(Detección de Rol)
+            UC_Reg(Registro)
+            UC_Rec(Recuperar)
             UC_Log(Logout)
-            UC_Det(Detección de Rol y Redirección)
             UC_Login -.->|include| UC_Det
         end
 
         subgraph HomePerfil ["Home & Perfil"]
+            direction LR
             UC_Home(Ver Home)
-            UC_Edit(Editar Username)
-            UC_Ava(Cambiar Avatar)
+            UC_Edit(Editar Perfil)
+            UC_Ava(Avatar)
         end
 
         subgraph Rutas ["Rutas"]
-            UC_Sel(Selección de Ciudad y Filtrado)
+            direction LR
+            UC_Sel(Selección Ciudad)
             UC_Disp(Ver Disponibilidad)
             UC_Ini(Iniciar Ruta)
             UC_Disp --> UC_Ini
         end
 
-        subgraph Diario ["Diario del Explorador"]
-            UC_Vis(Visualizar Rutas)
-            UC_Fot(Añadir Fotos Personales)
-            UC_PDF(Exportar PDF)
-        end
-
         subgraph Mision ["Misión: Flujo Complejo"]
-            UC_Nav(Navegar con Mapa)
-            UC_Lleg(Detectar Llegada al POI)
-            UC_Quiz(Responder Quiz)
-            UC_Salt(Saltar Punto Opcional)
-            UC_Fin(Finalizar Ruta)
-            UC_QR(Escanear QR y Validar)
-            UC_Info(Ver Info del Monumento)
+            direction TB
+            UC_Nav(Navegar Mapa)
+            UC_Lleg(Detectar Llegada)
+            UC_QR(Escanear QR)
+            UC_Info(Info Monumento)
             UC_QR -.->|extend| UC_Info
         end
     end
 
-    %% PANEL ADMIN (CENTRO - DERECHA)
-    subgraph PanelWeb ["<<System>> Panel Admin Web"]
+    %% SISTEMA ADMIN
+    subgraph SistemaAdmin ["<< System >> Panel Admin Web"]
         direction TB
         subgraph PanelSolo ["Panel Admin - Solo Web"]
             UC_Ciu(CRUD Ciudades)
             UC_Rut(CRUD Rutas)
-            UC_POI(CRUD POIs y Misiones)
-            UC_Map(Mapa Interactivo de POIs)
+            UC_POI(CRUD POIs)
         end
     end
 
-    %% ACCESIBILIDAD (TRANSVERSAL ABAJO)
-    subgraph Acc ["<<System>> Accesibilidad"]
+    %% ACCESIBILIDAD (A LA DERECHA)
+    subgraph SistemaAcc ["<< System >> Accesibilidad"]
         UC_Audio(Transversal: AudioGuideWidget)
     end
 
-    %% CONEXIONES DE FLUJO HORIZONTAL
-    Usuario --- Autenticacion
-    Usuario --- HomePerfil
-    Usuario --- Rutas
-    Usuario --- Diario
+    %% CONEXIONES LIMPIAS
+    Usuario --- UC_Login
+    Usuario --- UC_Home
+    Usuario --- UC_Sel
+    
     UC_Ini --> UC_Nav
     
-    %% Conexiones Admin
-    PanelSolo --- Admin
+    UC_Ciu --- Admin
+    UC_Rut --- Admin
     
-    %% Relación Transversal <<use>>
+    %% RELACIONES DE USO (PUNTEADAS PARA NO ENSUCIAR)
     Usuario -.->|use| UC_Audio
     Admin -.->|use| UC_Audio
 
-    %% Ajuste de nivel para forzar alineación horizontal
-    Autenticacion --- PanelSolo
+    %% FORZAR ALINEACIÓN HORIZONTAL (NODOS INVISIBLES)
+    SistemaApp ~~~ SistemaAdmin
+    SistemaAdmin ~~~ SistemaAcc
 ```
