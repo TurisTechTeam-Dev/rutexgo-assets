@@ -213,25 +213,21 @@ flowchart LR
         direction LR
 
         subgraph AUTH["Autenticación"]
-            AUTH1["Login"]
-            AUTH2["Registro"]
-            AUTH3["Recuperar contraseña"]
-            AUTH4["Cerrar sesión"]
+            AUTH1["Autenticarse"]
+            AUTH2["Recuperar contraseña"]
         end
 
         subgraph EXP["Exploración"]
-            EXP1["Ver ciudades"]
-            EXP2["Seleccionar ciudad"]
-            EXP3["Ver rutas"]
-            EXP4["Seleccionar ruta"]
+            EXP1["Explorar ciudades"]
+            EXP2["Seleccionar ruta"]
         end
 
         subgraph MISS["Misión gamificada"]
-            MISS1["Navegación"]
+            MISS1["Navegar"]
             MISS2["Escanear QR"]
-            MISS3["Quiz"]
+            MISS3["Resolver misión"]
             MISS4["Guardar progreso"]
-            MISS5["Resultados"]
+            MISS5["Ver resultados"]
         end
 
         subgraph PROF["Perfil"]
@@ -242,55 +238,43 @@ flowchart LR
             ACC1["AudioGuide"]
         end
 
-        subgraph ADM["Admin"]
+        subgraph ADM["Administración"]
             ADM1["Panel admin"]
-            ADM2["CRUD ciudades"]
-            ADM3["CRUD rutas"]
-            ADM4["CRUD misiones"]
-            ADM5["Mapa POIs"]
+            ADM2["Gestionar contenidos"]
         end
     end
 
+    %% Usuario
     U --> AUTH1
     U --> AUTH2
-    U --> AUTH3
-    U --> AUTH4
     U --> EXP1
     U --> EXP2
-    U --> EXP3
-    U --> EXP4
     U --> MISS1
     U --> MISS2
     U --> MISS3
-    U --> MISS4
     U --> MISS5
     U --> PROF1
     U -.-> ACC1
 
+    %% Admin
     A --> ADM1
     A --> ADM2
-    A --> ADM3
-    A --> ADM4
-    A --> ADM5
     A -.-> ACC1
 
+    %% Firebase
     AUTH1 -.-> F
     AUTH2 -.-> F
-    AUTH3 -.-> F
-    AUTH4 -.-> F
     MISS4 -.-> F
     ADM2 -.-> F
-    ADM3 -.-> F
-    ADM4 -.-> F
-    ADM5 -.-> F
 
-    EXP2 -.-> EXP3
-    EXP3 -.-> EXP4
+    %% Flujo interno
+    EXP1 -.-> EXP2
     MISS1 -.-> MISS2
     MISS2 -.-> MISS3
     MISS3 -.-> MISS4
     MISS4 -.-> MISS5
 
+    %% Estilo
     style U fill:#4CAF50,stroke:#2E7D32,stroke-width:2px,color:#fff
     style F fill:#2196F3,stroke:#1565C0,stroke-width:2px,color:#fff
     style A fill:#FF9800,stroke:#E65100,stroke-width:2px,color:#fff
