@@ -206,15 +206,12 @@ flowchart TD
 ```mermaid
 flowchart LR
     U["👤 USUARIO"]
-    F["☁️ FIREBASE"]
-    A["👨‍💼 ADMINISTRADOR"]
 
-    subgraph SYS["RUTEX-GO - CASOS DE USO"]
-        direction LR
-
-        subgraph AUTH["Autenticación"]
-            AUTH1["Autenticarse"]
-            AUTH2["Recuperar contraseña"]
+    subgraph LEFT[""]
+        direction TB
+        subgraph PROF["Perfil"]
+            PROF1["Ver perfil"]
+            PROF2["Diario explorador"]
         end
 
         subgraph EXP["Exploración"]
@@ -230,13 +227,23 @@ flowchart LR
             MISS5["Ver resultados"]
         end
 
-        subgraph PROF["Perfil"]
-            PROF1["Ver perfil"]
+        subgraph AUTH["Autenticación"]
+            AUTH1["Autenticarse"]
+            AUTH2["Recuperar contraseña"]
         end
+    end
 
+    subgraph CENTER[""]
+        direction TB
         subgraph ACC["Accesibilidad"]
             ACC1["AudioGuide"]
         end
+    end
+
+    subgraph RIGHT[""]
+        direction TB
+        F["☁️ FIREBASE"]
+        A["👨‍💼 ADMINISTRADOR"]
 
         subgraph ADM["Administración"]
             ADM1["Panel admin"]
@@ -244,45 +251,42 @@ flowchart LR
         end
     end
 
-    %% Usuario
-    U --> AUTH1
-    U --> AUTH2
+    U --> PROF1
+    U --> PROF2
     U --> EXP1
     U --> EXP2
     U --> MISS1
     U --> MISS2
     U --> MISS3
+    U --> MISS4
     U --> MISS5
-    U --> PROF1
+    U --> AUTH1
+    U --> AUTH2
     U -.-> ACC1
 
-    %% Admin
     A --> ADM1
     A --> ADM2
     A -.-> ACC1
 
-    %% Firebase
     AUTH1 -.-> F
     AUTH2 -.-> F
     MISS4 -.-> F
     ADM2 -.-> F
 
-    %% Flujo interno
     EXP1 -.-> EXP2
     MISS1 -.-> MISS2
     MISS2 -.-> MISS3
     MISS3 -.-> MISS4
     MISS4 -.-> MISS5
 
-    %% Estilo
     style U fill:#4CAF50,stroke:#2E7D32,stroke-width:2px,color:#fff
     style F fill:#2196F3,stroke:#1565C0,stroke-width:2px,color:#fff
     style A fill:#FF9800,stroke:#E65100,stroke-width:2px,color:#fff
 
-    style AUTH fill:#E8F5E9,stroke:#4CAF50,stroke-width:2px
+    style PROF fill:#FFF9C4,stroke:#FBC02D,stroke-width:2px
     style EXP fill:#E3F2FD,stroke:#2196F3,stroke-width:2px
     style MISS fill:#F3E5F5,stroke:#9C27B0,stroke-width:2px
-    style PROF fill:#FFF9C4,stroke:#FBC02D,stroke-width:2px
+    style AUTH fill:#E8F5E9,stroke:#4CAF50,stroke-width:2px
     style ACC fill:#F5F5F5,stroke:#757575,stroke-width:2px
     style ADM fill:#FFEBEE,stroke:#F44336,stroke-width:2px
 ```
