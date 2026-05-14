@@ -205,65 +205,52 @@ flowchart TD
 **Diagrama de Casos de Uso**
 ```mermaid
 flowchart LR
-    %% ACTORES
     U["👤 USUARIO"]
     F["☁️ FIREBASE"]
     A["👨‍💼 ADMINISTRADOR"]
 
-    %% BLOQUES PRINCIPALES
     subgraph SYS["RUTEX-GO - CASOS DE USO"]
         direction LR
 
-        subgraph LEFT[""]
-            direction TB
-
-            subgraph AUTH["Autenticación"]
-                AUTH1["Login"]
-                AUTH2["Registro"]
-                AUTH3["Recuperar contraseña"]
-                AUTH4["Cerrar sesión"]
-            end
-
-            subgraph EXP["Exploración"]
-                EXP1["Ver ciudades"]
-                EXP2["Seleccionar ciudad"]
-                EXP3["Ver rutas"]
-                EXP4["Seleccionar ruta"]
-            end
-
-            subgraph MISS["Misión gamificada"]
-                MISS1["Navegación"]
-                MISS2["Escanear QR"]
-                MISS3["Quiz"]
-                MISS4["Guardar progreso"]
-                MISS5["Resultados"]
-            end
-
-            subgraph PROF["Perfil"]
-                PROF1["Ver perfil"]
-            end
+        subgraph AUTH["Autenticación"]
+            AUTH1["Login"]
+            AUTH2["Registro"]
+            AUTH3["Recuperar contraseña"]
+            AUTH4["Cerrar sesión"]
         end
 
-        subgraph CENTER[""]
-            direction TB
-            subgraph ACC["Accesibilidad"]
-                ACC1["AudioGuide"]
-            end
+        subgraph EXP["Exploración"]
+            EXP1["Ver ciudades"]
+            EXP2["Seleccionar ciudad"]
+            EXP3["Ver rutas"]
+            EXP4["Seleccionar ruta"]
         end
 
-        subgraph RIGHT[""]
-            direction TB
-            subgraph ADM["Admin"]
-                ADM1["Panel admin"]
-                ADM2["CRUD ciudades"]
-                ADM3["CRUD rutas"]
-                ADM4["CRUD misiones"]
-                ADM5["Mapa POIs"]
-            end
+        subgraph MISS["Misión gamificada"]
+            MISS1["Navegación"]
+            MISS2["Escanear QR"]
+            MISS3["Quiz"]
+            MISS4["Guardar progreso"]
+            MISS5["Resultados"]
+        end
+
+        subgraph PROF["Perfil"]
+            PROF1["Ver perfil"]
+        end
+
+        subgraph ACC["Accesibilidad"]
+            ACC1["AudioGuide"]
+        end
+
+        subgraph ADM["Admin"]
+            ADM1["Panel admin"]
+            ADM2["CRUD ciudades"]
+            ADM3["CRUD rutas"]
+            ADM4["CRUD misiones"]
+            ADM5["Mapa POIs"]
         end
     end
 
-    %% RELACIONES USUARIO
     U --> AUTH1
     U --> AUTH2
     U --> AUTH3
@@ -280,7 +267,13 @@ flowchart LR
     U --> PROF1
     U -.-> ACC1
 
-    %% RELACIONES FIREBASE
+    A --> ADM1
+    A --> ADM2
+    A --> ADM3
+    A --> ADM4
+    A --> ADM5
+    A -.-> ACC1
+
     AUTH1 -.-> F
     AUTH2 -.-> F
     AUTH3 -.-> F
@@ -291,15 +284,6 @@ flowchart LR
     ADM4 -.-> F
     ADM5 -.-> F
 
-    %% RELACIONES ADMIN
-    A --> ADM1
-    A --> ADM2
-    A --> ADM3
-    A --> ADM4
-    A --> ADM5
-    A -.-> ACC1
-
-    %% FLUJOS ENTRE CASOS
     EXP2 -.-> EXP3
     EXP3 -.-> EXP4
     MISS1 -.-> MISS2
@@ -307,7 +291,6 @@ flowchart LR
     MISS3 -.-> MISS4
     MISS4 -.-> MISS5
 
-    %% ESTILOS
     style U fill:#4CAF50,stroke:#2E7D32,stroke-width:2px,color:#fff
     style F fill:#2196F3,stroke:#1565C0,stroke-width:2px,color:#fff
     style A fill:#FF9800,stroke:#E65100,stroke-width:2px,color:#fff
