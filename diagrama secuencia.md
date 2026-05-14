@@ -204,51 +204,51 @@ flowchart TD
 
 **Diagrama de Casos de Uso**
 ```mermaid
-graph LR
-    subgraph Actores["👥 ACTORES"]
+graph TB
+    subgraph Actores[""]
         U["👤 Usuario"]
         ADM["👨‍💼 Administrador"]
         FB["☁️ Firebase"]
     end
     
-    subgraph Sistema["🔐 CASOS DE USO - RUTEX-GO"]
-        subgraph Auth["🔑 Autenticación"]
+    subgraph CasosDeUso["CASOS DE USO - RUTEX-GO"]
+        subgraph Auth["Autenticación"]
             UC1["Autenticarse"]
             UC2["Registrarse"]
             UC3["Recuperar contraseña"]
         end
         
-        subgraph Explore["🏛️ Exploración"]
+        subgraph Explore["Exploración"]
             UC4["Explorar ciudades"]
             UC5["Ver rutas disponibles"]
         end
         
-        subgraph Select["📍 Selección"]
+        subgraph Select["Selección"]
             UC6["Seleccionar ciudad"]
             UC7["Seleccionar ruta"]
         end
         
-        subgraph Nav["🗺️ Navegación"]
+        subgraph Nav["Navegación"]
             UC8["Iniciar navegación"]
             UC9["Escanear QR"]
             UC10["Ver detalle de monumento"]
         end
         
-        subgraph Mission["❓ Misión"]
+        subgraph Mission["Misión"]
             UC11["Realizar cuestionario"]
             UC12["Guardar progreso"]
         end
         
-        subgraph Results["📊 Resultados"]
+        subgraph Results["Resultados"]
             UC13["Ver resultados de ruta"]
             UC14["Compartir resultado"]
         end
         
-        subgraph Profile["👤 Perfil"]
+        subgraph Profile["Perfil"]
             UC15["Ver/editar perfil"]
         end
         
-        subgraph Admin["⚙️ Administración"]
+        subgraph Admin["Administración"]
             UC16["Acceder panel admin"]
             UC17["Gestionar rutas y puntos"]
             UC18["Subir/editar misiones"]
@@ -256,7 +256,6 @@ graph LR
         end
     end
     
-    %% Relaciones Usuario
     U -->|usa| UC1
     U -->|usa| UC2
     U -->|usa| UC3
@@ -273,37 +272,30 @@ graph LR
     U -->|usa| UC14
     U -->|usa| UC15
     
-    %% Relaciones Administrador
     ADM -->|usa| UC16
     ADM -->|usa| UC17
     ADM -->|usa| UC18
     ADM -->|usa| UC19
     
-    %% Relaciones de inclusión/extensión
-    UC8 ---|permite| UC9
-    UC9 ---|requiere| UC10
-    UC11 ---|incluye| UC12
-    UC12 ---|genera| UC13
+    UC8 -.->|permite| UC9
+    UC9 -.->|requiere| UC10
+    UC11 -.->|incluye| UC12
     
-    %% Relaciones con Firebase
-    UC1 ---|valida con| FB
-    UC2 ---|registra en| FB
-    UC12 ---|persiste en| FB
-    UC17 ---|gestiona en| FB
-    UC18 ---|gestiona en| FB
-    UC19 ---|consulta en| FB
+    UC1 -.->|validación| FB
+    UC2 -.->|registro| FB
+    UC12 -.->|persistencia| FB
+    UC17 -.->|gestión| FB
+    UC18 -.->|gestión| FB
     
-    %% Estilos
-    style U fill:#4CAF50,stroke:#2E7D32,stroke-width:3px,color:#fff
-    style ADM fill:#FF9800,stroke:#E65100,stroke-width:3px,color:#fff
-    style FB fill:#2196F3,stroke:#1565C0,stroke-width:3px,color:#fff
-    
-    style Auth fill:#E8F5E9,stroke:#4CAF50,stroke-width:2px
-    style Explore fill:#E3F2FD,stroke:#2196F3,stroke-width:2px
-    style Select fill:#FFF3E0,stroke:#FF9800,stroke-width:2px
-    style Nav fill:#FCE4EC,stroke:#E91E63,stroke-width:2px
-    style Mission fill:#F3E5F5,stroke:#9C27B0,stroke-width:2px
-    style Results fill:#E0F2F1,stroke:#009688,stroke-width:2px
-    style Profile fill:#FFF9C4,stroke:#FBC02D,stroke-width:2px
-    style Admin fill:#FFEBEE,stroke:#F44336,stroke-width:2px
+    style U fill:#4CAF50,stroke:#2E7D32,stroke-width:2px,color:#fff
+    style ADM fill:#FF9800,stroke:#E65100,stroke-width:2px,color:#fff
+    style FB fill:#2196F3,stroke:#1565C0,stroke-width:2px,color:#fff
+    style Auth fill:#E8F5E9,stroke:#4CAF50
+    style Explore fill:#E3F2FD,stroke:#2196F3
+    style Select fill:#FFF3E0,stroke:#FF9800
+    style Nav fill:#FCE4EC,stroke:#E91E63
+    style Mission fill:#F3E5F5,stroke:#9C27B0
+    style Results fill:#E0F2F1,stroke:#009688
+    style Profile fill:#FFF9C4,stroke:#FBC02D
+    style Admin fill:#FFEBEE,stroke:#F44336
 ```
