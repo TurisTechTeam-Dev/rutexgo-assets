@@ -205,26 +205,23 @@ flowchart TD
 **Diagrama de Casos de Uso**
 ```mermaid
 flowchart LR
-    %% Nodo principal: Usuario
+    %% Nodo principal Izquierda
     U["👤 USUARIO"]
 
-    %% Subgrafo izquierdo (TB para flujo vertical interno)
-    subgraph LEFT [" "]
+    %% COLUMNA CENTRAL (App)
+    subgraph APP ["RutexGo Core"]
         direction TB
         
-        %% Grupo de Perfil
         subgraph PROF ["Perfil"]
             PROF1["Ver perfil"]
             PROF2["Diario explorador"]
         end
 
-        %% Grupo de Exploración
         subgraph EXP ["Exploración"]
             EXP1["Explorar ciudades"]
             EXP2["Seleccionar ruta"]
         end
 
-        %% Grupo de Misión gamificada
         subgraph MISS ["Misión gamificada"]
             MISS1["Navegar"]
             MISS2["Escanear QR"]
@@ -233,39 +230,31 @@ flowchart LR
             MISS5["Ver resultados"]
         end
 
-        %% Grupo de Autenticación
         subgraph AUTH ["Autenticación"]
             AUTH1["Autenticarse"]
             AUTH2["Recuperar contraseña"]
         end
-    end
-
-    %% Subgrafo central
-    subgraph CENTER [" "]
-        direction TB
-        %% Grupo de Accesibilidad
+        
         subgraph ACC ["Accesibilidad"]
             ACC1["AudioGuide"]
         end
     end
 
-    %% Subgrafo derecho
-    subgraph RIGHT [" "]
+    %% COLUMNA DERECHA (Admin & Backend)
+    subgraph BACKEND ["Sistemas y Gestión"]
         direction TB
-        %% Nodos de Firebase y Administrador
         F["☁️ FIREBASE"]
         A["👨‍💼 ADMINISTRADOR"]
 
-        %% Grupo de Administración
         subgraph ADM ["Administración"]
             ADM1["Panel admin"]
             ADM2["Gestionar contenidos"]
         end
     end
 
-    %% -- RELACIONES (FLECHAS) --
+    %% -- CONEXIONES --
 
-    %% Interacciones del Usuario (Sólidas para flujo principal)
+    %% Usuario a App
     U --> PROF1
     U --> PROF2
     U --> EXP1
@@ -277,40 +266,37 @@ flowchart LR
     U --> MISS5
     U --> AUTH1
     U --> AUTH2
-
-    %% Uso de Accesibilidad (Punteada)
     U -.-> ACC1
 
-    %% Interacciones del Administrador
+    %% Administrador a su Panel (Derecha)
     A --> ADM1
     A --> ADM2
     A -.-> ACC1
 
-    %% Interacciones con Firebase (Punteadas para flujo de datos)
+    %% Conexiones laterales a Firebase (Derecha)
     AUTH1 -.-> F
     AUTH2 -.-> F
     MISS4 -.-> F
     ADM2 -.-> F
 
-    %% Flujos de Proceso Internos (Punteadas)
+    %% Flujos internos
     EXP1 -.-> EXP2
     MISS1 -.-> MISS2
     MISS2 -.-> MISS3
     MISS3 -.-> MISS4
     MISS4 -.-> MISS5
 
-    %% -- ESTILOS (style) --
-
-    %% Estilos de Nodos Principales
+    %% -- ESTILOS --
     style U fill:#4CAF50,stroke:#2E7D32,stroke-width:2px,color:#fff
     style F fill:#2196F3,stroke:#1565C0,stroke-width:2px,color:#fff
     style A fill:#FF9800,stroke:#E65100,stroke-width:2px,color:#fff
-
-    %% Estilos de Subgrafos (Colores de fondo suaves)
-    style PROF fill:#FFF9C4,stroke:#FBC02D,stroke-width:2px
-    style EXP fill:#E3F2FD,stroke:#2196F3,stroke-width:2px
-    style MISS fill:#F3E5F5,stroke:#9C27B0,stroke-width:2px
-    style AUTH fill:#E8F5E9,stroke:#4CAF50,stroke-width:2px
-    style ACC fill:#F5F5F5,stroke:#757575,stroke-width:2px
-    style ADM fill:#FFEBEE,stroke:#F44336,stroke-width:2px
+    
+    style PROF fill:#FFF9C4,stroke:#FBC02D,stroke-width:1px
+    style EXP fill:#E3F2FD,stroke:#2196F3,stroke-width:1px
+    style MISS fill:#F3E5F5,stroke:#9C27B0,stroke-width:1px
+    style AUTH fill:#E8F5E9,stroke:#4CAF50,stroke-width:1px
+    style ACC fill:#F5F5F5,stroke:#757575,stroke-width:1px
+    style ADM fill:#FFEBEE,stroke:#F44336,stroke-width:1px
+    style APP fill:transparent,stroke:#666,stroke-dasharray: 5 5
+    style BACKEND fill:transparent,stroke:#666,stroke-dasharray: 5 5
 ```
