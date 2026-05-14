@@ -205,93 +205,102 @@ flowchart TD
 **Diagrama de Casos de Uso**
 ```mermaid
 flowchart LR
-    TURISTA["👤 TURISTA"]
-    ADMIN["👨‍💼 ADMINISTRADOR"]
-    FIREBASE["☁️ FIREBASE"]
+    %% ACTORES
+    U["👤 USUARIO"]
+    F["☁️ FIREBASE"]
+    A["👨‍💼 ADMINISTRADOR"]
 
-    subgraph SISTEMA["RUTEX-GO - CASOS DE USO"]
+    %% BLOQUES
+    subgraph SYS["RUTEX-GO - CASOS DE USO"]
         direction LR
 
         subgraph AUTH["Autenticación"]
-            A1["Login"]
-            A2["Registro"]
-            A3["Recuperar contraseña"]
-            A4["Cerrar sesión"]
+            AUTH1["Login"]
+            AUTH2["Registro"]
+            AUTH3["Recuperar contraseña"]
+            AUTH4["Cerrar sesión"]
         end
 
         subgraph EXP["Exploración"]
-            E1["Ver ciudades"]
-            E2["Seleccionar ciudad"]
-            E3["Ver rutas"]
-            E4["Seleccionar ruta"]
+            EXP1["Ver ciudades"]
+            EXP2["Seleccionar ciudad"]
+            EXP3["Ver rutas"]
+            EXP4["Seleccionar ruta"]
         end
 
         subgraph MISS["Misión gamificada"]
-            M1["Navegación"]
-            M2["Escanear QR"]
-            M3["Quiz"]
-            M4["Guardar progreso"]
-            M5["Resultados"]
+            MISS1["Navegación"]
+            MISS2["Escanear QR"]
+            MISS3["Quiz"]
+            MISS4["Guardar progreso"]
+            MISS5["Resultados"]
         end
 
         subgraph PROF["Perfil"]
-            P1["Ver perfil"]
+            PROF1["Ver perfil"]
         end
 
         subgraph ADM["Admin"]
-            D1["Panel admin"]
-            D2["CRUD ciudades"]
-            D3["CRUD rutas"]
-            D4["CRUD misiones"]
-            D5["Mapa POIs"]
+            ADM1["Panel admin"]
+            ADM2["CRUD ciudades"]
+            ADM3["CRUD rutas"]
+            ADM4["CRUD misiones"]
+            ADM5["Mapa POIs"]
         end
 
         subgraph ACC["Accesibilidad"]
-            X1["AudioGuide"]
+            ACC1["AudioGuide"]
         end
     end
 
-    TURISTA --> A1
-    TURISTA --> A2
-    TURISTA --> A3
-    TURISTA --> A4
-    TURISTA --> E1
-    TURISTA --> E2
-    TURISTA --> E3
-    TURISTA --> E4
-    TURISTA --> M1
-    TURISTA --> M2
-    TURISTA --> M3
-    TURISTA --> M4
-    TURISTA --> M5
-    TURISTA --> P1
-    TURISTA -.-> X1
+    %% RELACIONES USUARIO
+    U --> AUTH1
+    U --> AUTH2
+    U --> AUTH3
+    U --> AUTH4
+    U --> EXP1
+    U --> EXP2
+    U --> EXP3
+    U --> EXP4
+    U --> MISS1
+    U --> MISS2
+    U --> MISS3
+    U --> MISS4
+    U --> MISS5
+    U --> PROF1
+    U -.-> ACC1
 
-    ADMIN --> D1
-    ADMIN --> D2
-    ADMIN --> D3
-    ADMIN --> D4
-    ADMIN --> D5
-    ADMIN -.-> X1
+    %% RELACIONES FIREBASE
+    AUTH1 -.-> F
+    AUTH2 -.-> F
+    AUTH3 -.-> F
+    AUTH4 -.-> F
+    MISS4 -.-> F
+    ADM2 -.-> F
+    ADM3 -.-> F
+    ADM4 -.-> F
+    ADM5 -.-> F
 
-    A1 -.-> FIREBASE
-    A2 -.-> FIREBASE
-    A3 -.-> FIREBASE
-    M4 -.-> FIREBASE
-    D2 -.-> FIREBASE
-    D3 -.-> FIREBASE
-    D4 -.-> FIREBASE
+    %% RELACIONES ADMIN
+    A --> ADM1
+    A --> ADM2
+    A --> ADM3
+    A --> ADM4
+    A --> ADM5
+    A -.-> ACC1
 
-    E2 -.-> E3
-    E3 -.-> E4
-    M1 -.-> M2
-    M2 -.-> M3
-    M3 -.-> M4
-    M4 -.-> M5
+    %% FLUJOS ENTRE CASOS
+    EXP2 -.-> EXP3
+    EXP3 -.-> EXP4
+    MISS1 -.-> MISS2
+    MISS2 -.-> MISS3
+    MISS3 -.-> MISS4
+    MISS4 -.-> MISS5
 
-    style TURISTA fill:#4CAF50,stroke:#2E7D32,stroke-width:2px,color:#fff
-    style ADMIN fill:#FF9800,stroke:#E65100,stroke-width:2px,color:#fff
-    style FIREBASE fill:#2196F3,stroke:#1565C0,stroke-width:2px,color:#fff
+    %% ESTILOS
+    style U fill:#4CAF50,stroke:#2E7D32,stroke-width:2px,color:#fff
+    style F fill:#2196F3,stroke:#1565C0,stroke-width:2px,color:#fff
+    style A fill:#FF9800,stroke:#E65100,stroke-width:2px,color:#fff
 
     style AUTH fill:#E8F5E9,stroke:#4CAF50,stroke-width:2px
     style EXP fill:#E3F2FD,stroke:#2196F3,stroke-width:2px
