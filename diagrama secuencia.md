@@ -1,3 +1,4 @@
+***Diagrama de Secuencia 1***
 ```mermaid
 sequenceDiagram
     actor Usuario
@@ -48,6 +49,10 @@ sequenceDiagram
     Usuario->>RouteSelectionScreen: Seleccionar ruta
     RouteSelectionScreen->>MapNavigationScreen: Abrir pantalla de navegación
 ```
+
+---
+
+***Diagrama de Secuencia 2***
 
 ```mermaid
 sequenceDiagram
@@ -112,4 +117,85 @@ sequenceDiagram
 
         TripSimulationProvider->>RouteResultScreen: Mostrar resultado final
     end
+```
+
+---
+
+***Diagrama de Flujo***
+```mermaid
+flowchart TD
+    A[Inicio: Usuario abre la aplicación] --> B{¿Existe sesión activa?}
+
+    B -- No --> C[Mostrar pantalla de autenticación]
+    C --> D{¿Acción del usuario?}
+    D -- Iniciar sesión --> E[Validar credenciales]
+    D -- Registrarse --> F[Registrar nuevo usuario]
+
+    E --> G{¿Autenticación correcta?}
+    G -- No --> H[Mostrar error de autenticación]
+    H --> C
+    G -- Sí --> I[Acceder a pantalla principal]
+
+    F --> J{¿Registro correcto?}
+    J -- No --> K[Mostrar error de registro]
+    K --> C
+    J -- Sí --> I
+
+    B -- Sí --> I
+
+    I --> L[Mostrar opciones principales]
+    L --> M[Acceder al selector de ciudades]
+    M --> N[Obtener ciudades disponibles]
+    N --> O[Mostrar listado de ciudades]
+    O --> P[Usuario selecciona ciudad]
+
+    P --> Q[Obtener rutas asociadas a la ciudad]
+    Q --> R[Mostrar rutas disponibles]
+    R --> S[Usuario selecciona ruta]
+    S --> T[Abrir pantalla de navegación]
+
+    T --> U[Inicializar gestor de ruta]
+    U --> V[Obtener puntos de interés de la ruta]
+    V --> W[Iniciar seguimiento GPS y cálculo de trayecto]
+
+    W --> X{¿Se alcanza un punto de interés?}
+    X -- No --> W
+    X -- Sí --> Y[Mostrar aviso de llegada al punto]
+
+    Y --> Z{¿Acción en el punto?}
+    Z -- Escanear QR --> AA[Abrir escáner QR]
+    Z -- Omitir punto --> AB[Marcar punto como omitido/completado sin misión]
+
+    AA --> AC[Leer código QR]
+    AC --> AD[Validar punto y misión asociada]
+    AD --> AE{¿QR válido y punto esperado?}
+    AE -- No --> AF[Mostrar mensaje de QR no válido]
+    AF --> AA
+    AE -- Sí --> AG[Mostrar detalle del monumento]
+
+    AG --> AH[Iniciar cuestionario de misión]
+    AH --> AI[Usuario responde preguntas]
+    AI --> AJ[Calcular resultado de la misión]
+    AJ --> AK[Registrar punto como completado]
+
+    AB --> AL[Actualizar progreso de ruta]
+    AK --> AL
+
+    AL --> AM{¿Quedan puntos pendientes?}
+    AM -- Sí --> AN[Recalcular siguiente destino]
+    AN --> W
+
+    AM -- No --> AO[Finalizar ruta]
+    AO --> AP[Calcular puntuación final y métricas]
+    AP --> AQ[Guardar mejor progreso de ruta]
+    AQ --> AR{¿Corresponde guardar resultado detallado?}
+    AR -- Sí --> AS[Guardar resultado detallado de la ruta]
+    AR -- No --> AT[Continuar sin guardado detallado]
+
+    AS --> AU[Mostrar pantalla de resultados finales]
+    AT --> AU
+
+    AU --> AV{¿Usuario desea iniciar nueva ruta?}
+    AV -- Sí --> M
+    AV -- No --> AW[Fin del proceso]
 ```
