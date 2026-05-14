@@ -220,107 +220,88 @@ graph TB
     UI -- "Visualiza mapas" --> Maps
 ```
 ```mermaid
-graph TD
-    %% Título del Diagrama
-    title[DIAGRAMA DE CASOS DE USO DEL SISTEMA]
-    style title fill:none,stroke:none,font-weight:bold,font-size:20px
+graph LR
+    %% Definición de estilos para que parezca profesional
+    classDef actor fill:#fff,stroke:#333,stroke-width:2px
+    classDef box fill:#fff,stroke:#333,stroke-width:1px
+    classDef system fill:#f9f9f9,stroke:#333,stroke-width:2px,stroke-dasharray: 5 5
 
-    subgraph AreaGlobal [" "]
-        direction LR
-        style AreaGlobal fill:none,stroke:none
+    %% ACTOR IZQUIERDA
+    Usuario((Usuario Explorador)):::actor
 
-        %% COLUMNA IZQUIERDA: USUARIO
-        Usuario((Usuario Explorador))
-
-        %% COLUMNA CENTRAL: SISTEMA APP
-        subgraph SistemaApp ["<< System >> Sistema App Móvil"]
+    %% COLUMNA CENTRAL: APP MÓVIL
+    subgraph SistemaApp ["<< System >> Sistema App Móvil"]
+        direction TB
+        
+        subgraph Autenticacion ["Autenticación"]
             direction TB
-            
-            subgraph Autenticacion ["Autenticación"]
-                direction TB
-                UC_L(Login Email/Google) --- UC_Det(Detección de Rol)
-                UC_R(Registro de Nuevo Usuario)
-                UC_RC(Recuperar Contraseña)
-                UC_LO(Logout)
-                UC_L -.->|include| UC_Det
-            end
-
-            subgraph HomePerfil ["Home & Perfil"]
-                direction TB
-                UC_VH(Ver Home)
-                UC_EU(Editar Username)
-                UC_CA(Cambiar Avatar)
-            end
-
-            subgraph Rutas ["Rutas"]
-                direction TB
-                UC_SC(Selección de Ciudad)
-                UC_VD(Ver Disponibilidad)
-                UC_IR(Iniciar Ruta)
-                UC_VD --> UC_IR
-            end
-
-            subgraph Diario ["Diario del Explorador"]
-                direction TB
-                UC_VR(Visualizar Rutas)
-                UC_AF(Añadir Fotos Personales)
-                UC_EP(Exportar PDF)
-            end
-
-            subgraph Mision ["Misión: Núcleo Gamificado"]
-                direction TB
-                UC_NM(Navegar con Mapa)
-                UC_DL(Detectar Llegada)
-                UC_EQ(Escanear QR)
-                UC_RQ(Responder Quiz)
-                UC_SP(Saltar Punto)
-                UC_FR(Finalizar Ruta)
-                UC_VI(Ver Info Monumento)
-                UC_EQ -.->|extend| UC_VI
-            end
-            
-            UC_IR --> UC_NM
+            A1(Login Email/Google) --- A2(Detección de Rol)
+            A3(Registro Nuevo Usuario)
+            A4(Recuperar Contraseña)
+            A5(Logout)
+            A1 -.->|include| A2
         end
 
-        %% COLUMNA DERECHA: PANEL ADMIN + ADMIN
-        subgraph ColumnaAdmin [" "]
+        subgraph HomePerfil ["Home & Perfil"]
             direction TB
-            style ColumnaAdmin fill:none,stroke:none
-            
-            subgraph PanelWeb ["<< System >> Panel Admin Web"]
-                direction TB
-                subgraph PanelSolo ["Panel Admin - Solo Web"]
-                    direction TB
-                    UC_CC(CRUD Ciudades)
-                    UC_CR(CRUD Rutas)
-                    UC_CP(CRUD POIs y Misiones)
-                    UC_MI(Mapa Interactivo)
-                end
-            end
-            
-            Admin((Administrador))
+            H1(Ver Home)
+            H2(Editar Username)
+            H3(Cambiar Avatar)
+        end
+
+        subgraph Rutas ["Rutas"]
+            direction TB
+            R1(Selección de Ciudad)
+            R2(Ver Disponibilidad)
+            R3(Iniciar Ruta)
+            R2 --> R3
+        end
+
+        subgraph Mision ["Misión: Núcleo Gamificado"]
+            direction TB
+            M1(Navegar con Mapa)
+            M2(Detectar Llegada)
+            M3(Escanear QR)
+            M4(Responder Quiz)
+            M5(Finalizar Ruta)
+            M6(Ver Info Monumento)
+            M3 -.->|extend| M6
+        end
+        
+        R3 --> M1
+    end
+
+    %% COLUMNA DERECHA: PANEL ADMIN
+    subgraph SistemaAdmin ["<< System >> Panel Admin Web"]
+        direction TB
+        subgraph PanelSolo ["Panel Admin - Solo Web"]
+            direction TB
+            P1(CRUD Ciudades)
+            P2(CRUD Rutas)
+            P3(CRUD POIs y Misiones)
+            P4(Mapa Interactivo)
         end
     end
 
-    %% BLOQUE INFERIOR: ACCESIBILIDAD
+    %% ACTOR DERECHA
+    Admin((Administrador)):::actor
+
+    %% PARTE INFERIOR: ACCESIBILIDAD
     subgraph Accesibilidad ["<< System >> Accesibilidad"]
-        UC_Audio(Transversal: AudioGuideWidget)
+        Acc(Transversal: AudioGuideWidget)
     end
 
-    %% CONEXIONES
+    %% CONEXIONES PRINCIPALES (Para mantener el orden horizontal)
     Usuario --- Autenticacion
     Usuario --- HomePerfil
     Usuario --- Rutas
-    Usuario --- Diario
     
     PanelSolo --- Admin
-    
-    Usuario -.->|use| UC_Audio
-    Admin -.->|use| UC_Audio
 
-    %% ESTILOS PARA LOOK PROFESIONAL
-    classDef default font-family:Arial, font-size:12px
-    style SistemaApp fill:#ffffff,stroke:#333,stroke-width:2px
-    style PanelWeb fill:#ffffff,stroke:#333,stroke-width:2px
-    style Accesibilidad fill:#ffffff,stroke:#333,stroke-width:2px
+    %% RELACIONES DE USO (TRANSVERSALES)
+    Usuario -.->|use| Acc
+    Admin -.->|use| Acc
+
+    %% TRUCO DE ALINEACIÓN: Forzamos que los sistemas estén al mismo nivel
+    Autenticacion ~~~ PanelSolo
 ```
