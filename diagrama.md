@@ -222,10 +222,11 @@ graph TB
 ```mermaid
 graph LR
     %% Actores
-    UsuarioExplorador((Usuario Explorador))
-    Administrador((Administrador))
+    Usuario((Usuario Explorador))
+    Admin((Administrador))
 
-    subgraph SistemaAppMovil ["<<System>> Sistema App Móvil"]
+    %% Sistema Principal
+    subgraph SistemaApp ["<<System>> Sistema App Móvil"]
         
         subgraph Autenticacion ["Autenticación"]
             UC_Login(Login Email/Google)
@@ -238,72 +239,74 @@ graph LR
         end
 
         subgraph HomePerfil ["Home & Perfil"]
-            UC_VerHome(Ver Home Puntos/Rango, con Cache Offline)
-            UC_EditarUser(Editar Username)
-            UC_CambiarAvatar(Cambiar Avatar Firebase Storage)
+            UC_VerHome(Ver Home)
+            UC_Editar(Editar Username)
+            UC_Avatar(Cambiar Avatar)
         end
 
         subgraph Rutas ["Rutas"]
-            UC_Seleccion(Selección de Ciudad y Filtrado de Rutas)
-            UC_VerDisp(Ver Disponibilidad Ruta Activa si POIs tienen Misiones)
-            UC_IniciarRuta(Iniciar Ruta)
+            UC_Seleccion(Selección de Ciudad y Filtrado)
+            UC_Disp(Ver Disponibilidad)
+            UC_Iniciar(Iniciar Ruta)
             
-            UC_VerDisp --> UC_IniciarRuta
+            UC_Disp --> UC_Iniciar
         end
 
         subgraph Diario ["Diario del Explorador"]
-            UC_Visualizar(Visualizar Rutas Libro)
-            UC_AnadirFotos(Añadir Fotos Personales Polaroid)
-            UC_Exportar(Exportar PDF)
+            UC_Vis(Visualizar Rutas)
+            UC_Fotos(Añadir Fotos Personales)
+            UC_PDF(Exportar PDF)
         end
 
-        subgraph Mision ["Misión: Flujo Complejo - Núcleo Gamificado"]
-            UC_Navegar(Navegar con Mapa GPS Real/Simulado)
-            UC_Detectar(Detectar Llegada al POI Proximidad)
-            UC_Escanear(Escanear QR y Validar Punto/Estado)
-            UC_Quiz(Responder Quiz 10 pts)
+        subgraph Mision ["Misión: Flujo Complejo"]
+            UC_Nav(Navegar con Mapa)
+            UC_Llegada(Detectar Llegada al POI)
+            UC_QR(Escanear QR y Validar)
+            UC_Quiz(Responder Quiz)
             UC_Saltar(Saltar Punto Opcional)
-            UC_Finalizar(Finalizar Ruta y Guardar Puntuación)
-            UC_VerInfo(Ver Info del Monumento)
+            UC_Fin(Finalizar Ruta)
+            UC_Info(Ver Info del Monumento)
 
-            UC_Escanear -.->|extend| UC_VerInfo
+            UC_QR -.->|extend| UC_Info
         end
 
-        UC_IniciarRuta --> UC_Navegar
+        UC_Iniciar --> UC_Nav
     end
 
-    subgraph PanelAdminWeb ["<<System>> Panel Admin Web"]
-        subgraph PanelSoloWeb ["Panel Admin - Solo Web"]
-            UC_CRUDCiudades(CRUD Ciudades)
-            UC_CRUDRutas(CRUD Rutas)
-            UC_CRUDPOIs(CRUD POIs y Misiones)
-            UC_MapaInteractivo(Mapa Interactivo de POIs Bienvenida)
+    %% Panel Admin (Derecha)
+    subgraph PanelWeb ["<<System>> Panel Admin Web"]
+        subgraph PanelSolo ["Panel Admin - Solo Web"]
+            UC_Ciudades(CRUD Ciudades)
+            UC_RutasCRUD(CRUD Rutas)
+            UC_POIs(CRUD POIs y Misiones)
+            UC_MapaInt(Mapa Interactivo de POIs)
         end
     end
 
-    subgraph Accesibilidad ["<<System>> Accesibilidad"]
-        UC_AudioGuide(Transversal: AudioGuideWidget Lectura Automática/Manual)
+    %% Accesibilidad (Abajo/Transversal)
+    subgraph Acc ["<<System>> Accesibilidad"]
+        UC_Audio(Transversal: AudioGuideWidget)
     end
 
-    %% Relaciones Usuario Explorador
-    UsuarioExplorador --- UC_Login
-    UsuarioExplorador --- UC_Registro
-    UsuarioExplorador --- UC_Recuperar
-    UsuarioExplorador --- UC_Logout
-    UsuarioExplorador --- UC_VerHome
-    UsuarioExplorador --- UC_EditarUser
-    UsuarioExplorador --- UC_CambiarAvatar
-    UsuarioExplorador --- UC_Seleccion
-    UsuarioExplorador --- UC_VerDisp
-    UsuarioExplorador --- UC_Visualizar
-    UsuarioExplorador --- UC_AnadirFotos
-    UsuarioExplorador --- UC_Exportar
-    UsuarioExplorador -.->|use| UC_AudioGuide
+    %% Conexiones Usuario (Izquierda)
+    Usuario --- UC_Login
+    Usuario --- UC_Registro
+    Usuario --- UC_Recuperar
+    Usuario --- UC_Logout
+    Usuario --- UC_VerHome
+    Usuario --- UC_Editar
+    Usuario --- UC_Avatar
+    Usuario --- UC_Seleccion
+    Usuario --- UC_Disp
+    Usuario --- UC_Vis
+    Usuario --- UC_Fotos
+    Usuario --- UC_PDF
+    Usuario -.->|use| UC_Audio
 
-    %% Relaciones Administrador
-    Administrador --- UC_CRUDCiudades
-    Administrador --- UC_CRUDRutas
-    Administrador --- UC_CRUDPOIs
-    Administrador --- UC_MapaInteractivo
-    Administrador -.->|use| UC_AudioGuide
+    %% Conexiones Admin (Derecha)
+    UC_Ciudades --- Admin
+    UC_RutasCRUD --- Admin
+    UC_POIs --- Admin
+    UC_MapaInt --- Admin
+    UC_Audio <-.-|use| Admin
 ```
