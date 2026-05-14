@@ -210,46 +210,56 @@ flowchart LR
     F["☁️ FIREBASE"]
     A["👨‍💼 ADMINISTRADOR"]
 
-    %% BLOQUES
+    %% BLOQUES PRINCIPALES
     subgraph SYS["RUTEX-GO - CASOS DE USO"]
         direction LR
 
-        subgraph AUTH["Autenticación"]
-            AUTH1["Login"]
-            AUTH2["Registro"]
-            AUTH3["Recuperar contraseña"]
-            AUTH4["Cerrar sesión"]
+        subgraph LEFT[""]
+            direction TB
+
+            subgraph AUTH["Autenticación"]
+                AUTH1["Login"]
+                AUTH2["Registro"]
+                AUTH3["Recuperar contraseña"]
+                AUTH4["Cerrar sesión"]
+            end
+
+            subgraph EXP["Exploración"]
+                EXP1["Ver ciudades"]
+                EXP2["Seleccionar ciudad"]
+                EXP3["Ver rutas"]
+                EXP4["Seleccionar ruta"]
+            end
+
+            subgraph MISS["Misión gamificada"]
+                MISS1["Navegación"]
+                MISS2["Escanear QR"]
+                MISS3["Quiz"]
+                MISS4["Guardar progreso"]
+                MISS5["Resultados"]
+            end
+
+            subgraph PROF["Perfil"]
+                PROF1["Ver perfil"]
+            end
         end
 
-        subgraph EXP["Exploración"]
-            EXP1["Ver ciudades"]
-            EXP2["Seleccionar ciudad"]
-            EXP3["Ver rutas"]
-            EXP4["Seleccionar ruta"]
+        subgraph CENTER[""]
+            direction TB
+            subgraph ACC["Accesibilidad"]
+                ACC1["AudioGuide"]
+            end
         end
 
-        subgraph MISS["Misión gamificada"]
-            MISS1["Navegación"]
-            MISS2["Escanear QR"]
-            MISS3["Quiz"]
-            MISS4["Guardar progreso"]
-            MISS5["Resultados"]
-        end
-
-        subgraph PROF["Perfil"]
-            PROF1["Ver perfil"]
-        end
-
-        subgraph ADM["Admin"]
-            ADM1["Panel admin"]
-            ADM2["CRUD ciudades"]
-            ADM3["CRUD rutas"]
-            ADM4["CRUD misiones"]
-            ADM5["Mapa POIs"]
-        end
-
-        subgraph ACC["Accesibilidad"]
-            ACC1["AudioGuide"]
+        subgraph RIGHT[""]
+            direction TB
+            subgraph ADM["Admin"]
+                ADM1["Panel admin"]
+                ADM2["CRUD ciudades"]
+                ADM3["CRUD rutas"]
+                ADM4["CRUD misiones"]
+                ADM5["Mapa POIs"]
+            end
         end
     end
 
@@ -306,6 +316,6 @@ flowchart LR
     style EXP fill:#E3F2FD,stroke:#2196F3,stroke-width:2px
     style MISS fill:#F3E5F5,stroke:#9C27B0,stroke-width:2px
     style PROF fill:#FFF9C4,stroke:#FBC02D,stroke-width:2px
-    style ADM fill:#FFEBEE,stroke:#F44336,stroke-width:2px
     style ACC fill:#F5F5F5,stroke:#757575,stroke-width:2px
+    style ADM fill:#FFEBEE,stroke:#F44336,stroke-width:2px
 ```
