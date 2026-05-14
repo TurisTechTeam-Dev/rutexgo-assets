@@ -205,21 +205,27 @@ flowchart TD
 **Diagrama de Casos de Uso**
 ```mermaid
 flowchart LR
+    %% Nodo principal: Usuario
     U["👤 USUARIO"]
 
-    subgraph LEFT[""]
+    %% Subgrafo izquierdo (TB para flujo vertical interno)
+    subgraph LEFT [" "]
         direction TB
-        subgraph PROF["Perfil"]
+        
+        %% Grupo de Perfil
+        subgraph PROF ["Perfil"]
             PROF1["Ver perfil"]
             PROF2["Diario explorador"]
         end
 
-        subgraph EXP["Exploración"]
+        %% Grupo de Exploración
+        subgraph EXP ["Exploración"]
             EXP1["Explorar ciudades"]
             EXP2["Seleccionar ruta"]
         end
 
-        subgraph MISS["Misión gamificada"]
+        %% Grupo de Misión gamificada
+        subgraph MISS ["Misión gamificada"]
             MISS1["Navegar"]
             MISS2["Escanear QR"]
             MISS3["Resolver misión"]
@@ -227,30 +233,39 @@ flowchart LR
             MISS5["Ver resultados"]
         end
 
-        subgraph AUTH["Autenticación"]
+        %% Grupo de Autenticación
+        subgraph AUTH ["Autenticación"]
             AUTH1["Autenticarse"]
             AUTH2["Recuperar contraseña"]
         end
     end
 
-    subgraph CENTER[""]
+    %% Subgrafo central
+    subgraph CENTER [" "]
         direction TB
-        subgraph ACC["Accesibilidad"]
+        %% Grupo de Accesibilidad
+        subgraph ACC ["Accesibilidad"]
             ACC1["AudioGuide"]
         end
     end
 
-    subgraph RIGHT[""]
+    %% Subgrafo derecho
+    subgraph RIGHT [" "]
         direction TB
+        %% Nodos de Firebase y Administrador
         F["☁️ FIREBASE"]
         A["👨‍💼 ADMINISTRADOR"]
 
-        subgraph ADM["Administración"]
+        %% Grupo de Administración
+        subgraph ADM ["Administración"]
             ADM1["Panel admin"]
             ADM2["Gestionar contenidos"]
         end
     end
 
+    %% -- RELACIONES (FLECHAS) --
+
+    %% Interacciones del Usuario (Sólidas para flujo principal)
     U --> PROF1
     U --> PROF2
     U --> EXP1
@@ -262,27 +277,36 @@ flowchart LR
     U --> MISS5
     U --> AUTH1
     U --> AUTH2
+
+    %% Uso de Accesibilidad (Punteada)
     U -.-> ACC1
 
+    %% Interacciones del Administrador
     A --> ADM1
     A --> ADM2
     A -.-> ACC1
 
+    %% Interacciones con Firebase (Punteadas para flujo de datos)
     AUTH1 -.-> F
     AUTH2 -.-> F
     MISS4 -.-> F
     ADM2 -.-> F
 
+    %% Flujos de Proceso Internos (Punteadas)
     EXP1 -.-> EXP2
     MISS1 -.-> MISS2
     MISS2 -.-> MISS3
     MISS3 -.-> MISS4
     MISS4 -.-> MISS5
 
+    %% -- ESTILOS (style) --
+
+    %% Estilos de Nodos Principales
     style U fill:#4CAF50,stroke:#2E7D32,stroke-width:2px,color:#fff
     style F fill:#2196F3,stroke:#1565C0,stroke-width:2px,color:#fff
     style A fill:#FF9800,stroke:#E65100,stroke-width:2px,color:#fff
 
+    %% Estilos de Subgrafos (Colores de fondo suaves)
     style PROF fill:#FFF9C4,stroke:#FBC02D,stroke-width:2px
     style EXP fill:#E3F2FD,stroke:#2196F3,stroke-width:2px
     style MISS fill:#F3E5F5,stroke:#9C27B0,stroke-width:2px
