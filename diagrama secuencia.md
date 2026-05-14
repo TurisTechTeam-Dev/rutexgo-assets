@@ -204,98 +204,113 @@ flowchart TD
 
 **Diagrama de Casos de Uso**
 ```mermaid
-graph TB
-    subgraph Actores[""]
-        U["👤 Usuario"]
-        ADM["👨‍💼 Administrador"]
-        FB["☁️ Firebase"]
+flowchart LR
+    %% ACTORES
+    TURISTA["👤 TURISTA"]
+    ADMIN["👨‍💼 ADMINISTRADOR"]
+    FIREBASE["☁️ FIREBASE"]
+
+    %% SISTEMA
+    subgraph SISTEMA["RUTEX-GO - CASOS DE USO"]
+        direction LR
+
+        subgraph AUTH["Autenticación"]
+            AUTH1["Login Email / Google"]
+            AUTH2["Registro de nuevo usuario"]
+            AUTH3["Recuperar contraseña"]
+            AUTH4["Cerrar sesión"]
+            AUTH5["Detección de rol"]
+        end
+
+        subgraph EXP["Exploración de rutas"]
+            EXP1["Ver ciudades"]
+            EXP2["Seleccionar ciudad"]
+            EXP3["Ver rutas disponibles"]
+            EXP4["Seleccionar ruta"]
+        end
+
+        subgraph MIS["Misión gamificada"]
+            MIS1["Iniciar navegación"]
+            MIS2["Escanear QR"]
+            MIS3["Ver mapa de navegación"]
+            MIS4["Completar quiz del monumento"]
+            MIS5["Guardar progreso de la ruta"]
+            MIS6["Ver resultados de la ruta"]
+            MIS7["Ver diario explorador"]
+        end
+
+        subgraph PER["Perfil"]
+            PER1["Ver perfil"]
+        end
+
+        subgraph ADM["Panel administrativo"]
+            ADM1["Acceder panel administrativo"]
+            ADM2["CRUD ciudades"]
+            ADM3["CRUD rutas"]
+            ADM4["CRUD POIs y misiones"]
+            ADM5["Mapa interactivo de POIs"]
+        end
+
+        subgraph ACC["Accesibilidad"]
+            ACC1["AudioGuideWidget"]
+        end
     end
-    
-    subgraph CasosDeUso["CASOS DE USO - RUTEX-GO"]
-        subgraph Auth["Autenticación"]
-            UC1["Autenticarse"]
-            UC2["Registrarse"]
-            UC3["Recuperar contraseña"]
-        end
-        
-        subgraph Explore["Exploración"]
-            UC4["Explorar ciudades"]
-            UC5["Ver rutas disponibles"]
-        end
-        
-        subgraph Select["Selección"]
-            UC6["Seleccionar ciudad"]
-            UC7["Seleccionar ruta"]
-        end
-        
-        subgraph Nav["Navegación"]
-            UC8["Iniciar navegación"]
-            UC9["Escanear QR"]
-            UC10["Ver detalle de monumento"]
-        end
-        
-        subgraph Mission["Misión"]
-            UC11["Realizar cuestionario"]
-            UC12["Guardar progreso"]
-        end
-        
-        subgraph Results["Resultados"]
-            UC13["Ver resultados de ruta"]
-            UC14["Compartir resultado"]
-        end
-        
-        subgraph Profile["Perfil"]
-            UC15["Ver/editar perfil"]
-        end
-        
-        subgraph Admin["Administración"]
-            UC16["Acceder panel admin"]
-            UC17["Gestionar rutas y puntos"]
-            UC18["Subir/editar misiones"]
-            UC19["Gestionar resultados"]
-        end
-    end
-    
-    U -->|usa| UC1
-    U -->|usa| UC2
-    U -->|usa| UC3
-    U -->|usa| UC4
-    U -->|usa| UC5
-    U -->|usa| UC6
-    U -->|usa| UC7
-    U -->|usa| UC8
-    U -->|usa| UC9
-    U -->|usa| UC10
-    U -->|usa| UC11
-    U -->|usa| UC12
-    U -->|usa| UC13
-    U -->|usa| UC14
-    U -->|usa| UC15
-    
-    ADM -->|usa| UC16
-    ADM -->|usa| UC17
-    ADM -->|usa| UC18
-    ADM -->|usa| UC19
-    
-    UC8 -.->|permite| UC9
-    UC9 -.->|requiere| UC10
-    UC11 -.->|incluye| UC12
-    
-    UC1 -.->|validación| FB
-    UC2 -.->|registro| FB
-    UC12 -.->|persistencia| FB
-    UC17 -.->|gestión| FB
-    UC18 -.->|gestión| FB
-    
-    style U fill:#4CAF50,stroke:#2E7D32,stroke-width:2px,color:#fff
-    style ADM fill:#FF9800,stroke:#E65100,stroke-width:2px,color:#fff
-    style FB fill:#2196F3,stroke:#1565C0,stroke-width:2px,color:#fff
-    style Auth fill:#E8F5E9,stroke:#4CAF50
-    style Explore fill:#E3F2FD,stroke:#2196F3
-    style Select fill:#FFF3E0,stroke:#FF9800
-    style Nav fill:#FCE4EC,stroke:#E91E63
-    style Mission fill:#F3E5F5,stroke:#9C27B0
-    style Results fill:#E0F2F1,stroke:#009688
-    style Profile fill:#FFF9C4,stroke:#FBC02D
-    style Admin fill:#FFEBEE,stroke:#F44336
+
+    %% RELACIONES TURISTA
+    TURISTA --> AUTH1
+    TURISTA --> AUTH2
+    TURISTA --> AUTH3
+    TURISTA --> AUTH4
+    TURISTA --> EXP1
+    TURISTA --> EXP2
+    TURISTA --> EXP3
+    TURISTA --> EXP4
+    TURISTA --> MIS1
+    TURISTA --> MIS2
+    TURISTA --> MIS3
+    TURISTA --> MIS4
+    TURISTA --> MIS5
+    TURISTA --> MIS6
+    TURISTA --> MIS7
+    TURISTA --> PER1
+    TURISTA -.-> ACC1
+
+    %% RELACIONES ADMINISTRADOR
+    ADMIN --> ADM1
+    ADMIN --> ADM2
+    ADMIN --> ADM3
+    ADMIN --> ADM4
+    ADMIN --> ADM5
+    ADMIN -.-> ACC1
+
+    %% FLUJOS
+    AUTH1 -.-> AUTH5
+    EXP2 -.-> EXP3
+    EXP3 -.-> EXP4
+    MIS1 -.-> MIS2
+    MIS2 -.-> MIS3
+    MIS4 -.-> MIS5
+    MIS5 -.-> MIS6
+
+    %% FIREBASE
+    AUTH1 -.-> FIREBASE
+    AUTH2 -.-> FIREBASE
+    AUTH3 -.-> FIREBASE
+    AUTH5 -.-> FIREBASE
+    MIS5 -.-> FIREBASE
+    ADM2 -.-> FIREBASE
+    ADM3 -.-> FIREBASE
+    ADM4 -.-> FIREBASE
+
+    %% ESTILO
+    style TURISTA fill:#4CAF50,stroke:#2E7D32,stroke-width:2px,color:#fff
+    style ADMIN fill:#FF9800,stroke:#E65100,stroke-width:2px,color:#fff
+    style FIREBASE fill:#2196F3,stroke:#1565C0,stroke-width:2px,color:#fff
+
+    style AUTH fill:#E8F5E9,stroke:#4CAF50,stroke-width:2px
+    style EXP fill:#E3F2FD,stroke:#2196F3,stroke-width:2px
+    style MIS fill:#F3E5F5,stroke:#9C27B0,stroke-width:2px
+    style PER fill:#FFF9C4,stroke:#FBC02D,stroke-width:2px
+    style ADM fill:#FFEBEE,stroke:#F44336,stroke-width:2px
+    style ACC fill:#F5F5F5,stroke:#757575,stroke-width:2px
 ```
