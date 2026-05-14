@@ -1,93 +1,52 @@
 ```mermaid
 sequenceDiagram
-    autonumber
-    title Flujo Completo: Autenticación, Selección y Misiones (RutexGo)
-
-    %% Declaración global de participantes para evitar errores de parseo
-    participant Usuario
+    actor Usuario
     participant AuthWrapper
-    participant AuthUI as Login/Register
-    participant Home as HomeScreen
-    participant CitySel as CitySelection
-    participant RouteSel as RouteSelection
-    participant Nav as Navigator
-    participant MapScreen
-    participant TripProv as TripProvider
-    participant Scanner as MissionScanner
-    participant MissionUC as UseCases
-    participant MissionRepo as Repository
-    participant Monument as MonumentInfo
-    participant Quiz
-    participant Result as RouteResult
+    participant LoginScreen as Pantalla de inicio de sesión
+    participant RegisterScreen as Pantalla de registro
+    participant AuthUseCases as Casos de uso de autenticación
+    participant HomeScreen as Pantalla principal
+    participant CitySelectionScreen as Selector de ciudades
+    participant RoutesUseCases as Casos de uso de rutas
+    participant RouteSelectionScreen as Selector de rutas
+    participant MapNavigationScreen as Pantalla de navegación
 
-    box rgb(240, 248, 255) Autenticación
-        Usuario->>AuthWrapper: Abrir App
-        Note over AuthWrapper: verificar sesión
-        alt No autenticado
-            AuthWrapper->>AuthUI: Mostrar Login
-            Usuario->>AuthUI: Credenciales
-            AuthUI-->>AuthWrapper: Éxito
+    Usuario->>AuthWrapper: Abrir la aplicación
+    AuthWrapper->>AuthWrapper: Verificar estado de autenticación
+
+    alt Usuario no autenticado
+        AuthWrapper->>LoginScreen: Mostrar pantalla de inicio de sesión
+        Usuario->>LoginScreen: Introducir credenciales o acceder al registro
+
+        alt Inicio de sesión
+            LoginScreen->>AuthUseCases: login(email, password)
+            AuthUseCases-->>LoginScreen: Usuario autenticado
+            LoginScreen->>AuthUseCases: checkAdminStatus(uid)
+            AuthUseCases-->>LoginScreen: Resultado de validación
+            LoginScreen->>HomeScreen: Navegar a la pantalla principal
+        else Registro de usuario
+            LoginScreen->>RegisterScreen: Abrir pantalla de registro
+            Usuario->>RegisterScreen: Completar formulario de registro
+            RegisterScreen->>AuthUseCases: register(name, username, email, password)
+            AuthUseCases-->>RegisterScreen: Registro completado
+            RegisterScreen->>HomeScreen: Navegar a la pantalla principal
         end
-        AuthWrapper->>Home: Ir a Home
+    else Usuario autenticado
+        AuthWrapper->>HomeScreen: Acceder directamente a la pantalla principal
     end
 
-    box rgb(245, 245, 220) Selección de Destino
-        Usuario->>Home: Elegir Ciudad
-        Home->>Nav: pushNamed(citySelection)
-        Nav->>CitySel: Abrir pantalla
-        Usuario->>CitySel: Elige Ciudad
-        CitySel->>Nav: pushNamed(routeSelection)
-        Nav->>RouteSel: Abrir pantalla
-        Usuario->>RouteSel: Elige Ruta
-        RouteSel->>Nav: pushNamed(mapNavigation)
-    end
+    Usuario->>HomeScreen: Solicitar exploración de ciudades
+    HomeScreen->>CitySelectionScreen: Abrir selector de ciudades
+    CitySelectionScreen->>RoutesUseCases: getCities()
+    RoutesUseCases-->>CitySelectionScreen: Lista de ciudades disponibles
 
-    box rgb(230, 230, 250) Mapa y GPS
-        Nav->>MapScreen: Abrir mapa
-        MapScreen->>TripProv: Init Provider
-        TripProv->>MissionUC: getPoints(routeId)
-        MissionUC->>MissionRepo: Fetch POIs
-        MissionRepo-->>MissionUC: Data
-        MissionUC-->>TripProv: POIs List
-        Note over TripProv: Iniciar GPS y cálculos
-        TripProv-->>MapScreen: notifyListeners()
-    end
+    Usuario->>CitySelectionScreen: Seleccionar ciudad
+    CitySelectionScreen->>RouteSelectionScreen: Abrir selector de rutas
+    RouteSelectionScreen->>RoutesUseCases: getRoutesByCity() / getRoutesByCityKeys()
+    RoutesUseCases-->>RouteSelectionScreen: Rutas asociadas a la ciudad
 
-    box rgb(240, 255, 240) Llegada y Escaneo
-        Note over TripProv: Detectar proximidad
-        TripProv-->>MapScreen: reached = true
-        MapScreen->>Usuario: ArrivalBottomSheet
-        Usuario->>MapScreen: Elegir "Escanear"
-        MapScreen->>Nav: pushNamed(scanner)
-        Nav->>Scanner: Abrir Scanner
-        Scanner->>MissionUC: scan(qr)
-        MissionUC->>MissionRepo: getMissionData
-        MissionRepo-->>MissionUC: Mission Obj
-        MissionUC-->>Scanner: ScanResult
-    end
-
-    box rgb(255, 250, 205) Misión y Quiz
-        Scanner->>Nav: push(monumentInfo)
-        Nav->>Monument: Abrir pantalla
-        Usuario->>Monument: "Empezar misión"
-        Monument->>Nav: push(quiz)
-        Nav->>Quiz: Abrir Quiz
-        Usuario->>Quiz: Responder
-        Quiz-->>Monument: pointCompleted
-        Monument-->>Scanner: pop()
-        Scanner-->>MapScreen: Volver al mapa
-    end
-
-    box rgb(255, 245, 238) Finalización
-        MapScreen->>TripProv: markCompleted()
-        alt Quedan puntos
-            TripProv->>TripProv: Siguiente POI
-        else Ruta fin
-            TripProv->>MissionUC: saveProgress()
-            MissionUC->>MissionRepo: Firestore Sync
-            TripProv-->>Result: Mostrar Resultados
-        end
-    end
+    Usuario->>RouteSelectionScreen: Seleccionar ruta
+    RouteSelectionScreen->>MapNavigationScreen: Abrir pantalla de navegación
 ```
 
 
