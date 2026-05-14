@@ -1,109 +1,94 @@
 ```mermaid
 sequenceDiagram
     autonumber
-    title Diagrama de secuencia completo - Flujo de ruta y misiones (RutexGo)
+    title Flujo Completo: Autenticación, Selección y Misiones (RutexGo)
 
-    actor Usuario
-    participant App as App / AuthWrapper
-    participant AuthUI as Login/Register Screen
-    participant Home as HomeScreen / RouteSelection
-    participant Nav as Navigator (AppRoutes)
-    participant MapScreen as MapNavigationScreen
-    participant TripProv as TripSimulationProvider
-    participant Scanner as MissionScannerScreen
-    participant MissionUC as MissionUseCases
-    participant MissionRepo as MissionRepository / Firestore
-    participant Monument as MonumentInfoScreen
-    participant Quiz as QuizScreen
-    participant RouteResult as RouteResultScreen
+    actor U as Usuario
+    participant AW as AuthWrapper
+    participant UI as Login/Register
+    participant H as HomeScreen
+    participant CS as CitySelection
+    participant RS as RouteSelection
+    participant N as Navigator
+    participant M as MapScreen
+    participant T as TripProvider
+    participant S as Scanner
+    participant UC as MissionUseCases
+    participant R as MissionRepository
+    participant Mon as MonumentInfo
+    participant Q as Quiz
+    participant Res as RouteResult
 
-    box rgb(240, 248, 255) Inicio y autenticación
-    Usuario->>App: Abrir app
-    Note over App: subscribirse a authStateChanges / check current user
-    alt Usuario no autenticado
-        App->>AuthUI: mostrar `Login/Register`
-        Usuario->>AuthUI: Login / Register
-        AuthUI->>App: solicitar login (Navigator)
-        AuthUI->>App: llamar AuthUseCases.login(...)
-        Note over App: AuthRepository -> FirebaseAuth (impl)
-        AuthUI-->>App: login success -> App navega a Home
-    else Usuario autenticado
-        App->>Home: mostrar `HomeScreen`
-    end
-    end
-
-    box rgb(245, 245, 220) Selección de ruta
-    Usuario->>Home: seleccionar ciudad/ ruta
-    Home->>Nav: Navigator.pushNamed(AppRoutes.mapNavigation, args{routeId})
-    Nav->>MapScreen: abrir `MapNavigationScreen` (crea TripSimulationProvider)
-    MapScreen->>TripProv: inicializar provider (constructor)
-    TripProv->>MissionUC: executeGetPointsForRoute(routeId)
-    MissionUC->>MissionRepo: getRoutePointIds(); getPointsByIds(...)
-    MissionRepo-->>MissionUC: lista PointOfInterest
-    MissionUC-->>TripProv: lista points
-    Note over TripProv: _initGpsTracking(); _selectNearestTargetPoi(); _calculateStreetRoute()
-    TripProv-->>MapScreen: notifyListeners() (routePoints, currentPosition)
-    end
-
-    box rgb(230, 230, 250) Navegación y llegada a POI
-    Note over TripProv: getPositionStream -> actualiza currentPosition
-    Note over TripProv: _checkArrivalProximity() cuando distance <= activationRadius
-    alt Llega a POI
-        TripProv-->>MapScreen: notifyListeners() (hasReachedDestination = true)
-        Note over MapScreen: mostrar `ArrivalBottomSheet`
-        Usuario->>MapScreen: elige "Escanear misión"
-        MapScreen->>Nav: pushNamed(AppRoutes.missionQrScanner, args{expectedPointId,...})
-        Nav->>Scanner: abrir `MissionScannerScreen`
-    end
-    end
-
-    box rgb(240, 255, 240) Escaneo QR y resolución de misión
-    Note over Scanner: detectar QR (mobile_scanner)
-    Scanner->>MissionUC: executeScan(qrCode)
-    MissionUC->>MissionRepo: getPointByQr(qrCode)
-    MissionRepo-->>MissionUC: PointOfInterest (point)
-    MissionUC->>MissionRepo: getMissionByPointId(point.id)
-    MissionRepo-->>MissionUC: Mission (preguntas)
-    MissionUC-->>Scanner: MissionScanResult (point + mission)
-    Scanner->>Nav: pushNamed(AppRoutes.monumentInfo, MonumentInfoArgs(scanResult,...))
-    Nav->>Monument: abrir `MonumentInfoScreen`
-
-    Monument->>Nav: pushNamed(AppRoutes.quiz, QuizMission.fromMission(...))
-    Note right of Monument: cuando usuario pulsa "EMPEZAR MISIÓN"
-    Nav->>Quiz: abrir `QuizScreen`
-    Usuario->>Quiz: responde preguntas (varias interacciones)
-    Note over Quiz: registrar respuestas en `QuizRouteProgress`
-    Quiz-->>Monument: return MissionFlowResult.pointCompleted
-    Note right of Quiz: si completa misión
-    Monument->>Nav: pop() con MissionFlowResult.pointCompleted
-    Nav-->>Scanner: retorna MissionFlowResult.pointCompleted
-    Scanner->>Nav: pop()
-    Note right of Scanner: retorna hacia `MapNavigationScreen` con resultado
-    Nav-->>MapScreen: recibe MissionFlowResult.pointCompleted
-    end
-
-    box rgb(255, 245, 238) Marcaje de POI completado y continuacion
-    MapScreen->>TripProv: markCurrentPoiAsCompleted()
-    Note over TripProv: añadir _completedPoiIndices; _allPoisCompleted?; seleccionar siguiente POI
-    alt quedan POIs pendientes
-        TripProv->>TripProv: _calculateStreetRoute() async
-        TripProv-->>MapScreen: notifyListeners() (nueva ruta)
-    else todos los POIs completados
-        TripProv->>TripProv: finishRoute()
-        TripProv->>MissionUC: getRouteName(routeId)
-        TripProv->>MissionUC: saveBestRouteProgress(routeId, currentAttemptPoints, visitedPois, completedMissions, skippedPois)
-        MissionUC->>MissionRepo: saveBestRouteProgress(...)
-        MissionRepo-->>MissionUC: RouteProgressSaveResult(previousBest, savedBest)
-        alt Debe guardar resultado detallado (currentAttemptPoints >= savedBest)
-            TripProv->>MissionUC: saveRouteResult(RouteResultRecord(...))
-            MissionUC->>MissionRepo: saveRouteResult(...)
-            MissionRepo-->>MissionUC: ok
+    box rgb(240, 248, 255) Autenticación
+        U->>AW: Abrir App
+        Note over AW: verificar sesión (authStateChanges)
+        alt No autenticado
+            AW->>UI: Mostrar Login/Registro
+            U->>UI: Ingresar credenciales
+            UI-->>AW: Login exitoso
         end
-        MissionUC-->>TripProv: RouteCompletionSummary
-        TripProv-->>MapScreen: retorno summary
-        MapScreen->>Nav: pushReplacementNamed(AppRoutes.routeResult, RouteResultArgs(summary...))
-        Nav->>RouteResult: abrir `RouteResultScreen`
+        AW->>H: Navegar a HomeScreen
     end
+
+    box rgb(245, 245, 220) Selección de Destino
+        U->>H: Elegir Ciudad
+        H->>N: pushNamed(citySelection)
+        N->>CS: Abrir CitySelectionScreen
+        U->>CS: Seleccionar Ciudad
+        CS->>N: pushNamed(routeSelection, cityKeys)
+        N->>RS: Abrir RouteSelectionScreen
+        U->>RS: Seleccionar Ruta
+        RS->>N: pushNamed(mapNavigation, routeId)
+    end
+
+    box rgb(230, 230, 250) Inicialización del Mapa
+        N->>M: Abrir MapNavigationScreen
+        M->>T: Inicializar Provider
+        T->>UC: executeGetPointsForRoute(routeId)
+        UC->>R: Obtener puntos de ruta
+        R-->>UC: Lista POIs
+        UC-->>T: Puntos de Interés
+        Note over T: Iniciar GPS y calcular ruta
+        T-->>M: notifyListeners()
+    end
+
+    box rgb(240, 255, 240) Interacción en POI
+        Note over T: Detectar proximidad al POI
+        T-->>M: hasReachedDestination = true
+        M->>U: Mostrar ArrivalBottomSheet
+        U->>M: Elegir "Escanear Misión"
+        M->>N: pushNamed(missionQrScanner)
+        N->>S: Abrir MissionScannerScreen
+    end
+
+    box rgb(255, 250, 205) Resolución de Misión
+        S->>UC: executeScan(qrCode)
+        UC->>R: getPointByQr + getMission
+        R-->>UC: Datos de Misión
+        UC-->>S: MissionScanResult
+        S->>N: pushNamed(monumentInfo)
+        N->>Mon: Abrir MonumentInfoScreen
+        U->>Mon: Pulsar "Empezar misión"
+        Mon->>N: pushNamed(quiz)
+        N->>Q: Abrir QuizScreen
+        U->>Q: Responder preguntas
+        Q-->>Mon: pointCompleted
+        Mon-->>S: return pointCompleted
+        S-->>M: Volver al mapa
+    end
+
+    box rgb(255, 245, 238) Cierre y Guardado
+        M->>T: markCurrentPoiAsCompleted()
+        alt Quedan puntos pendientes
+            T->>T: Recalcular siguiente POI
+            T-->>M: Continuar ruta
+        else Ruta completada
+            T->>UC: saveBestRouteProgress()
+            UC->>R: Guardar progreso en Firestore
+            T->>UC: saveRouteResult()
+            UC->>R: Guardar récord final
+            T-->>Res: Navegar a RouteResultScreen
+        end
     end
 ```
 
