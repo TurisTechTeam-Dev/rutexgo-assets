@@ -3,91 +3,89 @@ sequenceDiagram
     autonumber
     title Flujo Completo: Autenticación, Selección y Misiones (RutexGo)
 
-    actor U as Usuario
-    participant AW as AuthWrapper
-    participant UI as Login/Register
-    participant H as HomeScreen
-    participant CS as CitySelection
-    participant RS as RouteSelection
-    participant N as Navigator
-    participant M as MapScreen
-    participant T as TripProvider
-    participant S as Scanner
-    participant UC as MissionUseCases
-    participant R as MissionRepository
-    participant Mon as MonumentInfo
-    participant Q as Quiz
-    participant Res as RouteResult
+    %% Declaración global de participantes para evitar errores de parseo
+    participant Usuario
+    participant AuthWrapper
+    participant AuthUI as Login/Register
+    participant Home as HomeScreen
+    participant CitySel as CitySelection
+    participant RouteSel as RouteSelection
+    participant Nav as Navigator
+    participant MapScreen
+    participant TripProv as TripProvider
+    participant Scanner as MissionScanner
+    participant MissionUC as UseCases
+    participant MissionRepo as Repository
+    participant Monument as MonumentInfo
+    participant Quiz
+    participant Result as RouteResult
 
     box rgb(240, 248, 255) Autenticación
-        U->>AW: Abrir App
-        Note over AW: verificar sesión (authStateChanges)
+        Usuario->>AuthWrapper: Abrir App
+        Note over AuthWrapper: verificar sesión
         alt No autenticado
-            AW->>UI: Mostrar Login/Registro
-            U->>UI: Ingresar credenciales
-            UI-->>AW: Login exitoso
+            AuthWrapper->>AuthUI: Mostrar Login
+            Usuario->>AuthUI: Credenciales
+            AuthUI-->>AuthWrapper: Éxito
         end
-        AW->>H: Navegar a HomeScreen
+        AuthWrapper->>Home: Ir a Home
     end
 
     box rgb(245, 245, 220) Selección de Destino
-        U->>H: Elegir Ciudad
-        H->>N: pushNamed(citySelection)
-        N->>CS: Abrir CitySelectionScreen
-        U->>CS: Seleccionar Ciudad
-        CS->>N: pushNamed(routeSelection, cityKeys)
-        N->>RS: Abrir RouteSelectionScreen
-        U->>RS: Seleccionar Ruta
-        RS->>N: pushNamed(mapNavigation, routeId)
+        Usuario->>Home: Elegir Ciudad
+        Home->>Nav: pushNamed(citySelection)
+        Nav->>CitySel: Abrir pantalla
+        Usuario->>CitySel: Elige Ciudad
+        CitySel->>Nav: pushNamed(routeSelection)
+        Nav->>RouteSel: Abrir pantalla
+        Usuario->>RouteSel: Elige Ruta
+        RouteSel->>Nav: pushNamed(mapNavigation)
     end
 
-    box rgb(230, 230, 250) Inicialización del Mapa
-        N->>M: Abrir MapNavigationScreen
-        M->>T: Inicializar Provider
-        T->>UC: executeGetPointsForRoute(routeId)
-        UC->>R: Obtener puntos de ruta
-        R-->>UC: Lista POIs
-        UC-->>T: Puntos de Interés
-        Note over T: Iniciar GPS y calcular ruta
-        T-->>M: notifyListeners()
+    box rgb(230, 230, 250) Mapa y GPS
+        Nav->>MapScreen: Abrir mapa
+        MapScreen->>TripProv: Init Provider
+        TripProv->>MissionUC: getPoints(routeId)
+        MissionUC->>MissionRepo: Fetch POIs
+        MissionRepo-->>MissionUC: Data
+        MissionUC-->>TripProv: POIs List
+        Note over TripProv: Iniciar GPS y cálculos
+        TripProv-->>MapScreen: notifyListeners()
     end
 
-    box rgb(240, 255, 240) Interacción en POI
-        Note over T: Detectar proximidad al POI
-        T-->>M: hasReachedDestination = true
-        M->>U: Mostrar ArrivalBottomSheet
-        U->>M: Elegir "Escanear Misión"
-        M->>N: pushNamed(missionQrScanner)
-        N->>S: Abrir MissionScannerScreen
+    box rgb(240, 255, 240) Llegada y Escaneo
+        Note over TripProv: Detectar proximidad
+        TripProv-->>MapScreen: reached = true
+        MapScreen->>Usuario: ArrivalBottomSheet
+        Usuario->>MapScreen: Elegir "Escanear"
+        MapScreen->>Nav: pushNamed(scanner)
+        Nav->>Scanner: Abrir Scanner
+        Scanner->>MissionUC: scan(qr)
+        MissionUC->>MissionRepo: getMissionData
+        MissionRepo-->>MissionUC: Mission Obj
+        MissionUC-->>Scanner: ScanResult
     end
 
-    box rgb(255, 250, 205) Resolución de Misión
-        S->>UC: executeScan(qrCode)
-        UC->>R: getPointByQr + getMission
-        R-->>UC: Datos de Misión
-        UC-->>S: MissionScanResult
-        S->>N: pushNamed(monumentInfo)
-        N->>Mon: Abrir MonumentInfoScreen
-        U->>Mon: Pulsar "Empezar misión"
-        Mon->>N: pushNamed(quiz)
-        N->>Q: Abrir QuizScreen
-        U->>Q: Responder preguntas
-        Q-->>Mon: pointCompleted
-        Mon-->>S: return pointCompleted
-        S-->>M: Volver al mapa
+    box rgb(255, 250, 205) Misión y Quiz
+        Scanner->>Nav: push(monumentInfo)
+        Nav->>Monument: Abrir pantalla
+        Usuario->>Monument: "Empezar misión"
+        Monument->>Nav: push(quiz)
+        Nav->>Quiz: Abrir Quiz
+        Usuario->>Quiz: Responder
+        Quiz-->>Monument: pointCompleted
+        Monument-->>Scanner: pop()
+        Scanner-->>MapScreen: Volver al mapa
     end
 
-    box rgb(255, 245, 238) Cierre y Guardado
-        M->>T: markCurrentPoiAsCompleted()
-        alt Quedan puntos pendientes
-            T->>T: Recalcular siguiente POI
-            T-->>M: Continuar ruta
-        else Ruta completada
-            T->>UC: saveBestRouteProgress()
-            UC->>R: Guardar progreso en Firestore
-            T->>UC: saveRouteResult()
-            UC->>R: Guardar récord final
-            T-->>Res: Navegar a RouteResultScreen
+    box rgb(255, 245, 238) Finalización
+        MapScreen->>TripProv: markCompleted()
+        alt Quedan puntos
+            TripProv->>TripProv: Siguiente POI
+        else Ruta fin
+            TripProv->>MissionUC: saveProgress()
+            MissionUC->>MissionRepo: Firestore Sync
+            TripProv-->>Result: Mostrar Resultados
         end
     end
 ```
