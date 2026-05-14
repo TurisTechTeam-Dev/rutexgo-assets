@@ -48,3 +48,68 @@ sequenceDiagram
     Usuario->>RouteSelectionScreen: Seleccionar ruta
     RouteSelectionScreen->>MapNavigationScreen: Abrir pantalla de navegación
 ```
+
+```mermaid
+sequenceDiagram
+    actor Usuario
+    participant MapNavigationScreen as Pantalla de navegación
+    participant TripSimulationProvider as Gestor de ruta
+    participant ArrivalBottomSheet as Aviso de llegada
+    participant MissionScannerScreen as Escáner QR
+    participant MissionUseCases as Casos de uso de misiones
+    participant MissionRepository as Repositorio de misiones
+    participant MonumentInfoScreen as Detalle del monumento
+    participant QuizScreen as Cuestionario
+    participant RouteResultScreen as Resultado de la ruta
+
+    TripSimulationProvider->>TripSimulationProvider: Inicializar GPS y calcular ruta
+    TripSimulationProvider->>MissionUseCases: executeGetPointsForRoute(routeId)
+    MissionUseCases->>MissionRepository: Obtener puntos de interés de la ruta
+    MissionRepository-->>MissionUseCases: Lista de puntos de interés
+    MissionUseCases-->>TripSimulationProvider: Puntos cargados
+
+    TripSimulationProvider->>TripSimulationProvider: Detectar proximidad al punto de interés
+    TripSimulationProvider-->>MapNavigationScreen: Indicar llegada al destino
+
+    MapNavigationScreen->>ArrivalBottomSheet: Mostrar opciones de acción
+    Usuario->>ArrivalBottomSheet: Elegir escanear misión
+
+    ArrivalBottomSheet->>MissionScannerScreen: Abrir escáner QR
+    MissionScannerScreen->>MissionUseCases: executeScan(qrCode)
+    MissionUseCases->>MissionRepository: getPointByQr(qrCode)
+    MissionRepository-->>MissionUseCases: Punto de interés
+
+    MissionUseCases->>MissionRepository: getMissionByPointId(point.id)
+    MissionRepository-->>MissionUseCases: Misión asociada
+    MissionUseCases-->>MissionScannerScreen: Resultado del escaneo
+
+    MissionScannerScreen->>MonumentInfoScreen: Mostrar información del monumento
+    MonumentInfoScreen->>QuizScreen: Iniciar cuestionario
+
+    Usuario->>QuizScreen: Responder preguntas
+    QuizScreen-->>MonumentInfoScreen: Resultado de la misión
+    MonumentInfoScreen-->>MissionScannerScreen: Confirmación de punto completado
+    MissionScannerScreen-->>MapNavigationScreen: Retornar a la navegación
+
+    MapNavigationScreen->>TripSimulationProvider: markCurrentPoiAsCompleted()
+
+    alt Existen puntos pendientes
+        TripSimulationProvider->>TripSimulationProvider: Recalcular siguiente punto de interés
+        TripSimulationProvider-->>MapNavigationScreen: Continuar navegación
+    else Ruta finalizada
+        TripSimulationProvider->>MissionUseCases: getRouteName(routeId)
+        MissionUseCases-->>TripSimulationProvider: Nombre de la ruta
+
+        TripSimulationProvider->>MissionUseCases: saveBestRouteProgress(...)
+        MissionUseCases->>MissionRepository: Persistir progreso de la ruta
+        MissionRepository-->>MissionUseCases: Confirmación de guardado
+
+        opt Guardado detallado del resultado
+            TripSimulationProvider->>MissionUseCases: saveRouteResult(RouteResultRecord)
+            MissionUseCases->>MissionRepository: Persistir resultado final
+            MissionRepository-->>MissionUseCases: Confirmación de guardado
+        end
+
+        TripSimulationProvider->>RouteResultScreen: Mostrar resultado final
+    end
+```
