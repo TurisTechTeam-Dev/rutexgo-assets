@@ -199,3 +199,47 @@ flowchart TD
     AV -- Sí --> M
     AV -- No --> AW[Fin del proceso]
 ```
+
+---
+
+**Diagrama de Casos de Uso**
+```mermaid
+usecaseDiagram
+direction LR
+
+actor Usuario
+actor Administrador
+actor SistemaFirebase as "Sistema (Firebase)"
+
+Usuario --> (Autenticarse)
+Usuario --> (Registrarse)
+Usuario --> (Recuperar contraseña)
+Usuario --> (Explorar ciudades)
+Usuario --> (Seleccionar ciudad)
+Usuario --> (Ver rutas disponibles)
+Usuario --> (Seleccionar ruta)
+Usuario --> (Iniciar navegación)
+Usuario --> (Escanear QR)
+Usuario --> (Ver detalle de monumento)
+Usuario --> (Realizar cuestionario)
+Usuario --> (Ver resultados de la ruta)
+Usuario --> (Ver/editar perfil)
+Usuario --> (Compartir resultado)
+
+Administrador --> (Acceder panel administrativo)
+Administrador --> (Gestionar rutas y puntos)
+Administrador --> (Subir/editar misiones)
+
+(Iniciar navegación) ..> (Escanear QR) : permite
+(Realizar cuestionario) ..> (Guardar progreso) : incluye
+
+(Guardar progreso) as GP
+Usuario --> GP
+SistemaFirebase --> GP
+Administrador --> (Gestionar resultados)
+
+(Autenticarse) ..> SistemaFirebase
+(Registrar) ..> SistemaFirebase
+(Guardar progreso) ..> SistemaFirebase
+(Gestionar rutas y puntos) ..> SistemaFirebase
+```
