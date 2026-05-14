@@ -221,22 +221,26 @@ graph TB
 ```
 ```mermaid
 graph LR
-    %% Actores en los extremos
-    Usuario((Usuario Explorador))
-    Admin((Administrador))
+    %% ESTILOS
+    classDef actor fill:#fff,stroke:#333,stroke-width:2px
+    classDef usecase fill:#f9f9f9,stroke:#333,stroke-width:1px
 
-    %% COLUMNA 1: APP MÓVIL
+    %% ACTORES
+    Usuario((Usuario Explorador)):::actor
+    Admin((Administrador)):::actor
+
+    %% --- COLUMNA IZQUIERDA: APP MÓVIL ---
     subgraph SistemaApp ["<< System >> Sistema App Móvil"]
         direction TB
         
         subgraph Autenticacion ["Autenticación"]
             direction TB
             A1(Login Email/Google)
-            A2(Registro de Nuevo Usuario)
-            A3(Recuperar Contraseña)
-            A4(Logout)
-            A5(Detección de Rol)
-            A1 -.->|include| A5
+            A2(Detección de Rol)
+            A3(Registro de Nuevo Usuario)
+            A4(Recuperar Contraseña)
+            A5(Logout)
+            A1 -.->|include| A2
         end
 
         subgraph HomePerfil ["Home & Perfil"]
@@ -265,9 +269,12 @@ graph LR
             M7(Ver Info Monumento)
             M3 -.->|extend| M7
         end
+        
+        %% Uniones de flujo internas de la App
+        R3 --> M1
     end
 
-    %% COLUMNA 2: PANEL ADMIN
+    %% --- COLUMNA DERECHA: PANEL ADMIN ---
     subgraph SistemaAdmin ["<< System >> Panel Admin Web"]
         direction TB
         subgraph PanelSolo ["Panel Admin - Solo Web"]
@@ -279,24 +286,27 @@ graph LR
         end
     end
 
-    %% COLUMNA 3: ACCESIBILIDAD
+    %% --- BLOQUE ACCESIBILIDAD ---
     subgraph SistemaAcc ["<< System >> Accesibilidad"]
         Acc(Transversal: AudioGuideWidget)
     end
 
-    %% CONEXIONES DE ACTORES (Limpias para no deformar)
-    Usuario --- Autenticacion
-    Usuario --- HomePerfil
-    Usuario --- Rutas
+    %% --- CONEXIONES DE ACTORES ---
+    Usuario --- A1
+    Usuario --- A3
+    Usuario --- H1
+    Usuario --- R1
     
-    PanelSolo --- Admin
-    
-    %% Relación de uso transversal
+    P1 --- Admin
+    P2 --- Admin
+    P3 --- Admin
+    P4 --- Admin
+
+    %% Relación de uso transversal (Líneas punteadas largas)
     Usuario -.->|use| Acc
     Admin -.->|use| Acc
 
-    %% TRUCO MAESTRO DE ALINEACIÓN
-    %% Esto obliga a los 3 sistemas a ponerse uno al lado del otro
+    %% ORDENAMIENTO DE COLUMNAS
     SistemaApp ~~~ SistemaAdmin
     SistemaAdmin ~~~ SistemaAcc
 ```
