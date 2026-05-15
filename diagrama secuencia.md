@@ -123,85 +123,110 @@ sequenceDiagram
 
 ***Diagrama de Flujo***
 ```mermaid
-flowchart LR
-    subgraph AUTH["1. Autenticación"]
+flowchart TD
+    A[Inicio: Usuario abre la app] --> B{¿Sesión activa?}
+
+    subgraph F1["Fase 1: Autenticación"]
         direction TB
-        A1[Inicio] --> A2{¿Sesión activa?}
-        A2 -- Sí --> A3[Pantalla principal]
-        A2 -- No --> A4[Mostrar autenticación]
-        A4 --> A5{¿Acción?}
-        A5 -- Login --> A6[Validar credenciales]
-        A5 -- Registro --> A7[Registrar usuario]
-        A6 --> A8{¿Correcto?}
-        A7 --> A9{¿Correcto?}
-        A8 -- Sí --> A3
-        A8 -- No --> A4
-        A9 -- Sí --> A3
-        A9 -- No --> A4
+        C[Mostrar autenticación]
+        D{¿Acción?}
+        E[Validar credenciales]
+        F[Registrar usuario]
+        G{¿Autenticación correcta?}
+        H{¿Registro correcto?}
+        I[Mostrar error]
+        J[Acceder a pantalla principal]
+
+        C --> D
+        D -- Iniciar sesión --> E --> G
+        D -- Registrarse --> F --> H
+        G -- No --> I --> C
+        H -- No --> I
+        G -- Sí --> J
+        H -- Sí --> J
     end
 
-    subgraph SEL["2. Selección"]
+    B -- No --> C
+    B -- Sí --> J
+
+    subgraph F2["Fase 2: Selección de ciudad y ruta"]
         direction TB
-        B1[Pantalla principal] --> B2[Mostrar ciudades]
-        B2 --> B3[Seleccionar ciudad]
-        B3 --> B4[Obtener rutas]
-        B4 --> B5[Mostrar rutas]
-        B5 --> B6[Seleccionar ruta]
-        B6 --> B7[Ir a navegación]
+        K[Mostrar opciones principales]
+        L[Abrir selector de ciudades]
+        M[Obtener ciudades disponibles]
+        N[Usuario selecciona ciudad]
+        O[Obtener rutas de la ciudad]
+        P[Mostrar rutas disponibles]
+        Q[Usuario selecciona ruta]
+        R[Abrir pantalla de navegación]
+
+        K --> L --> M --> N --> O --> P --> Q --> R
     end
 
-    subgraph MISSION["3. Navegación y misión"]
+    J --> K
+
+    subgraph F3["Fase 3: Navegación y misión"]
         direction TB
-        C1[Ir a navegación] --> C2[Inicializar gestor de ruta]
-        C2 --> C3[Obtener POIs]
-        C3 --> C4[Iniciar GPS]
-        C4 --> C5{¿Llegada a POI?}
-        C5 -- No --> C4
-        C5 -- Sí --> C6[Mostrar aviso de llegada]
-        C6 --> C7{¿Acción?}
-        C7 -- Escanear QR --> C8[Abrir escáner]
-        C7 -- Omitir --> C9[Marcar punto completado]
-        C8 --> C10[Leer QR]
-        C10 --> C11[Validar misión]
-        C11 --> C12{¿QR válido?}
-        C12 -- No --> C8
-        C12 -- Sí --> C13[Mostrar detalle monumento]
-        C13 --> C14[Iniciar quiz]
-        C14 --> C15[Responder preguntas]
-        C15 --> C16[Calcular resultado]
-        C16 --> C17[Registrar punto completado]
-        C9 --> C18[Actualizar progreso]
-        C17 --> C18
+        S[Inicializar gestor de ruta]
+        T[Obtener POIs de la ruta]
+        U[Iniciar GPS y cálculo de trayecto]
+        V{¿Se alcanza un POI?}
+        W[Mostrar aviso de llegada]
+        X{¿Acción en el punto?}
+        Y[Abrir escáner QR]
+        Z[Marcar punto omitido/completado]
+        AA[Leer QR]
+        AB[Validar punto y misión]
+        AC{¿QR válido?}
+        AD[Mostrar detalle del monumento]
+        AE[Iniciar cuestionario]
+        AF[Responder preguntas]
+        AG[Calcular resultado]
+        AH[Registrar punto completado]
+        AI[Actualizar progreso]
+
+        S --> T --> U --> V
+        V -- No --> U
+        V -- Sí --> W --> X
+        X -- Escanear QR --> Y --> AA --> AB --> AC
+        X -- Omitir punto --> Z --> AI
+        AC -- No --> Y
+        AC -- Sí --> AD --> AE --> AF --> AG --> AH --> AI
     end
 
-    subgraph ENDING["4. Cierre"]
+    R --> S
+
+    subgraph F4["Fase 4: Cierre de ruta y resultados"]
         direction TB
-        D1[Actualizar progreso] --> D2{¿Quedan puntos?}
-        D2 -- Sí --> D3[Recalcular siguiente destino]
-        D3 --> D4[Volver a navegación]
-        D2 -- No --> D5[Finalizar ruta]
-        D5 --> D6[Calcular puntuación final]
-        D6 --> D7[Guardar mejor progreso]
-        D7 --> D8{¿Guardar detalle?}
-        D8 -- Sí --> D9[Guardar resultado detallado]
-        D8 -- No --> D10[Continuar]
-        D9 --> D11[Mostrar resultados finales]
-        D10 --> D11
-        D11 --> D12{¿Nueva ruta?}
-        D12 -- Sí --> B1
-        D12 -- No --> D13[Fin]
+        AJ{¿Quedan puntos pendientes?}
+        AK[Recalcular siguiente destino]
+        AL[Finalizar ruta]
+        AM[Calcular puntuación final]
+        AN[Guardar mejor progreso]
+        AO{¿Guardar resultado detallado?}
+        AP[Guardar resultado detallado]
+        AQ[Mostrar resultados finales]
+        AR{¿Iniciar nueva ruta?}
+        AS[Volver a selector de ciudades]
+        AT[Fin]
+
+        AJ -- Sí --> AK
+        AK --> U
+        AJ -- No --> AL --> AM --> AN --> AO
+        AO -- Sí --> AP --> AQ
+        AO -- No --> AQ
+        AQ --> AR
+        AR -- Sí --> AS
+        AR -- No --> AT
     end
 
-    %% Conexiones entre bloques
-    A3 --> B1
-    B7 --> C1
-    C18 --> D1
+    AI --> AJ
+    AS --> L
 
-    %% Estilos
-    style AUTH fill:#E8F5E9,stroke:#4CAF50,stroke-width:2px
-    style SEL fill:#E3F2FD,stroke:#2196F3,stroke-width:2px
-    style MISSION fill:#F3E5F5,stroke:#9C27B0,stroke-width:2px
-    style ENDING fill:#FFF3E0,stroke:#FF9800,stroke-width:2px
+    style F1 fill:#E8F5E9,stroke:#4CAF50,stroke-width:2px
+    style F2 fill:#E3F2FD,stroke:#2196F3,stroke-width:2px
+    style F3 fill:#F3E5F5,stroke:#9C27B0,stroke-width:2px
+    style F4 fill:#FFF3E0,stroke:#FF9800,stroke-width:2px
 ```
 
 ---
