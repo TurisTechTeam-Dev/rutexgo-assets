@@ -205,54 +205,62 @@ flowchart TD
 **Diagrama de Casos de Uso**
 ```mermaid
 flowchart LR
+    %% Nodo Izquierda
     U["👤 USUARIO"]
-    A["👨‍💼 ADMINISTRADOR"]
-    F["☁️ FIREBASE"]
 
-    subgraph APP["RUTEX-GO - CASOS DE USO"]
+    %% BLOQUE CENTRAL: App
+    subgraph APP ["RUTEX-GO - CASOS DE USO"]
         direction TB
         
-        subgraph AUTH["Autenticación"]
-            AUTH1["Login/Registro"]
-            AUTH2["Recuperar contraseña"]
-        end
-
-        subgraph HOME["Pantalla Principal"]
-            HOME1["Ver home"]
-        end
-
-        subgraph EXP["Exploración"]
-            EXP1["Seleccionar ciudad"]
-            EXP2["Seleccionar ruta"]
-        end
-
-        subgraph PROF["Perfil y Diario"]
+        subgraph PROF ["Perfil y Diario"]
             PROF1["Ver perfil"]
             PROF2["Diario explorador"]
         end
 
-        subgraph NAV["Navegación y Misiones"]
+        subgraph EXP ["Exploración"]
+            EXP1["Seleccionar ciudad"]
+            EXP2["Seleccionar ruta"]
+        end
+
+        subgraph HOME ["Pantalla Principal"]
+            HOME1["Ver home"]
+        end
+
+        subgraph NAV ["Navegación y Misiones"]
             NAV1["Navegar"]
             NAV2["Escanear QR"]
             NAV3["Resolver misión"]
             NAV4["Guardar progreso"]
             NAV5["Ver resultados"]
         end
-        
-        subgraph ACC["Accesibilidad"]
+
+        subgraph AUTH ["Autenticación"]
+            AUTH1["Login/Registro"]
+            AUTH2["Recuperar contraseña"]
+        end
+
+        subgraph ACC ["Accesibilidad"]
             ACC1["AudioGuide"]
         end
     end
 
-    subgraph ADM["Administración"]
+    %% BLOQUE DERECHA: Gestión y Datos
+    subgraph GESTION ["Gestión y Datos"]
         direction TB
-        ADM1["Panel admin"]
-        ADM2["CRUD ciudades"]
-        ADM3["CRUD rutas"]
-        ADM4["CRUD misiones"]
+        A["👨‍💼 ADMINISTRADOR"]
+        F["☁️ FIREBASE"]
+
+        subgraph ADM ["Administración"]
+            ADM1["Panel admin"]
+            ADM2["CRUD ciudades"]
+            ADM3["CRUD rutas"]
+            ADM4["CRUD misiones"]
+        end
     end
 
-    %% Usuario al App
+    %% --- RELACIONES PARA FORZAR LATERALIDAD ---
+
+    %% Usuario a Centro
     U --> AUTH1
     U --> HOME1
     U --> EXP1
@@ -262,28 +270,30 @@ flowchart LR
     U --> PROF2
     U -.-> ACC1
 
-    %% Admin
+    %% Centro a Derecha (Firebase)
+    AUTH1 -.-> F
+    NAV4 -.-> F
+    
+    %% Administrador (Derecha)
     A --> ADM1
     A --> ADM2
     A --> ADM3
     A --> ADM4
     A -.-> ACC1
 
-    %% Firebase
-    AUTH1 -.-> F
-    NAV4 -.-> F
+    %% Administración a Firebase (Derecha)
     ADM2 -.-> F
     ADM3 -.-> F
     ADM4 -.-> F
 
-    %% Flujos
+    %% Flujos lógicos internos
     EXP1 -.-> EXP2
     NAV1 -.-> NAV2
     NAV2 -.-> NAV3
     NAV3 -.-> NAV4
     NAV4 -.-> NAV5
 
-    %% Estilos
+    %% --- ESTILOS ---
     style U fill:#4CAF50,stroke:#2E7D32,stroke-width:2px,color:#fff
     style A fill:#FF9800,stroke:#E65100,stroke-width:2px,color:#fff
     style F fill:#2196F3,stroke:#1565C0,stroke-width:2px,color:#fff
@@ -296,4 +306,5 @@ flowchart LR
     style ACC fill:#F5F5F5,stroke:#757575,stroke-width:1px
     style ADM fill:#FFEBEE,stroke:#F44336,stroke-width:1px
     style APP fill:none,stroke:#999,stroke-width:2px,stroke-dasharray:5 5
+    style GESTION fill:none,stroke:transparent
 ```
