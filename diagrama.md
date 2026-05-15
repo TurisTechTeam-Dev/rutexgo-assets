@@ -210,82 +210,50 @@ erDiagram
 ```
 
 ```mermaid
-flowchart LR
-    %% Actores con forma de círculo
-    User((Usuario Explorador))
-    Admin((Administrador))
+useCaseDiagram
+    actor "Usuario No Registrado" as UnregUser
+    actor "Usuario Explorador" as User
+    actor "Administrador" as Admin
 
-    subgraph App [Sistema App Móvil]
-        direction TB
+    package "Sistema RuteX-Go" {
+        %% Casos de Uso - Autenticación
+        usecase "Iniciar Sesión" as UC_Login
+        usecase "Registrarse" as UC_Register
         
-        subgraph Auth [Autenticación]
-            direction LR
-            L1([Login General]) --- L2([Login Email/Google])
-            R1([Registro de Nuevo Usuario])
-            C1([Recuperar Contraseña])
-            Out([Logout])
-            Det([Detección de Rol y Redirección])
-            
-            L2 -.->|include| Det
-            R1 -.->|include| Det
-            Out -.->|include| Det
-        end
+        %% Casos de Uso - Explorador
+        usecase "Gestionar Perfil" as UC_Profile
+        usecase "Seleccionar Ciudad" as UC_City
+        usecase "Seleccionar Ruta" as UC_Route
+        usecase "Seguir Navegación GPS" as UC_Nav
+        usecase "Escanear QR de Monumento" as UC_QR
+        usecase "Completar Quiz de Misión" as UC_Quiz
+        usecase "Consultar Diario del Explorador" as UC_Diary
+        
+        %% Casos de Uso - Administrador
+        usecase "Gestionar Ciudades" as UC_AdmCity
+        usecase "Gestionar Rutas" as UC_AdmRoute
+        usecase "Gestionar Puntos de Interés" as UC_AdmPOI
+        usecase "Gestionar Misiones" as UC_AdmMissions
+    }
 
-        subgraph Perfil [Home & Perfil]
-            H1([Ver Home / Cache Offline])
-            E1([Editar Username])
-            A1([Cambiar Avatar - Firebase])
-            G1([Gestionar Perfil])
-            
-            H1 --- G1
-            E1 --- G1
-            A1 --- G1
-        end
+    %% Relaciones Usuario No Registrado
+    UnregUser --> UC_Login
+    UnregUser --> UC_Register
 
-        subgraph Rutas [Rutas]
-            S1([Selección de Ciudad])
-            V1([Ver Disponibilidad])
-            I1([Iniciar Ruta])
-            V1 -.->|extend| I1
-        end
+    %% Relaciones Usuario Explorador
+    User --> UC_Login
+    User --> UC_Profile
+    User --> UC_City
+    User --> UC_Route
+    User --> UC_Nav
+    User --> UC_QR
+    User --> UC_Quiz
+    User --> UC_Diary
 
-        subgraph Mision [Misión - Núcleo Gamificado]
-            M1([Navegar con Mapa])
-            M2([Detectar Llegada POI])
-            M3([Escanear QR y Validar])
-            M4([Responder Quiz])
-            M5([Saltar Punto Opcional])
-            M6([Finalizar Ruta y Guardar])
-            Info([Ver Info del Monumento])
-            
-            M3 -.->|extend| Info
-            M4 -.->|include| Info
-        end
-    end
-
-    subgraph Web [Panel Admin Web]
-        W1([CRUD Ciudades])
-        W2([CRUD Rutas])
-        W3([CRUD POIs y Misiones])
-        W4([Mapa Interactivo de POIs])
-    end
-
-    %% Conexiones principales
-    User --- L1
-    User --- R1
-    User --- S1
-    User --- H1
-    
-    Admin --- Web
-    
-    %% Relaciones entre bloques
-    G1 -.-> Mision
-    I1 --> M1
-    M6 -.->|notifies| Web
-    M6 -.->|populates| App
-    Web -.->|configures| App
-
-    %% Estilos para que se parezca más
-    classDef usecase fill:#f9f9ff,stroke:#333,stroke-width:1px,rx:20,ry:20
-    class L1,L2,R1,C1,Out,Det,H1,E1,A1,G1,S1,V1,I1,M1,M2,M3,M4,M5,M6,Info,W1,W2,W3,W4 usecase
+    %% Relaciones Administrador
+    Admin --> UC_Login
+    Admin --> UC_AdmCity
+    Admin --> UC_AdmRoute
+    Admin --> UC_AdmPOI
+    Admin --> UC_AdmMissions
 ```
