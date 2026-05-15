@@ -234,15 +234,12 @@ flowchart TD
 **Diagrama de Casos de Uso**
 ```mermaid
 flowchart LR
-    %% ========== COLUMNA 1 ==========
     U["👤 USUARIO"]
 
-    %% ========== COLUMNA 2 ==========
-    subgraph APP["RUTEX-GO - APP (Divide y vencerás)"]
+    subgraph APP["RUTEX-GO - APP"]
         direction TB
 
         subgraph F1["Fase 1 · Acceso"]
-            direction LR
             A1["Abrir app"]
             A2["Login/Registro"]
             A3["Recuperar contraseña"]
@@ -252,7 +249,6 @@ flowchart LR
         end
 
         subgraph F2["Fase 2 · Exploración"]
-            direction LR
             B1["Seleccionar ciudad"]
             B2["Ver rutas"]
             B3["Seleccionar ruta"]
@@ -260,7 +256,6 @@ flowchart LR
         end
 
         subgraph F3["Fase 3 · Misión"]
-            direction LR
             C1["Navegar"]
             C2["Escanear QR"]
             C3["Resolver misión"]
@@ -270,7 +265,6 @@ flowchart LR
         end
 
         subgraph F4["Fase 4 · Perfil y soporte"]
-            direction LR
             D1["Ver perfil"]
             D2["Diario explorador"]
             D3["AudioGuide"]
@@ -278,53 +272,32 @@ flowchart LR
         end
     end
 
-    %% ========== COLUMNA 3 ==========
-    subgraph GESTION["Gestión y Sistemas"]
+    subgraph GESTION["Gestión"]
         direction TB
         A["👨‍💼 ADMINISTRADOR"]
-
-        subgraph ADM["Administración"]
-            direction TB
-            E1["Panel admin"]
-            E2["CRUD ciudades"]
-            E3["CRUD rutas"]
-            E4["CRUD misiones"]
-        end
-
-        F["☁️ FIREBASE"]
+        E1["Panel admin"]
+        E2["CRUD contenidos"]
+        A --> E1 --> E2
     end
 
-    %% ---------- Conexiones externas ----------
+    F["☁️ FIREBASE"]
+
+    %% Usuario
     U --> F1
     U --> F2
     U --> F3
     U --> F4
 
+    %% Flujo principal
     F2 --> F3
     F3 --> F4
 
-    A --> E1
-    A --> E2
-    A --> E3
-    A --> E4
-
+    %% Integración mínima con Firebase (solo puntos críticos)
     A2 -.-> F
     C4 -.-> F
     E2 -.-> F
-    E3 -.-> F
-    E4 -.-> F
 
-    %% ---------- Estilos ----------
     style U fill:#4CAF50,stroke:#2E7D32,stroke-width:2px,color:#fff
     style A fill:#FF9800,stroke:#E65100,stroke-width:2px,color:#fff
     style F fill:#2196F3,stroke:#1565C0,stroke-width:2px,color:#fff
-
-    style APP fill:none,stroke:#999,stroke-width:2px,stroke-dasharray:5 5
-    style GESTION fill:none,stroke:#999,stroke-width:2px,stroke-dasharray:5 5
-
-    style F1 fill:#E8F5E9,stroke:#4CAF50,stroke-width:1px
-    style F2 fill:#E3F2FD,stroke:#2196F3,stroke-width:1px
-    style F3 fill:#F3E5F5,stroke:#9C27B0,stroke-width:1px
-    style F4 fill:#FFF9C4,stroke:#FBC02D,stroke-width:1px
-    style ADM fill:#FFEBEE,stroke:#F44336,stroke-width:1px
 ```
