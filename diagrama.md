@@ -212,155 +212,96 @@ erDiagram
 ```mermaid
 graph LR
     %% Actores
-    U1((Turista))
-    U2((Administrador))
+    Usuario((Usuario Explorador))
+    Admin((Administrador))
 
-    %% Sistema Central
-    subgraph "Sistema RuteX Go"
-        App[Aplicación Móvil<br/>Flutter]
-    end
-
-    %% Servicios Externos
-    subgraph "Servicios Externos (Firebase & APIs)"
-        Auth[Firebase Auth<br/>Email / Google]
-        Firestore[(Cloud Firestore<br/>Base de Datos NoSQL)]
-        Storage[Cloud Storage<br/>Multimedia / Fotos]
-        Maps[APIs de Mapas<br/>Google Maps / OSM]
-    end
-
-    %% Flujo de interacciones del Turista
-    U1 -- "Interacción UI" --> App
-    App -- "Validación Acceso" --> Auth
-    App -- "Consulta Rutas / Quizzes" --> Firestore
-    App -- "Carga Mapas Turísticos" --> Maps
-
-    %% Flujo de interacciones del Admin
-    U2 -- "Gestión de Contenido" --> App
-    App -- "CRUD Ciudades / Rutas / POIs" --> Firestore
-    App -- "Subida de Imágenes" --> Storage
-    App -- "Localización de Puntos" --> Maps
-```
-
-```mermaid
-graph TB
-    %% Actores
-    User((Turista / Admin))
-
-    %% Contenedor Aplicación Móvil
-    subgraph "Dispositivo Móvil (App Flutter)"
-        UI[Capa de Interfaz<br/>Widgets / UI UX]
-        Logic[Lógica de Negocio<br/>Providers / Casos de Uso]
-        Data[Capa de Datos<br/>Repositorios / SDK Firebase]
-    end
-
-    %% Contenedor Backend
-    subgraph "Servicios Firebase (BaaS)"
-        Auth[Firebase Auth<br/>Autenticación]
-        Firestore[(Cloud Firestore<br/>Base de Datos NoSQL)]
-        Storage[Cloud Storage<br/>Repositorio Imágenes]
-    end
-
-    %% Servicios Externos
-    Maps[APIs de Mapas<br/>Google Maps / OSM]
-
-    %% Flujos de comunicación
-    User -- "Usa la interfaz" --> UI
-    UI -- "Llama a" --> Logic
-    Logic -- "Solicita datos a" --> Data
-
-    Data -- "Protocolo HTTPS" --> Auth
-    Data -- "Sincronización RealTime" --> Firestore
-    Data -- "Carga de archivos" --> Storage
-    UI -- "Visualiza mapas" --> Maps
-```
-```mermaid
-graph LR
-    %% ESTILOS
-    classDef actor fill:#fff,stroke:#333,stroke-width:2px
-    classDef usecase fill:#f9f9f9,stroke:#333,stroke-width:1px
-
-    %% ACTORES
-    Usuario((Usuario Explorador)):::actor
-    Admin((Administrador)):::actor
-
-    %% --- COLUMNA IZQUIERDA: APP MÓVIL ---
-    subgraph SistemaApp ["<< System >> Sistema App Móvil"]
-        direction TB
+    %% Sistema App Móvil
+    subgraph SistemaApp [Sistema App Móvil]
         
-        subgraph Autenticacion ["Autenticación"]
-            direction TB
-            A1(Login Email/Google)
-            A2(Detección de Rol)
-            A3(Registro de Nuevo Usuario)
-            A4(Recuperar Contraseña)
-            A5(Logout)
-            A1 -.->|include| A2
+        subgraph Autenticacion [Autenticación]
+            L_Gen(Login General)
+            L_EG(Login Email/Google)
+            Reg(Registro de Nuevo Usuario)
+            Rec(Recuperar Contraseña)
+            Logo(Logout)
+            Det(Detección de Rol y Redirección)
+            
+            L_EG -.->|include| Det
+            Reg -.->|include| Det
+            Logo -.->|include| Det
+            L_Gen --- L_EG
         end
 
-        subgraph HomePerfil ["Home & Perfil"]
-            direction TB
-            H1(Ver Home)
-            H2(Editar Username)
-            H3(Cambiar Avatar)
+        subgraph HomePerfil [Home & Perfil]
+            V_Home(Ver Home / Cache Offline)
+            E_User(Editar Username)
+            C_Ava(Cambiar Avatar - Firebase)
+            G_Per(Gestionar Perfil)
+            
+            V_Home --- G_Per
+            E_User --- G_Per
+            C_Ava --- G_Per
         end
 
-        subgraph Rutas ["Rutas"]
-            direction TB
-            R1(Selección de Ciudad)
-            R2(Ver Disponibilidad)
-            R3(Iniciar Ruta)
-            R2 --> R3
+        subgraph Rutas [Rutas]
+            Sel(Selección de Ciudad y Filtrado)
+            Disp(Ver Disponibilidad)
+            Ini(Iniciar Ruta)
+            
+            Disp -.->|extend| Ini
         end
 
-        subgraph Mision ["Misión: Núcleo Gamificado"]
-            direction TB
-            M1(Navegar con Mapa)
-            M2(Detectar Llegada al POI)
-            M3(Escanear QR y Validar)
-            M4(Responder Quiz)
-            M5(Saltar Punto Opcional)
-            M6(Finalizar Ruta)
-            M7(Ver Info Monumento)
-            M3 -.->|extend| M7
+        subgraph Mision [Misión - Flujo Gamificado]
+            Nav(Navegar con Mapa)
+            Lle(Detectar Llegada POI)
+            QR(Escanear QR y Validar)
+            Quiz(Responder Quiz)
+            Salt(Saltar Punto Opcional)
+            Fin(Finalizar Ruta y Guardar)
+            Info(Ver Info del Monumento)
+            
+            QR -.->|extend| Info
+            Quiz -.->|include| Info
         end
-        
-        %% Uniones de flujo internas de la App
-        R3 --> M1
+
+        subgraph Diario [Diario del Explorador]
+            Vis(Visualizar Rutas - Libro)
+            Fotos(Añadir Fotos Personales)
+            Exp(Exportar PDF)
+        end
     end
 
-    %% --- COLUMNA DERECHA: PANEL ADMIN ---
-    subgraph SistemaAdmin ["<< System >> Panel Admin Web"]
-        direction TB
-        subgraph PanelSolo ["Panel Admin - Solo Web"]
-            direction TB
-            P1(CRUD Ciudades)
-            P2(CRUD Rutas)
-            P3(CRUD POIs y Misiones)
-            P4(Mapa Interactivo de POIs)
-        end
+    %% Panel Admin Web
+    subgraph PanelWeb [Panel Admin Web]
+        C_Ciu(CRUD Ciudades)
+        C_Rut(CRUD Rutas)
+        C_POI(CRUD POIs y Misiones)
+        Mapa(Mapa Interactivo de POIs)
     end
 
-    %% --- BLOQUE ACCESIBILIDAD ---
-    subgraph SistemaAcc ["<< System >> Accesibilidad"]
-        Acc(Transversal: AudioGuideWidget)
+    %% Accesibilidad
+    subgraph Accesibilidad [Accesibilidad]
+        Audio(Transversal: AudioGuideWidget)
     end
 
-    %% --- CONEXIONES DE ACTORES ---
-    Usuario --- A1
-    Usuario --- A3
-    Usuario --- H1
-    Usuario --- R1
-    
-    P1 --- Admin
-    P2 --- Admin
-    P3 --- Admin
-    P4 --- Admin
+    %% Relaciones de Actores
+    Usuario --- L_EG
+    Usuario --- Reg
+    Usuario --- Rec
+    Usuario --- V_Home
+    Usuario --- Sel
+    Usuario --- Vis
+    Usuario -.->|use| Audio
 
-    %% Relación de uso transversal (Líneas punteadas largas)
-    Usuario -.->|use| Acc
-    Admin -.->|use| Acc
+    Admin --- PanelWeb
+    Admin -.->|use| Audio
 
-    %% ORDENAMIENTO DE COLUMNAS
-    SistemaApp ~~~ SistemaAdmin
-    SistemaAdmin ~~~ SistemaAcc
+    %% Relaciones entre Sistemas
+    G_Per -.-> Nav
+    G_Per -.-> Lle
+    G_Per -.-> QR
+    Ini --> Nav
+    Fin -.->|notifies| PanelWeb
+    Fin -.->|populates| Diario
+    PanelWeb -.->|configures| SistemaApp
 ```
