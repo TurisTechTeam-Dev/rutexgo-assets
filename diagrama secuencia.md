@@ -205,10 +205,10 @@ flowchart TD
 **Diagrama de Casos de Uso**
 ```mermaid
 flowchart LR
-    %% Nodo Izquierda
+    %% NODOS PRINCIPALES
     U["👤 USUARIO"]
 
-    %% BLOQUE CENTRAL: App
+    %% COLUMNA CENTRAL: SISTEMA
     subgraph APP ["RUTEX-GO - CASOS DE USO"]
         direction TB
         
@@ -244,7 +244,7 @@ flowchart LR
         end
     end
 
-    %% BLOQUE DERECHA: Gestión y Datos
+    %% COLUMNA DERECHA: GESTIÓN Y BACKEND
     subgraph GESTION ["Gestión y Datos"]
         direction TB
         A["👨‍💼 ADMINISTRADOR"]
@@ -258,9 +258,9 @@ flowchart LR
         end
     end
 
-    %% --- RELACIONES PARA FORZAR LATERALIDAD ---
+    %% --- RELACIONES ---
 
-    %% Usuario a Centro
+    %% Usuario interactúa con la App (Izquierda a Centro)
     U --> AUTH1
     U --> HOME1
     U --> EXP1
@@ -270,30 +270,28 @@ flowchart LR
     U --> PROF2
     U -.-> ACC1
 
-    %% Centro a Derecha (Firebase)
-    AUTH1 -.-> F
-    NAV4 -.-> F
-    
-    %% Administrador (Derecha)
+    %% Administrador interactúa con su Panel (Derecha)
     A --> ADM1
     A --> ADM2
     A --> ADM3
     A --> ADM4
     A -.-> ACC1
 
-    %% Administración a Firebase (Derecha)
+    %% Conexiones a Firebase (Desde App y desde Admin)
+    AUTH1 -.-> F
+    NAV4 -.-> F
     ADM2 -.-> F
     ADM3 -.-> F
     ADM4 -.-> F
 
-    %% Flujos lógicos internos
+    %% Flujos lógicos (flechas punteadas)
     EXP1 -.-> EXP2
     NAV1 -.-> NAV2
     NAV2 -.-> NAV3
     NAV3 -.-> NAV4
     NAV4 -.-> NAV5
 
-    %% --- ESTILOS ---
+    %% --- ESTILOS (Basados en image_153906.png) ---
     style U fill:#4CAF50,stroke:#2E7D32,stroke-width:2px,color:#fff
     style A fill:#FF9800,stroke:#E65100,stroke-width:2px,color:#fff
     style F fill:#2196F3,stroke:#1565C0,stroke-width:2px,color:#fff
