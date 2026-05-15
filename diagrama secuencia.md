@@ -205,31 +205,36 @@ flowchart TD
 **Diagrama de Casos de Uso**
 ```mermaid
 flowchart LR
-    %% Nodo Izquierda
+    %% Columna 1: Actor Principal
     U["👤 USUARIO"]
 
-    %% COLUMNA CENTRAL: Aplicación
+    %% Columna 2: Módulos de la APP (apilados)
     subgraph APP ["RUTEX-GO - CASOS DE USO"]
         direction TB
         
-        %% Cada módulo ahora tiene direction TB para que sus hijos se apilen
-        subgraph PROF ["Perfil y Diario"]
-            direction TB
-            PROF1["Ver perfil"]
-            PROF2["Diario explorador"]
+        subgraph ACC ["Accesibilidad"]
+            ACC1["AudioGuide"]
         end
 
-        subgraph EXP ["Exploración"]
-            direction TB
-            EXP1["Seleccionar ciudad"]
-            EXP2["Seleccionar ruta"]
+        subgraph AUTH ["Autenticación"]
+            AUTH1["Login/Registro"]
+            AUTH2["Recuperar contraseña"]
         end
 
         subgraph HOME ["Pantalla Principal"]
             HOME1["Ver home"]
         end
 
-        %% Forzamos que la navegación sea vertical (uno bajo otro)
+        subgraph EXP ["Exploración"]
+            EXP1["Seleccionar ciudad"]
+            EXP2["Seleccionar ruta"]
+        end
+
+        subgraph PROF ["Perfil y Diario"]
+            PROF1["Ver perfil"]
+            PROF2["Diario explorador"]
+        end
+
         subgraph NAV ["Navegación y Misiones"]
             direction TB
             NAV1["Navegar"]
@@ -238,20 +243,9 @@ flowchart LR
             NAV4["Guardar progreso"]
             NAV5["Ver resultados"]
         end
-
-        subgraph AUTH ["Autenticación"]
-            direction TB
-            AUTH1["Login/Registro"]
-            AUTH2["Recuperar contraseña"]
-        end
-
-        subgraph ACC ["Accesibilidad"]
-            ACC1["AudioGuide"]
-        end
     end
 
-    %% COLUMNA DERECHA: Administración y Datos
-    %% Al estar fuera de APP y conectado con flechas LR, se moverá a la derecha
+    %% Columna 3: Gestión y Datos (Forzada a la derecha)
     subgraph GESTION ["Gestión y Sistemas"]
         direction TB
         
@@ -268,32 +262,30 @@ flowchart LR
         F["☁️ FIREBASE"]
     end
 
-    %% --- RELACIONES PARA CONTROLAR EL LAYOUT ---
-    
-    %% Usuario conecta a la izquierda de los bloques
-    U --> PROF1
-    U --> EXP1
-    U --> HOME1
-    U --> NAV1
+    %% --- CONEXIONES ---
     U --> AUTH1
+    U --> HOME1
+    U --> EXP1
+    U --> PROF1
+    U --> NAV1
     U -.-> ACC1
 
-    %% Admin conecta a su bloque (Derecha)
     A --> ADM1
     A --> ADM2
     A --> ADM3
     A --> ADM4
 
-    %% Conexiones que empujan a Firebase a la derecha del todo
+    %% Flechas que empujan Firebase a la derecha
     AUTH1 -.-> F
     NAV4 -.-> F
     ADM2 -.-> F
     ADM4 -.-> F
 
-    %% Estilos
-    style U fill:#4CAF50,stroke:#2E7D32,stroke-width:2px,color:#fff
-    style A fill:#FF9800,stroke:#E65100,stroke-width:2px,color:#fff
-    style F fill:#2196F3,stroke:#1565C0,stroke-width:2px,color:#fff
-    style NAV fill:#F3E5F5,stroke:#9C27B0,stroke-width:1px
-    style ADM fill:#FFEBEE,stroke:#F44336,stroke-width:1px
+    %% Estilos (Simplificados para evitar errores)
+    style U fill:#4CAF50,color:#fff
+    style A fill:#FF9800,color:#fff
+    style F fill:#2196F3,color:#fff
+    style APP fill:none,stroke:#999,stroke-dasharray:5 5
+    style NAV fill:#F3E5F5
+    style ADM fill:#FFEBEE
 ```
