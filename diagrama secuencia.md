@@ -235,7 +235,6 @@ flowchart TD
 ```mermaid
 flowchart LR
     U["👤 USUARIO TURISTA"]
-    A["👨‍💼 ADMINISTRADOR"]
 
     subgraph USUARIO_CASOS["Casos de Uso - Usuario Turista"]
         direction TB
@@ -265,6 +264,10 @@ flowchart LR
             U13["Ver diario explorador"]
         end
     end
+
+    USUARIO_CASOS --> ADMIN_SPACER[""]
+
+    A["👨‍💼 ADMINISTRADOR"]
 
     subgraph ADMIN_CASOS["Casos de Uso - Administrador"]
         direction TB
@@ -303,6 +306,7 @@ flowchart LR
     %% Estilos
     style U fill:#4CAF50,stroke:#2E7D32,stroke-width:2px,color:#fff
     style A fill:#FF9800,stroke:#E65100,stroke-width:2px,color:#fff
+    style ADMIN_SPACER fill:none,stroke:none
 
     style USUARIO_CASOS fill:none,stroke:#999,stroke-width:2px,stroke-dasharray:5 5
     style ADMIN_CASOS fill:none,stroke:#999,stroke-width:2px,stroke-dasharray:5 5
