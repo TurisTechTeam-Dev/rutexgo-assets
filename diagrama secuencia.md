@@ -123,7 +123,7 @@ sequenceDiagram
 
 ***Diagrama de Flujo***
 ```mermaid
-flowchart TD
+flowchart LR
     A[Inicio: Usuario abre la aplicación] --> B{¿Existe sesión activa?}
 
     B -- No --> C[Mostrar pantalla de autenticación]
