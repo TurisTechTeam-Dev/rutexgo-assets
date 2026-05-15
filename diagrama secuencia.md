@@ -234,89 +234,97 @@ flowchart TD
 **Diagrama de Casos de Uso**
 ```mermaid
 flowchart LR
-    %% COLUMNA 1: El inicio
+    %% ========== COLUMNA 1 ==========
     U["👤 USUARIO"]
 
-    %% COLUMNA 2: LA APP (Apilada verticalmente)
-    subgraph APP ["RUTEX-GO - CASOS DE USO"]
+    %% ========== COLUMNA 2 ==========
+    subgraph APP["RUTEX-GO - APP (Divide y vencerás)"]
         direction TB
-        
-        subgraph ACC ["Accesibilidad"]
-            ACC1["AudioGuide"]
+
+        subgraph F1["Fase 1 · Acceso"]
+            direction LR
+            A1["Abrir app"]
+            A2["Login/Registro"]
+            A3["Recuperar contraseña"]
+            A4["Ver home"]
+            A1 --> A2 --> A4
+            A3 --> A2
         end
 
-        subgraph AUTH ["Autenticación"]
-            AUTH1["Login/Registro"]
-            AUTH2["Recuperar contraseña"]
+        subgraph F2["Fase 2 · Exploración"]
+            direction LR
+            B1["Seleccionar ciudad"]
+            B2["Ver rutas"]
+            B3["Seleccionar ruta"]
+            B1 --> B2 --> B3
         end
 
-        subgraph HOME ["Pantalla Principal"]
-            HOME1["Ver home"]
+        subgraph F3["Fase 3 · Misión"]
+            direction LR
+            C1["Navegar"]
+            C2["Escanear QR"]
+            C3["Resolver misión"]
+            C4["Guardar progreso"]
+            C5["Ver resultados"]
+            C1 --> C2 --> C3 --> C4 --> C5
         end
 
-        subgraph EXP ["Exploración"]
-            EXP1["Seleccionar ciudad"]
-            EXP2["Seleccionar ruta"]
-        end
-
-        subgraph PROF ["Perfil y Diario"]
-            PROF1["Ver perfil"]
-            PROF2["Diario explorador"]
-        end
-
-        subgraph NAV ["Navegación y Misiones"]
-            direction TB
-            NAV1["Navegar"]
-            NAV2["Escanear QR"]
-            NAV3["Resolver misión"]
-            NAV4["Guardar progreso"]
-            NAV5["Ver resultados"]
+        subgraph F4["Fase 4 · Perfil y soporte"]
+            direction LR
+            D1["Ver perfil"]
+            D2["Diario explorador"]
+            D3["AudioGuide"]
+            D1 --> D2
         end
     end
 
-    %% COLUMNA 3: GESTIÓN (Derecha)
-    subgraph GESTION ["Gestión y Sistemas"]
+    %% ========== COLUMNA 3 ==========
+    subgraph GESTION["Gestión y Sistemas"]
         direction TB
-        
         A["👨‍💼 ADMINISTRADOR"]
-        
-        subgraph ADM ["Administración"]
+
+        subgraph ADM["Administración"]
             direction TB
-            ADM1["Panel admin"]
-            ADM2["CRUD ciudades"]
-            ADM3["CRUD rutas"]
-            ADM4["CRUD misiones"]
+            E1["Panel admin"]
+            E2["CRUD ciudades"]
+            E3["CRUD rutas"]
+            E4["CRUD misiones"]
         end
 
         F["☁️ FIREBASE"]
     end
 
-    %% --- CONEXIONES QUE ORDENAN ---
-    
-    %% Usuario a la izquierda de la App
-    U --> ACC
-    U --> AUTH
-    U --> HOME
-    U --> EXP
-    U --> PROF
-    U --> NAV
+    %% ---------- Conexiones externas ----------
+    U --> F1
+    U --> F2
+    U --> F3
+    U --> F4
 
-    %% Forzar que GESTION esté a la derecha de APP usando una flecha invisible
-    APP ~~~ GESTION
+    F2 --> F3
+    F3 --> F4
 
-    %% Admin a sus funciones (Dentro de su columna)
-    A --> ADM
+    A --> E1
+    A --> E2
+    A --> E3
+    A --> E4
 
-    %% Conexiones de datos a Firebase (Hacia la derecha)
-    AUTH1 -.-> F
-    NAV4 -.-> F
-    ADM2 -.-> F
-    ADM4 -.-> F
+    A2 -.-> F
+    C4 -.-> F
+    E2 -.-> F
+    E3 -.-> F
+    E4 -.-> F
 
-    %% --- ESTILOS ---
-    style U fill:#4CAF50,color:#fff
-    style A fill:#FF9800,color:#fff
-    style F fill:#2196F3,color:#fff
-    style APP fill:none,stroke:#999,stroke-dasharray:5 5
-    style GESTION fill:none,stroke:none
+    %% ---------- Estilos ----------
+    style U fill:#4CAF50,stroke:#2E7D32,stroke-width:2px,color:#fff
+    style A fill:#FF9800,stroke:#E65100,stroke-width:2px,color:#fff
+    style F fill:#2196F3,stroke:#1565C0,stroke-width:2px,color:#fff
+
+    style APP fill:none,stroke:#999,stroke-width:2px,stroke-dasharray:5 5
+    style GESTION fill:none,stroke:#999,stroke-width:2px,stroke-dasharray:5 5
+
+    style F1 fill:#E8F5E9,stroke:#4CAF50,stroke-width:1px
+    style F2 fill:#E3F2FD,stroke:#2196F3,stroke-width:1px
+    style F3 fill:#F3E5F5,stroke:#9C27B0,stroke-width:1px
+    style F4 fill:#FFF9C4,stroke:#FBC02D,stroke-width:1px
+    style ADM fill:#FFEBEE,stroke:#F44336,stroke-width:1px
 ```
