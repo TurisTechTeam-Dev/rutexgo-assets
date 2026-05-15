@@ -236,7 +236,6 @@ flowchart TD
 flowchart LR
     U["👤 USUARIO TURISTA"]
     A["👨‍💼 ADMINISTRADOR"]
-    F["☁️ FIREBASE"]
 
     subgraph USUARIO_CASOS["Casos de Uso - Usuario Turista"]
         direction TB
@@ -301,19 +300,9 @@ flowchart LR
     A --> A4
     A --> A5
 
-    %% Relaciones Firebase (solo puntos críticos)
-    U1 -.-> F
-    U2 -.-> F
-    U11 -.-> F
-    A2 -.-> F
-    A3 -.-> F
-    A4 -.-> F
-    A5 -.-> F
-
     %% Estilos
     style U fill:#4CAF50,stroke:#2E7D32,stroke-width:2px,color:#fff
     style A fill:#FF9800,stroke:#E65100,stroke-width:2px,color:#fff
-    style F fill:#2196F3,stroke:#1565C0,stroke-width:2px,color:#fff
 
     style USUARIO_CASOS fill:none,stroke:#999,stroke-width:2px,stroke-dasharray:5 5
     style ADMIN_CASOS fill:none,stroke:#999,stroke-width:2px,stroke-dasharray:5 5
