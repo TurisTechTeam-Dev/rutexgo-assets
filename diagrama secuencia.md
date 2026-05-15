@@ -205,10 +205,10 @@ flowchart TD
 **Diagrama de Casos de Uso**
 ```mermaid
 flowchart LR
-    %% NODOS PRINCIPALES
+    %% Nodo Izquierda
     U["👤 USUARIO"]
 
-    %% COLUMNA CENTRAL: SISTEMA
+    %% COLUMNA CENTRAL: Aplicación
     subgraph APP ["RUTEX-GO - CASOS DE USO"]
         direction TB
         
@@ -227,11 +227,8 @@ flowchart LR
         end
 
         subgraph NAV ["Navegación y Misiones"]
-            NAV1["Navegar"]
-            NAV2["Escanear QR"]
-            NAV3["Resolver misión"]
-            NAV4["Guardar progreso"]
-            NAV5["Ver resultados"]
+            direction LR
+            NAV1["Navegar"] --> NAV2["Escanear QR"] --> NAV3["Resolver misión"] --> NAV4["Guardar progreso"] --> NAV5["Ver resultados"]
         end
 
         subgraph AUTH ["Autenticación"]
@@ -244,54 +241,48 @@ flowchart LR
         end
     end
 
-    %% COLUMNA DERECHA: GESTIÓN Y BACKEND
+    %% COLUMNA DERECHA: Gestión y Datos
     subgraph GESTION ["Gestión y Datos"]
         direction TB
+        
         A["👨‍💼 ADMINISTRADOR"]
-        F["☁️ FIREBASE"]
-
+        
         subgraph ADM ["Administración"]
+            direction TB
             ADM1["Panel admin"]
             ADM2["CRUD ciudades"]
             ADM3["CRUD rutas"]
             ADM4["CRUD misiones"]
         end
+
+        F["☁️ FIREBASE"]
     end
 
-    %% --- RELACIONES ---
+    %% --- CONEXIONES ---
 
-    %% Usuario interactúa con la App (Izquierda a Centro)
+    %% Usuario a App
     U --> AUTH1
     U --> HOME1
     U --> EXP1
-    U --> EXP2
-    U --> NAV1
     U --> PROF1
-    U --> PROF2
+    U --> NAV1
     U -.-> ACC1
 
-    %% Administrador interactúa con su Panel (Derecha)
+    %% Admin a sus funciones (Apiladas verticalmente)
     A --> ADM1
     A --> ADM2
     A --> ADM3
     A --> ADM4
     A -.-> ACC1
 
-    %% Conexiones a Firebase (Desde App y desde Admin)
+    %% Conexiones a Firebase
     AUTH1 -.-> F
     NAV4 -.-> F
     ADM2 -.-> F
     ADM3 -.-> F
     ADM4 -.-> F
 
-    %% Flujos lógicos (flechas punteadas)
-    EXP1 -.-> EXP2
-    NAV1 -.-> NAV2
-    NAV2 -.-> NAV3
-    NAV3 -.-> NAV4
-    NAV4 -.-> NAV5
-
-    %% --- ESTILOS (Basados en image_153906.png) ---
+    %% Estilos (Copia exacta de tu diseño)
     style U fill:#4CAF50,stroke:#2E7D32,stroke-width:2px,color:#fff
     style A fill:#FF9800,stroke:#E65100,stroke-width:2px,color:#fff
     style F fill:#2196F3,stroke:#1565C0,stroke-width:2px,color:#fff
@@ -304,5 +295,4 @@ flowchart LR
     style ACC fill:#F5F5F5,stroke:#757575,stroke-width:1px
     style ADM fill:#FFEBEE,stroke:#F44336,stroke-width:1px
     style APP fill:none,stroke:#999,stroke-width:2px,stroke-dasharray:5 5
-    style GESTION fill:none,stroke:transparent
 ```
