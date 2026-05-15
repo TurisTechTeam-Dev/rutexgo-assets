@@ -210,98 +210,82 @@ erDiagram
 ```
 
 ```mermaid
-graph LR
-    %% Actores
-    Usuario((Usuario Explorador))
+flowchart LR
+    %% Actores con forma de círculo
+    User((Usuario Explorador))
     Admin((Administrador))
 
-    %% Sistema App Móvil
-    subgraph SistemaApp [Sistema App Móvil]
+    subgraph App [Sistema App Móvil]
+        direction TB
         
-        subgraph Autenticacion [Autenticación]
-            L_Gen(Login General)
-            L_EG(Login Email/Google)
-            Reg(Registro de Nuevo Usuario)
-            Rec(Recuperar Contraseña)
-            Logo(Logout)
-            Det(Detección de Rol y Redirección)
+        subgraph Auth [Autenticación]
+            direction LR
+            L1([Login General]) --- L2([Login Email/Google])
+            R1([Registro de Nuevo Usuario])
+            C1([Recuperar Contraseña])
+            Out([Logout])
+            Det([Detección de Rol y Redirección])
             
-            L_EG -.->|include| Det
-            Reg -.->|include| Det
-            Logo -.->|include| Det
-            L_Gen --- L_EG
+            L2 -.->|include| Det
+            R1 -.->|include| Det
+            Out -.->|include| Det
         end
 
-        subgraph HomePerfil [Home & Perfil]
-            V_Home(Ver Home / Cache Offline)
-            E_User(Editar Username)
-            C_Ava(Cambiar Avatar - Firebase)
-            G_Per(Gestionar Perfil)
+        subgraph Perfil [Home & Perfil]
+            H1([Ver Home / Cache Offline])
+            E1([Editar Username])
+            A1([Cambiar Avatar - Firebase])
+            G1([Gestionar Perfil])
             
-            V_Home --- G_Per
-            E_User --- G_Per
-            C_Ava --- G_Per
+            H1 --- G1
+            E1 --- G1
+            A1 --- G1
         end
 
         subgraph Rutas [Rutas]
-            Sel(Selección de Ciudad y Filtrado)
-            Disp(Ver Disponibilidad)
-            Ini(Iniciar Ruta)
+            S1([Selección de Ciudad])
+            V1([Ver Disponibilidad])
+            I1([Iniciar Ruta])
+            V1 -.->|extend| I1
+        end
+
+        subgraph Mision [Misión - Núcleo Gamificado]
+            M1([Navegar con Mapa])
+            M2([Detectar Llegada POI])
+            M3([Escanear QR y Validar])
+            M4([Responder Quiz])
+            M5([Saltar Punto Opcional])
+            M6([Finalizar Ruta y Guardar])
+            Info([Ver Info del Monumento])
             
-            Disp -.->|extend| Ini
-        end
-
-        subgraph Mision [Misión - Flujo Gamificado]
-            Nav(Navegar con Mapa)
-            Lle(Detectar Llegada POI)
-            QR(Escanear QR y Validar)
-            Quiz(Responder Quiz)
-            Salt(Saltar Punto Opcional)
-            Fin(Finalizar Ruta y Guardar)
-            Info(Ver Info del Monumento)
-            
-            QR -.->|extend| Info
-            Quiz -.->|include| Info
-        end
-
-        subgraph Diario [Diario del Explorador]
-            Vis(Visualizar Rutas - Libro)
-            Fotos(Añadir Fotos Personales)
-            Exp(Exportar PDF)
+            M3 -.->|extend| Info
+            M4 -.->|include| Info
         end
     end
 
-    %% Panel Admin Web
-    subgraph PanelWeb [Panel Admin Web]
-        C_Ciu(CRUD Ciudades)
-        C_Rut(CRUD Rutas)
-        C_POI(CRUD POIs y Misiones)
-        Mapa(Mapa Interactivo de POIs)
+    subgraph Web [Panel Admin Web]
+        W1([CRUD Ciudades])
+        W2([CRUD Rutas])
+        W3([CRUD POIs y Misiones])
+        W4([Mapa Interactivo de POIs])
     end
 
-    %% Accesibilidad
-    subgraph Accesibilidad [Accesibilidad]
-        Audio(Transversal: AudioGuideWidget)
-    end
+    %% Conexiones principales
+    User --- L1
+    User --- R1
+    User --- S1
+    User --- H1
+    
+    Admin --- Web
+    
+    %% Relaciones entre bloques
+    G1 -.-> Mision
+    I1 --> M1
+    M6 -.->|notifies| Web
+    M6 -.->|populates| App
+    Web -.->|configures| App
 
-    %% Relaciones de Actores
-    Usuario --- L_EG
-    Usuario --- Reg
-    Usuario --- Rec
-    Usuario --- V_Home
-    Usuario --- Sel
-    Usuario --- Vis
-    Usuario -.->|use| Audio
-
-    Admin --- PanelWeb
-    Admin -.->|use| Audio
-
-    %% Relaciones entre Sistemas
-    G_Per -.-> Nav
-    G_Per -.-> Lle
-    G_Per -.-> QR
-    Ini --> Nav
-    Fin -.->|notifies| PanelWeb
-    Fin -.->|populates| Diario
-    PanelWeb -.->|configures| SistemaApp
+    %% Estilos para que se parezca más
+    classDef usecase fill:#f9f9ff,stroke:#333,stroke-width:1px,rx:20,ry:20
+    class L1,L2,R1,C1,Out,Det,H1,E1,A1,G1,S1,V1,I1,M1,M2,M3,M4,M5,M6,Info,W1,W2,W3,W4 usecase
 ```
