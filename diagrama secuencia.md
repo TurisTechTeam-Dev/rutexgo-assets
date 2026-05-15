@@ -206,128 +206,94 @@ flowchart TD
 ```mermaid
 flowchart LR
     U["👤 USUARIO"]
+    A["👨‍💼 ADMINISTRADOR"]
+    F["☁️ FIREBASE"]
 
-    subgraph APP["RutexGo Core"]
+    subgraph APP["RUTEX-GO - CASOS DE USO"]
         direction TB
         
         subgraph AUTH["Autenticación"]
             AUTH1["Login/Registro"]
             AUTH2["Recuperar contraseña"]
-            AUTH3["Validar sesión"]
         end
 
         subgraph HOME["Pantalla Principal"]
             HOME1["Ver home"]
-            HOME2["Acceso a ciudades"]
         end
 
-        subgraph EXP["Exploración de Rutas"]
+        subgraph EXP["Exploración"]
             EXP1["Seleccionar ciudad"]
-            EXP2["Ver rutas disponibles"]
-            EXP3["Seleccionar ruta"]
+            EXP2["Seleccionar ruta"]
         end
 
         subgraph PROF["Perfil y Diario"]
             PROF1["Ver perfil"]
             PROF2["Diario explorador"]
-            PROF3["Estadísticas"]
-        end
-        
-        subgraph ACC["Accesibilidad"]
-            ACC1["AudioGuideWidget"]
         end
 
         subgraph NAV["Navegación y Misiones"]
-            NAV1["Iniciar mapa"]
-            NAV2["Detectar proximidad"]
-            NAV3["Escanear QR"]
-            NAV4["Ver monumento"]
-            NAV5["Realizar quiz"]
-            NAV6["Guardar progreso"]
-            NAV7["Ver resultados"]
+            NAV1["Navegar"]
+            NAV2["Escanear QR"]
+            NAV3["Resolver misión"]
+            NAV4["Guardar progreso"]
+            NAV5["Ver resultados"]
         end
-    end
-
-    subgraph BACKEND["FIREBASE"]
-        direction TB
-        F["☁️ FIREBASE"]
-    end
-
-    subgraph ADM_SECTION["Administración"]
-        direction TB
-        A["👨‍💼 ADMINISTRADOR"]
         
-        subgraph ADM["Gestión"]
-            ADM1["Panel admin"]
-            ADM2["CRUD ciudades"]
-            ADM3["CRUD rutas"]
-            ADM4["CRUD misiones"]
-            ADM5["Mapa de POIs"]
+        subgraph ACC["Accesibilidad"]
+            ACC1["AudioGuide"]
         end
     end
 
-    %% Usuario → App
+    subgraph ADM["Administración"]
+        direction TB
+        ADM1["Panel admin"]
+        ADM2["CRUD ciudades"]
+        ADM3["CRUD rutas"]
+        ADM4["CRUD misiones"]
+    end
+
+    %% Usuario al App
     U --> AUTH1
-    U --> AUTH2
     U --> HOME1
     U --> EXP1
     U --> EXP2
-    U --> EXP3
     U --> NAV1
-    U --> NAV2
-    U --> NAV3
-    U --> NAV4
-    U --> NAV5
     U --> PROF1
     U --> PROF2
-    U --> PROF3
     U -.-> ACC1
 
-    %% Administrador
+    %% Admin
     A --> ADM1
     A --> ADM2
     A --> ADM3
     A --> ADM4
-    A --> ADM5
     A -.-> ACC1
 
-    %% Firebase (persistencia)
+    %% Firebase
     AUTH1 -.-> F
-    AUTH2 -.-> F
-    AUTH3 -.-> F
-    NAV6 -.-> F
-    PROF3 -.-> F
+    NAV4 -.-> F
     ADM2 -.-> F
     ADM3 -.-> F
     ADM4 -.-> F
-    ADM5 -.-> F
 
-    %% Flujos internos de la app
-    AUTH1 --> AUTH3
-    HOME2 --> EXP1
-    EXP1 --> EXP2
-    EXP2 --> EXP3
-    EXP3 --> NAV1
-    NAV1 --> NAV2
-    NAV2 --> NAV3
-    NAV3 --> NAV4
-    NAV4 --> NAV5
-    NAV5 --> NAV6
-    NAV6 --> NAV7
+    %% Flujos
+    EXP1 -.-> EXP2
+    NAV1 -.-> NAV2
+    NAV2 -.-> NAV3
+    NAV3 -.-> NAV4
+    NAV4 -.-> NAV5
 
     %% Estilos
     style U fill:#4CAF50,stroke:#2E7D32,stroke-width:2px,color:#fff
-    style F fill:#2196F3,stroke:#1565C0,stroke-width:2px,color:#fff
     style A fill:#FF9800,stroke:#E65100,stroke-width:2px,color:#fff
-    
-    style AUTH fill:#E8F5E9,stroke:#4CAF50,stroke-width:2px
-    style HOME fill:#E3F2FD,stroke:#2196F3,stroke-width:2px
-    style EXP fill:#E8F5E9,stroke:#4CAF50,stroke-width:2px
-    style PROF fill:#FFF9C4,stroke:#FBC02D,stroke-width:2px
-    style ACC fill:#F5F5F5,stroke:#757575,stroke-width:2px
-    style NAV fill:#F3E5F5,stroke:#9C27B0,stroke-width:2px
-    style ADM fill:#FFEBEE,stroke:#F44336,stroke-width:2px
+    style F fill:#2196F3,stroke:#1565C0,stroke-width:2px,color:#fff
+
+    style AUTH fill:#E8F5E9,stroke:#4CAF50,stroke-width:1px
+    style HOME fill:#E3F2FD,stroke:#2196F3,stroke-width:1px
+    style EXP fill:#E8F5E9,stroke:#4CAF50,stroke-width:1px
+    style PROF fill:#FFF9C4,stroke:#FBC02D,stroke-width:1px
+    style NAV fill:#F3E5F5,stroke:#9C27B0,stroke-width:1px
+    style ACC fill:#F5F5F5,stroke:#757575,stroke-width:1px
+    style ADM fill:#FFEBEE,stroke:#F44336,stroke-width:1px
     style APP fill:none,stroke:#999,stroke-width:2px,stroke-dasharray:5 5
-    style BACKEND fill:none,stroke:#999,stroke-width:2px,stroke-dasharray:5 5
-    style ADM_SECTION fill:none,stroke:#999,stroke-width:2px,stroke-dasharray:5 5
 ```
