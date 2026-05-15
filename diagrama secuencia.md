@@ -212,12 +212,15 @@ flowchart LR
     subgraph APP ["RUTEX-GO - CASOS DE USO"]
         direction TB
         
+        %% Cada módulo ahora tiene direction TB para que sus hijos se apilen
         subgraph PROF ["Perfil y Diario"]
+            direction TB
             PROF1["Ver perfil"]
             PROF2["Diario explorador"]
         end
 
         subgraph EXP ["Exploración"]
+            direction TB
             EXP1["Seleccionar ciudad"]
             EXP2["Seleccionar ruta"]
         end
@@ -226,12 +229,18 @@ flowchart LR
             HOME1["Ver home"]
         end
 
+        %% Forzamos que la navegación sea vertical (uno bajo otro)
         subgraph NAV ["Navegación y Misiones"]
-            direction LR
-            NAV1["Navegar"] --> NAV2["Escanear QR"] --> NAV3["Resolver misión"] --> NAV4["Guardar progreso"] --> NAV5["Ver resultados"]
+            direction TB
+            NAV1["Navegar"]
+            NAV2["Escanear QR"]
+            NAV3["Resolver misión"]
+            NAV4["Guardar progreso"]
+            NAV5["Ver resultados"]
         end
 
         subgraph AUTH ["Autenticación"]
+            direction TB
             AUTH1["Login/Registro"]
             AUTH2["Recuperar contraseña"]
         end
@@ -241,8 +250,9 @@ flowchart LR
         end
     end
 
-    %% COLUMNA DERECHA: Gestión y Datos
-    subgraph GESTION ["Gestión y Datos"]
+    %% COLUMNA DERECHA: Administración y Datos
+    %% Al estar fuera de APP y conectado con flechas LR, se moverá a la derecha
+    subgraph GESTION ["Gestión y Sistemas"]
         direction TB
         
         A["👨‍💼 ADMINISTRADOR"]
@@ -258,41 +268,32 @@ flowchart LR
         F["☁️ FIREBASE"]
     end
 
-    %% --- CONEXIONES ---
-
-    %% Usuario a App
-    U --> AUTH1
-    U --> HOME1
-    U --> EXP1
+    %% --- RELACIONES PARA CONTROLAR EL LAYOUT ---
+    
+    %% Usuario conecta a la izquierda de los bloques
     U --> PROF1
+    U --> EXP1
+    U --> HOME1
     U --> NAV1
+    U --> AUTH1
     U -.-> ACC1
 
-    %% Admin a sus funciones (Apiladas verticalmente)
+    %% Admin conecta a su bloque (Derecha)
     A --> ADM1
     A --> ADM2
     A --> ADM3
     A --> ADM4
-    A -.-> ACC1
 
-    %% Conexiones a Firebase
+    %% Conexiones que empujan a Firebase a la derecha del todo
     AUTH1 -.-> F
     NAV4 -.-> F
     ADM2 -.-> F
-    ADM3 -.-> F
     ADM4 -.-> F
 
-    %% Estilos (Copia exacta de tu diseño)
+    %% Estilos
     style U fill:#4CAF50,stroke:#2E7D32,stroke-width:2px,color:#fff
     style A fill:#FF9800,stroke:#E65100,stroke-width:2px,color:#fff
     style F fill:#2196F3,stroke:#1565C0,stroke-width:2px,color:#fff
-
-    style AUTH fill:#E8F5E9,stroke:#4CAF50,stroke-width:1px
-    style HOME fill:#E3F2FD,stroke:#2196F3,stroke-width:1px
-    style EXP fill:#E8F5E9,stroke:#4CAF50,stroke-width:1px
-    style PROF fill:#FFF9C4,stroke:#FBC02D,stroke-width:1px
     style NAV fill:#F3E5F5,stroke:#9C27B0,stroke-width:1px
-    style ACC fill:#F5F5F5,stroke:#757575,stroke-width:1px
     style ADM fill:#FFEBEE,stroke:#F44336,stroke-width:1px
-    style APP fill:none,stroke:#999,stroke-width:2px,stroke-dasharray:5 5
 ```
