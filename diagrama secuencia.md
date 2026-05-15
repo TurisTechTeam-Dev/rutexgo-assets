@@ -231,89 +231,66 @@ flowchart TD
 
 ---
 
-**Diagrama de Casos de Uso**
+## Diagrama de Casos de Uso
+
 ```mermaid
 flowchart LR
-    U["👤 USUARIO TURISTA"]
+    U["👤 Usuario Turista"]
+    A["👨‍💼 Administrador"]
 
-    subgraph USUARIO_CASOS["Casos de Uso - Usuario Turista"]
-        direction TB
-        
+    subgraph SIS["Sistema de la Aplicación"]
+
         subgraph AUTH["Autenticación"]
-            U1["Login/Registro"]
-            U2["Recuperar contraseña"]
-            U3["Logout"]
+            U1(["Login / Registro"])
+            U2(["Recuperar contraseña"])
+            U3(["Logout"])
         end
 
-        subgraph EXPLORE["Exploración"]
-            U4["Ver ciudades"]
-            U5["Ver rutas por ciudad"]
-            U6["Seleccionar ruta"]
+        subgraph EXPL["Exploración"]
+            U4(["Ver ciudades"])
+            U5(["Ver rutas por ciudad"])
+            U6(["Seleccionar ruta"])
         end
 
-        subgraph MISSION["Misión Gamificada"]
-            U7["Iniciar navegación"]
-            U8["Escanear QR"]
-            U9["Ver detalle monumento"]
-            U10["Realizar quiz"]
-            U11["Ver resultados ruta"]
+        subgraph MIS["Misión Gamificada"]
+            U7(["Iniciar navegación"])
+            U8(["Escanear QR"])
+            U9(["Ver detalle monumento"])
+            U10(["Realizar quiz"])
+            U11(["Ver resultados ruta"])
         end
 
-        subgraph PROFILE["Perfil"]
-            U12["Ver perfil"]
-            U13["Ver diario explorador"]
+        subgraph PER["Perfil"]
+            U12(["Ver perfil"])
+            U13(["Ver diario explorador"])
         end
+
+        subgraph ADM["Administración"]
+            A1(["Acceder panel admin"])
+            A2(["Gestionar ciudades"])
+            A3(["Gestionar rutas"])
+            A4(["Gestionar POIs"])
+            A5(["Gestionar misiones"])
+        end
+
     end
 
-    A["👨‍💼 ADMINISTRADOR"]
+    U --> U1 & U2 & U3
+    U --> U4 & U5 & U6
+    U --> U7 & U8 & U9 & U10 & U11
+    U --> U12 & U13
 
-    subgraph ADMIN_CASOS["Casos de Uso - Administrador"]
-        direction TB
-        
-        subgraph ADMIN_FUNC["Administración"]
-            A1["Acceder panel admin"]
-            A2["Gestionar ciudades"]
-            A3["Gestionar rutas"]
-            A4["Gestionar POIs"]
-            A5["Gestionar misiones"]
-        end
-    end
+    A --> U1 & U2 & U3
+    A --> U4 & U5 & U6
+    A --> U7 & U8 & U9 & U10 & U11
+    A --> U12 & U13
+    A --> A1 & A2 & A3 & A4 & A5
 
-    %% Relaciones Usuario
-    U --> U1
-    U --> U2
-    U --> U3
-    U --> U4
-    U --> U5
-    U --> U6
-    U --> U7
-    U --> U8
-    U --> U9
-    U --> U10
-    U --> U11
-    U --> U12
-    U --> U13
-
-    %% Relaciones Administrador
-    A --> A1
-    A --> A2
-    A --> A3
-    A --> A4
-    A --> A5
-
-    %% Fuerza posicionamiento a derecha
-    USUARIO_CASOS --> ADMIN_CASOS
-
-    %% Estilos
-    style U fill:#4CAF50,stroke:#2E7D32,stroke-width:2px,color:#fff
-    style A fill:#FF9800,stroke:#E65100,stroke-width:2px,color:#fff
-
-    style USUARIO_CASOS fill:none,stroke:#999,stroke-width:2px,stroke-dasharray:5 5
-    style ADMIN_CASOS fill:none,stroke:#999,stroke-width:2px,stroke-dasharray:5 5
-
-    style AUTH fill:#E8F5E9,stroke:#4CAF50,stroke-width:1px
-    style EXPLORE fill:#E3F2FD,stroke:#2196F3,stroke-width:1px
-    style MISSION fill:#F3E5F5,stroke:#9C27B0,stroke-width:1px
-    style PROFILE fill:#FFF9C4,stroke:#FBC02D,stroke-width:1px
-    style ADMIN_FUNC fill:#FFEBEE,stroke:#F44336,stroke-width:1px
+    style U fill:#4CAF50,stroke:#2E7D32,color:#fff
+    style A fill:#FF9800,stroke:#E65100,color:#fff
+    style AUTH fill:#E8F5E9,stroke:#4CAF50
+    style EXPL fill:#E3F2FD,stroke:#2196F3
+    style MIS fill:#F3E5F5,stroke:#9C27B0
+    style PER fill:#FFF9C4,stroke:#F9A825
+    style ADM fill:#FFEBEE,stroke:#F44336
 ```
