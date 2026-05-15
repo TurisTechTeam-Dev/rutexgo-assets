@@ -205,98 +205,129 @@ flowchart TD
 **Diagrama de Casos de Uso**
 ```mermaid
 flowchart LR
-    %% Nodo principal Izquierda
     U["👤 USUARIO"]
 
-    %% COLUMNA CENTRAL (App)
-    subgraph APP ["RutexGo Core"]
+    subgraph APP["RutexGo Core"]
         direction TB
         
-        subgraph PROF ["Perfil"]
+        subgraph AUTH["Autenticación"]
+            AUTH1["Login/Registro"]
+            AUTH2["Recuperar contraseña"]
+            AUTH3["Validar sesión"]
+        end
+
+        subgraph HOME["Pantalla Principal"]
+            HOME1["Ver home"]
+            HOME2["Acceso a ciudades"]
+        end
+
+        subgraph EXP["Exploración de Rutas"]
+            EXP1["Seleccionar ciudad"]
+            EXP2["Ver rutas disponibles"]
+            EXP3["Seleccionar ruta"]
+        end
+
+        subgraph PROF["Perfil y Diario"]
             PROF1["Ver perfil"]
             PROF2["Diario explorador"]
-        end
-
-        subgraph EXP ["Exploración"]
-            EXP1["Explorar ciudades"]
-            EXP2["Seleccionar ruta"]
-        end
-
-        subgraph MISS ["Misión gamificada"]
-            MISS1["Navegar"]
-            MISS2["Escanear QR"]
-            MISS3["Resolver misión"]
-            MISS4["Guardar progreso"]
-            MISS5["Ver resultados"]
-        end
-
-        subgraph AUTH ["Autenticación"]
-            AUTH1["Autenticarse"]
-            AUTH2["Recuperar contraseña"]
+            PROF3["Estadísticas"]
         end
         
-        subgraph ACC ["Accesibilidad"]
-            ACC1["AudioGuide"]
+        subgraph ACC["Accesibilidad"]
+            ACC1["AudioGuideWidget"]
+        end
+
+        subgraph NAV["Navegación y Misiones"]
+            NAV1["Iniciar mapa"]
+            NAV2["Detectar proximidad"]
+            NAV3["Escanear QR"]
+            NAV4["Ver monumento"]
+            NAV5["Realizar quiz"]
+            NAV6["Guardar progreso"]
+            NAV7["Ver resultados"]
         end
     end
 
-    %% COLUMNA DERECHA (Admin & Backend)
-    subgraph BACKEND ["Sistemas y Gestión"]
+    subgraph BACKEND["FIREBASE"]
         direction TB
         F["☁️ FIREBASE"]
-        A["👨‍💼 ADMINISTRADOR"]
+    end
 
-        subgraph ADM ["Administración"]
+    subgraph ADM_SECTION["Administración"]
+        direction TB
+        A["👨‍💼 ADMINISTRADOR"]
+        
+        subgraph ADM["Gestión"]
             ADM1["Panel admin"]
-            ADM2["Gestionar contenidos"]
+            ADM2["CRUD ciudades"]
+            ADM3["CRUD rutas"]
+            ADM4["CRUD misiones"]
+            ADM5["Mapa de POIs"]
         end
     end
 
-    %% -- CONEXIONES --
-
-    %% Usuario a App
-    U --> PROF1
-    U --> PROF2
-    U --> EXP1
-    U --> EXP2
-    U --> MISS1
-    U --> MISS2
-    U --> MISS3
-    U --> MISS4
-    U --> MISS5
+    %% Usuario → App
     U --> AUTH1
     U --> AUTH2
+    U --> HOME1
+    U --> EXP1
+    U --> EXP2
+    U --> EXP3
+    U --> NAV1
+    U --> NAV2
+    U --> NAV3
+    U --> NAV4
+    U --> NAV5
+    U --> PROF1
+    U --> PROF2
+    U --> PROF3
     U -.-> ACC1
 
-    %% Administrador a su Panel (Derecha)
+    %% Administrador
     A --> ADM1
     A --> ADM2
+    A --> ADM3
+    A --> ADM4
+    A --> ADM5
     A -.-> ACC1
 
-    %% Conexiones laterales a Firebase (Derecha)
+    %% Firebase (persistencia)
     AUTH1 -.-> F
     AUTH2 -.-> F
-    MISS4 -.-> F
+    AUTH3 -.-> F
+    NAV6 -.-> F
+    PROF3 -.-> F
     ADM2 -.-> F
+    ADM3 -.-> F
+    ADM4 -.-> F
+    ADM5 -.-> F
 
-    %% Flujos internos
-    EXP1 -.-> EXP2
-    MISS1 -.-> MISS2
-    MISS2 -.-> MISS3
-    MISS3 -.-> MISS4
-    MISS4 -.-> MISS5
+    %% Flujos internos de la app
+    AUTH1 --> AUTH3
+    HOME2 --> EXP1
+    EXP1 --> EXP2
+    EXP2 --> EXP3
+    EXP3 --> NAV1
+    NAV1 --> NAV2
+    NAV2 --> NAV3
+    NAV3 --> NAV4
+    NAV4 --> NAV5
+    NAV5 --> NAV6
+    NAV6 --> NAV7
 
-    %% -- ESTILOS --
+    %% Estilos
     style U fill:#4CAF50,stroke:#2E7D32,stroke-width:2px,color:#fff
     style F fill:#2196F3,stroke:#1565C0,stroke-width:2px,color:#fff
     style A fill:#FF9800,stroke:#E65100,stroke-width:2px,color:#fff
     
-    style PROF fill:#FFF9C4,stroke:#FBC02D,stroke-width:1px
-    style EXP fill:#E3F2FD,stroke:#2196F3,stroke-width:1px
-    style MISS fill:#F3E5F5,stroke:#9C27B0,stroke-width:1px
-    style AUTH fill:#E8F5E9,stroke:#4CAF50,stroke-width:1px
-    style ACC fill:#F5F5F5,stroke:#757575,stroke-width:1px
-    style ADM fill:#FFEBEE,stroke:#F44336,stroke-width:1px
-    style APP fill:transparent,stroke:#666,stroke-dasharray: 5 5
-    style BACKEND fill:transparent,stroke:#666,stroke-dasharray: 5 5
+    style AUTH fill:#E8F5E9,stroke:#4CAF50,stroke-width:2px
+    style HOME fill:#E3F2FD,stroke:#2196F3,stroke-width:2px
+    style EXP fill:#E8F5E9,stroke:#4CAF50,stroke-width:2px
+    style PROF fill:#FFF9C4,stroke:#FBC02D,stroke-width:2px
+    style ACC fill:#F5F5F5,stroke:#757575,stroke-width:2px
+    style NAV fill:#F3E5F5,stroke:#9C27B0,stroke-width:2px
+    style ADM fill:#FFEBEE,stroke:#F44336,stroke-width:2px
+    style APP fill:none,stroke:#999,stroke-width:2px,stroke-dasharray:5 5
+    style BACKEND fill:none,stroke:#999,stroke-width:2px,stroke-dasharray:5 5
+    style ADM_SECTION fill:none,stroke:#999,stroke-width:2px,stroke-dasharray:5 5
 ```
