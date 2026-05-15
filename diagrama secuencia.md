@@ -265,8 +265,6 @@ flowchart LR
         end
     end
 
-    USUARIO_CASOS --> ADMIN_SPACER[""]
-
     A["👨‍💼 ADMINISTRADOR"]
 
     subgraph ADMIN_CASOS["Casos de Uso - Administrador"]
@@ -303,10 +301,12 @@ flowchart LR
     A --> A4
     A --> A5
 
+    %% Fuerza posicionamiento a derecha
+    USUARIO_CASOS --> ADMIN_CASOS
+
     %% Estilos
     style U fill:#4CAF50,stroke:#2E7D32,stroke-width:2px,color:#fff
     style A fill:#FF9800,stroke:#E65100,stroke-width:2px,color:#fff
-    style ADMIN_SPACER fill:none,stroke:none
 
     style USUARIO_CASOS fill:none,stroke:#999,stroke-width:2px,stroke-dasharray:5 5
     style ADMIN_CASOS fill:none,stroke:#999,stroke-width:2px,stroke-dasharray:5 5
