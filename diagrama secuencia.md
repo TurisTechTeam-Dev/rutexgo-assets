@@ -234,70 +234,93 @@ flowchart TD
 **Diagrama de Casos de Uso**
 ```mermaid
 flowchart LR
-    U["👤 USUARIO"]
-
-    subgraph APP["RUTEX-GO - APP"]
-        direction TB
-
-        subgraph F1["Fase 1 · Acceso"]
-            A1["Abrir app"]
-            A2["Login/Registro"]
-            A3["Recuperar contraseña"]
-            A4["Ver home"]
-            A1 --> A2 --> A4
-            A3 --> A2
-        end
-
-        subgraph F2["Fase 2 · Exploración"]
-            B1["Seleccionar ciudad"]
-            B2["Ver rutas"]
-            B3["Seleccionar ruta"]
-            B1 --> B2 --> B3
-        end
-
-        subgraph F3["Fase 3 · Misión"]
-            C1["Navegar"]
-            C2["Escanear QR"]
-            C3["Resolver misión"]
-            C4["Guardar progreso"]
-            C5["Ver resultados"]
-            C1 --> C2 --> C3 --> C4 --> C5
-        end
-
-        subgraph F4["Fase 4 · Perfil y soporte"]
-            D1["Ver perfil"]
-            D2["Diario explorador"]
-            D3["AudioGuide"]
-            D1 --> D2
-        end
-    end
-
-    subgraph GESTION["Gestión"]
-        direction TB
-        A["👨‍💼 ADMINISTRADOR"]
-        E1["Panel admin"]
-        E2["CRUD contenidos"]
-        A --> E1 --> E2
-    end
-
+    U["👤 USUARIO TURISTA"]
+    A["👨‍💼 ADMINISTRADOR"]
     F["☁️ FIREBASE"]
 
-    %% Usuario
-    U --> F1
-    U --> F2
-    U --> F3
-    U --> F4
+    subgraph USUARIO_CASOS["Casos de Uso - Usuario Turista"]
+        direction TB
+        
+        subgraph AUTH["Autenticación"]
+            U1["Login/Registro"]
+            U2["Recuperar contraseña"]
+            U3["Logout"]
+        end
 
-    %% Flujo principal
-    F2 --> F3
-    F3 --> F4
+        subgraph EXPLORE["Exploración"]
+            U4["Ver ciudades"]
+            U5["Ver rutas por ciudad"]
+            U6["Seleccionar ruta"]
+        end
 
-    %% Integración mínima con Firebase (solo puntos críticos)
+        subgraph MISSION["Misión Gamificada"]
+            U7["Iniciar navegación"]
+            U8["Escanear QR"]
+            U9["Ver detalle monumento"]
+            U10["Realizar quiz"]
+            U11["Ver resultados ruta"]
+        end
+
+        subgraph PROFILE["Perfil"]
+            U12["Ver perfil"]
+            U13["Ver diario explorador"]
+        end
+    end
+
+    subgraph ADMIN_CASOS["Casos de Uso - Administrador"]
+        direction TB
+        
+        subgraph ADMIN_FUNC["Administración"]
+            A1["Acceder panel admin"]
+            A2["Gestionar ciudades"]
+            A3["Gestionar rutas"]
+            A4["Gestionar POIs"]
+            A5["Gestionar misiones"]
+        end
+    end
+
+    %% Relaciones Usuario
+    U --> U1
+    U --> U2
+    U --> U3
+    U --> U4
+    U --> U5
+    U --> U6
+    U --> U7
+    U --> U8
+    U --> U9
+    U --> U10
+    U --> U11
+    U --> U12
+    U --> U13
+
+    %% Relaciones Administrador
+    A --> A1
+    A --> A2
+    A --> A3
+    A --> A4
+    A --> A5
+
+    %% Relaciones Firebase (solo puntos críticos)
+    U1 -.-> F
+    U2 -.-> F
+    U11 -.-> F
     A2 -.-> F
-    C4 -.-> F
-    E2 -.-> F
+    A3 -.-> F
+    A4 -.-> F
+    A5 -.-> F
 
+    %% Estilos
     style U fill:#4CAF50,stroke:#2E7D32,stroke-width:2px,color:#fff
     style A fill:#FF9800,stroke:#E65100,stroke-width:2px,color:#fff
     style F fill:#2196F3,stroke:#1565C0,stroke-width:2px,color:#fff
+
+    style USUARIO_CASOS fill:none,stroke:#999,stroke-width:2px,stroke-dasharray:5 5
+    style ADMIN_CASOS fill:none,stroke:#999,stroke-width:2px,stroke-dasharray:5 5
+
+    style AUTH fill:#E8F5E9,stroke:#4CAF50,stroke-width:1px
+    style EXPLORE fill:#E3F2FD,stroke:#2196F3,stroke-width:1px
+    style MISSION fill:#F3E5F5,stroke:#9C27B0,stroke-width:1px
+    style PROFILE fill:#FFF9C4,stroke:#FBC02D,stroke-width:1px
+    style ADMIN_FUNC fill:#FFEBEE,stroke:#F44336,stroke-width:1px
 ```
