@@ -205,10 +205,10 @@ flowchart TD
 **Diagrama de Casos de Uso**
 ```mermaid
 flowchart LR
-    %% Columna 1: Actor Principal
+    %% COLUMNA 1: El inicio
     U["👤 USUARIO"]
 
-    %% Columna 2: Módulos de la APP (apilados)
+    %% COLUMNA 2: LA APP (Apilada verticalmente)
     subgraph APP ["RUTEX-GO - CASOS DE USO"]
         direction TB
         
@@ -245,7 +245,7 @@ flowchart LR
         end
     end
 
-    %% Columna 3: Gestión y Datos (Forzada a la derecha)
+    %% COLUMNA 3: GESTIÓN (Derecha)
     subgraph GESTION ["Gestión y Sistemas"]
         direction TB
         
@@ -262,30 +262,32 @@ flowchart LR
         F["☁️ FIREBASE"]
     end
 
-    %% --- CONEXIONES ---
-    U --> AUTH1
-    U --> HOME1
-    U --> EXP1
-    U --> PROF1
-    U --> NAV1
-    U -.-> ACC1
+    %% --- CONEXIONES QUE ORDENAN ---
+    
+    %% Usuario a la izquierda de la App
+    U --> ACC
+    U --> AUTH
+    U --> HOME
+    U --> EXP
+    U --> PROF
+    U --> NAV
 
-    A --> ADM1
-    A --> ADM2
-    A --> ADM3
-    A --> ADM4
+    %% Forzar que GESTION esté a la derecha de APP usando una flecha invisible
+    APP ~~~ GESTION
 
-    %% Flechas que empujan Firebase a la derecha
+    %% Admin a sus funciones (Dentro de su columna)
+    A --> ADM
+
+    %% Conexiones de datos a Firebase (Hacia la derecha)
     AUTH1 -.-> F
     NAV4 -.-> F
     ADM2 -.-> F
     ADM4 -.-> F
 
-    %% Estilos (Simplificados para evitar errores)
+    %% --- ESTILOS ---
     style U fill:#4CAF50,color:#fff
     style A fill:#FF9800,color:#fff
     style F fill:#2196F3,color:#fff
     style APP fill:none,stroke:#999,stroke-dasharray:5 5
-    style NAV fill:#F3E5F5
-    style ADM fill:#FFEBEE
+    style GESTION fill:none,stroke:none
 ```
