@@ -234,7 +234,7 @@ flowchart TD
 ## Diagrama de Casos de Uso
 
 ```mermaid
-usecaseDiagram
+flowchart LR
     actor Usuario as U
     actor Administrador as A
 
