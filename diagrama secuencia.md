@@ -234,63 +234,74 @@ flowchart TD
 ## Diagrama de Casos de Uso
 
 ```mermaid
-flowchart LR
-    U["👤 Usuario Turista"]
-    A["👨‍💼 Administrador"]
+usecaseDiagram
+    actor Usuario as U
+    actor Administrador as A
 
-    subgraph SIS["Sistema de la Aplicación"]
+    rectangle "RuteX Go" {
+        (Autenticarse) as UC1
+        (Gestionar perfil) as UC2
+        (Explorar rutas) as UC3
+        (Realizar misión) as UC4
+        (Consultar diario del explorador) as UC5
+        (Administrar contenido) as UC6
 
-        subgraph AUTH["Autenticación"]
-            U1(["Login / Registro"])
-            U2(["Recuperar contraseña"])
-            U3(["Logout"])
-        end
+        (Iniciar sesión) as UC1a
+        (Registrarse) as UC1b
+        (Iniciar sesión con Google) as UC1c
+        (Recuperar contraseña) as UC1d
 
-        subgraph EXPL["Exploración"]
-            U4(["Ver ciudades"])
-            U5(["Ver rutas por ciudad"])
-            U6(["Seleccionar ruta"])
-        end
+        (Ver información personal) as UC2a
+        (Actualizar datos de perfil) as UC2b
 
-        subgraph MIS["Misión Gamificada"]
-            U7(["Iniciar navegación"])
-            U8(["Escanear QR"])
-            U9(["Ver detalle monumento"])
-            U10(["Realizar quiz"])
-            U11(["Ver resultados ruta"])
-        end
+        (Seleccionar ciudad) as UC3a
+        (Seleccionar ruta) as UC3b
+        (Consultar detalles de ruta) as UC3c
 
-        subgraph PER["Perfil"]
-            U12(["Ver perfil"])
-            U13(["Ver diario explorador"])
-        end
+        (Escanear punto de interés) as UC4a
+        (Completar reto de ruta) as UC4b
+        (Consultar progreso) as UC4c
 
-        subgraph ADM["Administración"]
-            A1(["Acceder panel admin"])
-            A2(["Gestionar ciudades"])
-            A3(["Gestionar rutas"])
-            A4(["Gestionar POIs"])
-            A5(["Gestionar misiones"])
-        end
+        (Seleccionar rutas completadas) as UC5a
+        (Añadir recuerdos al diario) as UC5b
+        (Generar diario) as UC5c
 
-    end
+        (Gestionar ciudades) as UC6a
+        (Gestionar rutas) as UC6b
+        (Gestionar puntos de interés) as UC6c
+        (Gestionar misiones) as UC6d
+    }
 
-    U --> U1 & U2 & U3
-    U --> U4 & U5 & U6
-    U --> U7 & U8 & U9 & U10 & U11
-    U --> U12 & U13
+    U --> UC1
+    U --> UC2
+    U --> UC3
+    U --> UC4
+    U --> UC5
 
-    A --> U1 & U2 & U3
-    A --> U4 & U5 & U6
-    A --> U7 & U8 & U9 & U10 & U11
-    A --> U12 & U13
-    A --> A1 & A2 & A3 & A4 & A5
+    A --> UC6
 
-    style U fill:#4CAF50,stroke:#2E7D32,color:#fff
-    style A fill:#FF9800,stroke:#E65100,color:#fff
-    style AUTH fill:#E8F5E9,stroke:#4CAF50
-    style EXPL fill:#E3F2FD,stroke:#2196F3
-    style MIS fill:#F3E5F5,stroke:#9C27B0
-    style PER fill:#FFF9C4,stroke:#F9A825
-    style ADM fill:#FFEBEE,stroke:#F44336
+    UC1 ..> UC1a : <<include>>
+    UC1 ..> UC1b : <<include>>
+    UC1 ..> UC1c : <<extend>>
+    UC1 ..> UC1d : <<extend>>
+
+    UC2 ..> UC2a : <<include>>
+    UC2 ..> UC2b : <<include>>
+
+    UC3 ..> UC3a : <<include>>
+    UC3 ..> UC3b : <<include>>
+    UC3 ..> UC3c : <<include>>
+
+    UC4 ..> UC4a : <<include>>
+    UC4 ..> UC4b : <<include>>
+    UC4 ..> UC4c : <<include>>
+
+    UC5 ..> UC5a : <<include>>
+    UC5 ..> UC5b : <<include>>
+    UC5 ..> UC5c : <<include>>
+
+    UC6 ..> UC6a : <<include>>
+    UC6 ..> UC6b : <<include>>
+    UC6 ..> UC6c : <<include>>
+    UC6 ..> UC6d : <<include>>
 ```
