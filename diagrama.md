@@ -348,87 +348,129 @@ flowchart TB
 
 ```mermaid
 graph LR
-    %% Configuración de estilos visuales sencillos
-    classDef deAcuerdo fill:#fff,stroke:#333,stroke-width:1px;
-    classDef decision fill:#fff,stroke:#ff9999,stroke-width:2px;
-    
-    %% --- BLOQUE 1: AUTENTICACIÓN Y LOGIN ---
-    subgraph Autenticacion ["Autenticación"]
-        INICIO([INICIO: Iniciar aplicación]) --> InitFirebase[Inicializar Firebase]
-        InitFirebase --> CheckSession[Verificar sesión de usuario]
-        CheckSession --> IsAuth{¿Hay usuario autenticado?}
-        
-        IsAuth -- NO --> SplashLogin[Mostrar pantalla Splash/Login]
-        SplashLogin --> WantRegister{¿Usuario quiere registrarse?}
-        
-        WantRegister -- SÍ --> PantallaRegistro[Pantalla de Registro<br>Ingresar datos: nombre,<br>usuario, email, contraseña]
-        PantallaRegistro --> SaveFirebase[Guardar en Firebase]
-        SaveFirebase --> GoToLogin[Ir a Login]
-        GoToLogin --> LoginOptions
-        
-        WantRegister -- NO --> LoginOptions[Mostrar opciones de login:<br>- Iniciar sesión con email/contraseña<br>- Iniciar sesión con Google<br>- Recuperar contraseña]
-        LoginOptions --> AuthSuccess{¿Autenticación exitosa?}
-        AuthSuccess -- NO --> ShowError[Mostrar error]
-    end
+    %% ----------------------------------------------------
+    %% CONFIGURACIÓN DE ESTILOS (Colores fieles al original)
+    %% ----------------------------------------------------
+    classDef default fill:#ffffff,stroke:#333333,stroke-width:1.5px,round:5px;
+    classDef decision fill:#ffffff,stroke:#e06666,stroke-width:2px;
+    classDef inicio fill:#ffffff,stroke:#333333,stroke-width:1.5px;
+    classDef opcion fill:#fff2cc,stroke:#d6b656,stroke-width:1.5px;
 
-    %% --- CONTROL DE FLUJO PRINCIPAL ---
-    IsAuth -- SÍ ----> IsAdmin{¿Es usuario web Y<br>es administrador?}
-    AuthSuccess -- SÍ --> IsAdmin
+    %% ----------------------------------------------------
+    %% BLOQUE 1: AUTENTICACIÓN (Columna Izquierda - Vertical)
+    %% ----------------------------------------------------
+    INICIO([INICIO:<br>Iniciar aplicación])
+    InitFirebase[Inicializar Firebase]
+    CheckSession[Verificar sesión de<br>usuario]
+    IsAuth{¿Hay usuario<br>autenticado?}
+    SplashLogin[Mostrar pantalla<br>Splash/Login]
+    WantRegister{¿Usuario quiere<br>registrarse?}
+    LoginOptions[Mostrar opciones de login:<br>- Iniciar sesión con email/contraseña<br>- Iniciar sesión con Google<br>- Recuperar contraseña]
+    AuthSuccess{¿Autenticación<br>exitosa?}
+    ShowError[Mostrar error]
 
-    %% --- BLOQUE 2: PANEL DE ADMINISTRACIÓN ---
-    subgraph PanelAdmin ["Panel de Administración"]
-        IsAdmin -- SÍ --> AdminPanel[Pantalla de Panel de Administración]
-        AdminPanel --> WhatManage{¿Qué desea gestionar?}
-        
-        WhatManage --> Ciudades[Ciudades<br>CRUD]
-        WhatManage --> Rutas[Rutas<br>CRUD]
-        WhatManage --> POI[Puntos de interés<br>CRUD]
-        WhatManage --> Misiones[Misiones<br>CRUD]
-        
-        Ciudades --> DoOp[Realizar operación]
-        Rutas --> DoOp
-        POI --> DoOp
-        Misiones --> DoOp
-        
-        DoOp --> SaveFirestore[Guardar cambios en<br>Firestore/Storage]
-        SaveFirestore --> LoopAdmin[Volver a seleccionar<br>opción o cerrar sesión]
-    end
+    %% Sub-flujo de Registro (Caja al lado del login)
+    PantallaRegistro[<b>Pantalla de Registro</b><br><br>Ingresar datos (nombre,<br>usuario, email, contraseña)]
+    SaveFirebase[Guardar en Firebase]
+    GoToLogin[Ir a Login]
+
+    %% Conexiones e Inyecciones de alineación vertical estricta
+    INICIO --> InitFirebase
+    InitFirebase --> CheckSession
+    CheckSession --> IsAuth
+    IsAuth -- NO --> SplashLogin
+    SplashLogin --> WantRegister
+    WantRegister -- NO --> LoginOptions
+    LoginOptions --> AuthSuccess
+    AuthSuccess -- NO --> ShowError
+
+    %% Conexiones del flujo de Registro
+    WantRegister -- SÍ --> PantallaRegistro
+    PantallaRegistro --> SaveFirebase
+    SaveFirebase --> GoToLogin
+    GoToLogin --> LoginOptions
+
+    %% ----------------------------------------------------
+    %% BLOQUE 2: PANEL DE ADMINISTRACIÓN (Columna Central)
+    %% ----------------------------------------------------
+    IsAdmin{¿Es usuario web Y<br>es administrador?}
+    AdminPanel[Pantalla de Panel de<br>Administración]
+    WhatManage{¿Qué desea<br>gestionar?}
     
-    %% Retornos del Admin
+    Ciudades[Ciudades<br>(CRUD)]
+    Rutas[Rutas<br>(CRUD)]
+    POI[Puntos de<br>interés (CRUD)]
+    Misiones[Misiones<br>(CRUD)]
+    
+    DoOp[Realizar operación]
+    SaveFirestore[Guardar cambios en<br>Firestore/Storage]
+    LoopAdmin[Volver a seleccionar<br>opción o cerrar sesión]
+
+    %% Conexiones de Administración
+    IsAdmin -- SÍ --> AdminPanel
+    AdminPanel --> WhatManage
+    
+    WhatManage --> Ciudades
+    WhatManage --> Rutas
+    WhatManage --> POI
+    WhatManage --> Misiones
+    
+    Ciudades --> DoOp
+    Rutas --> DoOp
+    POI --> DoOp
+    Misiones --> DoOp
+    
+    DoOp --> SaveFirestore
+    SaveFirestore --> LoopAdmin
     LoopAdmin --> AdminPanel
 
-    %% --- BLOQUE 3: PANTALLA HOME Y OPCIONES DE USUARIO ---
-    IsAdmin -- NO --> Home[Pantalla Home]
+    %% ----------------------------------------------------
+    %% BLOQUE 3: PANTALLA HOME Y OPCIONES (Columna Derecha)
+    %% ----------------------------------------------------
+    Home[Pantalla Home]
     
-    %% Retorno desde Admin de vuelta a la Home si aplica
-    LoopAdmin -.-> Home
+    Op1[<b>Opción 1: Ver perfil</b><br><hr>Cargar datos del usuario<br>Mostrar información personal<br>Opción para actualizar nombre/avatar]
+    
+    Op2[<b>Opción 2: Explorar rutas</b><br><hr>Seleccionar ciudad<br>Ver rutas disponibles de esa ciudad<br>Seleccionar una ruta<br>Ver detalles y disponibilidad de la ruta<br>Opción para iniciar misión]
+    
+    Op3[<b>Opción 3: Realizar misión</b><br><hr>Ir a escáner QR<br>Escanear código QR del punto de interés<br>Validar que es el punto correcto<br>Mostrar información del monumento<br>Completar misión/reto<br>Hacer quiz si aplica<br>Guardar progreso en Firestore]
+    
+    Op4[<b>Opción 4: Ver diario del explorador</b><br><hr>Cargar rutas completadas<br>Seleccionar rutas para incluir en diario<br>Añadir fotos a cada ruta<br>Vista previa del diario<br>Generar y descargar PDF]
+    
+    Op5[Opción 5: Cerrar sesión]
+    Logout[Cerrar sesión]
+    ReturnSplash[Volver a Splash/Login]
 
-    subgraph OpcionesHome ["Opciones del Usuario"]
-        Home --> Op1[Opción 1: Ver perfil]
-        Home --> Op2[Opción 2: Explorar rutas]
-        Home --> Op3[Opción 3: Realizar misión]
-        Home --> Op4[Opción 4: Ver diario del explorador]
-        Home --> Op5[Opción 5: Cerrar sesión]
+    %% Conexiones de la Home y Opciones
+    IsAdmin -- NO --> Home
+    LoopAdmin ----> Home
+    
+    Home --> Op1
+    Home --> Op2
+    Home --> Op3
+    Home --> Op4
+    Home --> Op5
+    
+    Op5 --> Logout
+    Logout --> ReturnSplash
 
-        Op1 --> Op1_Det[Cargar datos del usuario<br>Mostrar información personal<br>Opción para actualizar nombre/avatar]
-        
-        Op2 --> Op2_Det[Seleccionar ciudad<br>Ver rutas disponibles de esa ciudad<br>Seleccionar una ruta<br>Ver detalles y disponibilidad de la ruta<br>Opción para iniciar misión]
-        
-        Op3 --> Op3_Det[Ir a escáner QR<br>Escanear código QR del punto de interés<br>Validar que es el punto correcto<br>Mostrar información del monumento<br>Completar misión/reto<br>Hacer quiz si aplica<br>Guardar progreso en Firestore]
-        
-        Op4 --> Op4_Det[Cargar rutas completadas<br>Seleccionar rutas para incluir en diario<br>Añadir fotos a cada ruta<br>Vista previa del diario<br>Generar y descargar PDF]
-        
-        Op5 --> Logout[Cerrar sesión]
-        Logout --> ReturnSplash[Volver a Splash/Login]
-    end
+    %% Retornos de las opciones a la Home
+    Op1 --> Home
+    Op2 --> Home
+    Op3 --> Home
+    Op4 --> Home
+    ReturnSplash ----> SplashLogin
 
-    %% Líneas de retorno a la Home (para simular el comportamiento original sin romper el layout)
-    Op1_Det --> Home
-    Op2_Det --> Home
-    Op3_Det --> Home
-    Op4_Det --> Home
-    ReturnSplash --> SplashLogin
+    %% ----------------------------------------------------
+    %% ENLACES E INTERCONEXIONES TRANSVERSALES
+    %% ----------------------------------------------------
+    IsAuth -- SÍ ------------> IsAdmin
+    AuthSuccess -- SÍ ------> IsAdmin
 
-    %% Aplicar estilos a las decisiones
+    %% ----------------------------------------------------
+    %% ASIGNACIÓN DE ESTILOS
+    %% ----------------------------------------------------
     class IsAuth,WantRegister,AuthSuccess,IsAdmin,WhatManage decision;
+    class INICIO inicio;
+    class Op5 opcion;
 ```
