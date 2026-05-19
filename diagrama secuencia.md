@@ -234,72 +234,60 @@ flowchart TD
 ## Diagrama de Casos de Uso
 
 ```mermaid
-graph LR
+flowchart LR
     %% Definición de Actores
-    Usuario((Usuario))
-    Admin((Administrador))
+    User[Usuario]
+    Admin[Administrador]
 
-    %% Definición de Secciones (Subgraphs para agrupar)
-    subgraph UC1 [1. Autenticarse]
-        direction TB
-        A1(Iniciar sesión)
-        A2(Registrarse)
-        A3(Iniciar sesión con Google)
-        A4(Recuperar contraseña)
+    %% Estructura de Casos de Uso
+    subgraph Sistema [Sistema: RuteX Go]
+        
+        %% 1. Autenticarse
+        U1[1. Autenticarse]
+        U1 --> S1[Iniciar sesión]
+        U1 --> S2[Registrarse]
+        U1 --> S3[Iniciar sesión con Google]
+        U1 --> S4[Recuperar contraseña]
+
+        %% 2. Gestionar perfil
+        U2[2. Gestionar perfil]
+        U2 --> S5[Ver información personal]
+        U2 --> S6[Actualizar datos de perfil]
+
+        %% 3. Explorar rutas
+        U3[3. Explorar rutas]
+        U3 --> S7[Seleccionar ciudad]
+        U3 --> S8[Seleccionar ruta]
+        U3 --> S9[Consultar detalles de ruta]
+
+        %% 4. Realizar misión
+        U4[4. Realizar misión]
+        U4 --> S10[Escanear punto de interés]
+        U4 --> S11[Completar reto de ruta]
+        U4 --> S12[Consultar progreso]
+
+        %% 5. Consultar diario
+        U5[5. Consultar diario]
+        U5 --> S13[Seleccionar rutas completadas]
+        U5 --> S14[Añadir recuerdos]
+        U5 --> S15[Generar diario]
+
+        %% 6. Administrar contenido
+        U6[6. Administrar contenido]
+        U6 --> S16[Gestionar ciudades]
+        U6 --> S17[Gestionar rutas]
+        U6 --> S18[Gestionar puntos de interés]
+        U6 --> S19[Gestionar misiones]
     end
 
-    subgraph UC2 [2. Gestionar perfil]
-        direction TB
-        B1(Ver información personal)
-        B2(Actualizar datos de perfil)
-    end
+    %% Conexiones con Actores
+    User --> U1
+    User --> U2
+    User --> U3
+    User --> U4
+    User --> U5
 
-    subgraph UC3 [3. Explorar rutas]
-        direction TB
-        C1(Seleccionar ciudad)
-        C2(Seleccionar ruta)
-        C3(Consultar detalles de ruta)
-    end
-
-    subgraph UC4 [4. Realizar misión]
-        direction TB
-        D1(Escanear punto de interés)
-        D2(Completar reto de ruta)
-        D3(Consultar progreso)
-    end
-
-    subgraph UC5 [5. Consultar diario]
-        direction TB
-        E1(Seleccionar rutas completadas)
-        E2(Añadir recuerdos al diario)
-        E3(Generar diario)
-    end
-
-    subgraph UC6 [6. Administrar contenido]
-        direction TB
-        F1(Gestionar ciudades)
-        F2(Gestionar rutas)
-        F3(Gestionar puntos de interés)
-        F4(Gestionar misiones)
-    end
-
-    %% Relaciones Usuario
-    Usuario --- UC1
-    Usuario --- UC2
-    Usuario --- UC3
-    Usuario --- UC4
-    Usuario --- UC5
-
-    %% Relaciones Administrador
-    Admin --- UC1
-    Admin --- UC3
-    Admin --- UC6
-
-    %% Estilos para que se vean más estéticos
-    style UC1 fill:#e1f5fe,stroke:#01579b
-    style UC2 fill:#e1f5fe,stroke:#01579b
-    style UC3 fill:#e1f5fe,stroke:#01579b
-    style UC4 fill:#e1f5fe,stroke:#01579b
-    style UC5 fill:#e1f5fe,stroke:#01579b
-    style UC6 fill:#e1f5fe,stroke:#01579b
+    Admin --> U1
+    Admin --> U3
+    Admin --> U6
 ```
