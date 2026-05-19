@@ -210,50 +210,30 @@ erDiagram
 ```
 
 ```mermaid
-useCaseDiagram
-    actor "Usuario No Registrado" as UnregUser
-    actor "Usuario Explorador" as User
-    actor "Administrador" as Admin
+flowchart TD
+    A([Inicio]) --> B[Inicializar aplicación]
+    B --> C[Verificar sesión]
+    C --> D{¿Usuario autenticado?}
 
-    package "Sistema RuteX-Go" {
-        %% Casos de Uso - Autenticación
-        usecase "Iniciar Sesión" as UC_Login
-        usecase "Registrarse" as UC_Register
-        
-        %% Casos de Uso - Explorador
-        usecase "Gestionar Perfil" as UC_Profile
-        usecase "Seleccionar Ciudad" as UC_City
-        usecase "Seleccionar Ruta" as UC_Route
-        usecase "Seguir Navegación GPS" as UC_Nav
-        usecase "Escanear QR de Monumento" as UC_QR
-        usecase "Completar Quiz de Misión" as UC_Quiz
-        usecase "Consultar Diario del Explorador" as UC_Diary
-        
-        %% Casos de Uso - Administrador
-        usecase "Gestionar Ciudades" as UC_AdmCity
-        usecase "Gestionar Rutas" as UC_AdmRoute
-        usecase "Gestionar Puntos de Interés" as UC_AdmPOI
-        usecase "Gestionar Misiones" as UC_AdmMissions
-    }
+    D -- No --> E[Pantalla Login]
+    E --> F{¿Registro o acceso?}
+    F -- Registro --> G[Registro de usuario]
+    F -- Acceso --> H[Login]
+    G --> H
+    H --> C
 
-    %% Relaciones Usuario No Registrado
-    UnregUser --> UC_Login
-    UnregUser --> UC_Register
+    D -- Sí --> I{¿Es administrador?}
+    I -- Sí --> J[Panel de administración]
+    I -- No --> K[Pantalla principal]
 
-    %% Relaciones Usuario Explorador
-    User --> UC_Login
-    User --> UC_Profile
-    User --> UC_City
-    User --> UC_Route
-    User --> UC_Nav
-    User --> UC_QR
-    User --> UC_Quiz
-    User --> UC_Diary
+    J --> L[Gestionar contenido]
+    J --> M[Cerrar sesión]
+    M --> E
 
-    %% Relaciones Administrador
-    Admin --> UC_Login
-    Admin --> UC_AdmCity
-    Admin --> UC_AdmRoute
-    Admin --> UC_AdmPOI
-    Admin --> UC_AdmMissions
+    K --> N[Perfil]
+    K --> O[Rutas]
+    K --> P[Misiones]
+    K --> Q[Diario]
+    K --> R[Cerrar sesión]
+    R --> E
 ```
