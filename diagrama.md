@@ -347,95 +347,48 @@ flowchart TB
 ---
 
 ```mermaid
-flowchart TD
-  A[INICIO]
-  B[Iniciar aplicacion]
-  C[Inicializar Firebase]
-  D[Verificar sesion de usuario]
-  E{Hay usuario autenticado}
+flowchart LR
+    A((Turista / Admin))
 
-  F[Mostrar Splash o Login]
-  G{Usuario quiere registrarse}
+    subgraph M1["Dispositivo Movil App Flutter"]
+        direction TB
+        B[Capa de Interfaz]
+        C[Widgets UI UX]
+        D[Llamar a]
+        E[Logica de Negocio]
+        F[Providers y Casos de Uso]
+        G[Solicita datos a]
+        H[Capa de Datos]
+        I[Repositorios y SDK Firebase]
+    end
 
-  H[Mostrar opciones de login]
-  H1[Email y contraseña]
-  H2[Google]
-  H3[Recuperar contraseña]
+    J[APIs de Mapas]
+    J1[Google Maps OSM]
 
-  I{Autenticacion exitosa}
-  J[Mostrar error]
+    subgraph M2["Servicios Firebase BaaS"]
+        direction TB
+        K[Firebase Auth]
+        K1[Autenticacion]
+        L[Cloud Firestore]
+        L1[Base de Datos NoSQL]
+        M[Cloud Storage]
+        M1[Repositorio Imagenes]
+    end
 
-  K[Pantalla de registro]
-  K1[Ingresar datos]
-  K2[Guardar en Firebase]
-  K3[Ir a Login]
+    A -->|Usa la interfaz| B
+    B --> C
+    C --> D --> E
+    E --> F --> G --> H --> I
 
-  L{Es usuario web y es administrador}
-  M[Pantalla de panel de administracion]
-  N{Que desea gestionar}
+    C -->|Visualiza mapas| J
+    J --> J1
 
-  O[Ciudades]
-  P[Rutas]
-  Q[Puntos de interes]
-  R[Misiones]
-  S[Realizar operacion]
-  T[Guardar cambios en Firestore o Storage]
-  U[Volver a seleccionar opcion o cerrar sesion]
+    I -->|Protocolo HTTPS| K
+    K --> K1
 
-  V[Pantalla Home]
+    I -->|Sincronizacion RealTime| L
+    L --> L1
 
-  W[Ver perfil]
-  X[Explorar rutas]
-  Y[Realizar mision]
-  Z[Ver diario del explorador]
-  AA[Cerrar sesion]
-
-  AB[Cerrar sesion]
-  AC[Volver a Splash o Login]
-
-  A --> B --> C --> D --> E
-  E -- Si --> L
-  E -- No --> F
-
-  F --> G
-  G -- Si --> K
-  G -- No --> H
-
-  H --> H1
-  H --> H2
-  H --> H3
-
-  H1 --> I
-  H2 --> I
-  H3 --> I
-
-  I -- Si --> L
-  I -- No --> J
-
-  K --> K1 --> K2 --> K3 --> H
-
-  L -- Si --> M
-  L -- No --> V
-
-  M --> N
-  N --> O
-  N --> P
-  N --> Q
-  N --> R
-
-  O --> S
-  P --> S
-  Q --> S
-  R --> S
-
-  S --> T --> U --> M
-  U --> AA
-
-  V --> W
-  V --> X
-  V --> Y
-  V --> Z
-  V --> AA
-
-  AA --> AB --> AC
+    I -->|Carga de archivos| M
+    M --> M1
 ```
