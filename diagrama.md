@@ -219,44 +219,44 @@ flowchart TD
 
     E -- No --> F[SplashScreen]
     F --> G[LoginScreen]
-    G --> H{¿Registro?}
+    G --> H{¿Quiere registrarse?}
+
     H -- Sí --> I[RegisterScreen]
     I --> J[Crear cuenta]
-    J --> K[HomeScreen]
+    J --> K[Volver a LoginScreen]
+
     H -- No --> L[Iniciar sesión]
-    L --> M{¿Login correcto?}
+    L --> M{¿Autenticación correcta?}
     M -- No --> G
-    M -- Sí --> N{¿Es admin y está en web?}
+    M -- Sí --> N{¿Es admin y entra desde web?}
 
     E -- Sí --> N
 
     N -- Sí --> O[AdminPanelScreen]
     O --> P[Gestionar ciudades]
-    O --> Q[Gestionar rutas]
-    O --> R[Gestionar puntos de interés]
-    O --> S[Gestionar misiones]
-    O --> T[Cerrar sesión]
+    P --> Q[Gestionar rutas]
+    Q --> R[Gestionar puntos de interés]
+    R --> S[Gestionar misiones]
+    S --> T[Cerrar sesión]
     T --> F
 
-    N -- No --> U[SplashScreen]
-    U --> K[HomeScreen]
+    N -- No --> U[HomeScreen]
 
-    K --> V[ProfileScreen]
-    K --> W[CitySelectionScreen]
-    K --> X[ExplorerDiaryScreen]
-    K --> Y[Cerrar sesión]
+    U --> V[ProfileScreen]
+    V --> U
 
-    V --> K
-    W --> Z[RouteSelectionScreen]
-    Z --> AA[MapNavigationScreen]
-    Z --> AB[MissionScannerScreen]
+    U --> W[CitySelectionScreen]
+    W --> X[RouteSelectionScreen]
+    X --> Y[MapNavigationScreen]
+    Y --> Z[MissionScannerScreen]
+    Z --> AA[MonumentInfoScreen]
+    AA --> AB[QuizScreen]
+    AB --> AC[RouteResultScreen]
+    AC --> U
 
-    AB --> AC[MonumentInfoScreen]
-    AC --> AD[QuizScreen]
-    AD --> AE[RouteResultScreen]
-    AE --> K
+    U --> AD[ExplorerDiaryScreen]
+    AD --> U
 
-    AA --> AB
-    X --> K
-    Y --> F
+    U --> AE[Cerrar sesión]
+    AE --> F
 ```
