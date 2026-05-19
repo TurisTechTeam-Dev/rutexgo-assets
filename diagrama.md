@@ -349,7 +349,7 @@ flowchart TB
 ```mermaid
 graph LR
     %% ----------------------------------------------------
-    %% CONFIGURACIÓN DE ESTILOS
+    %% CONFIGURACIÓN DE ESTILOS (Colores fieles al original)
     %% ----------------------------------------------------
     classDef default fill:#ffffff,stroke:#333333,stroke-width:1.5px;
     classDef decision fill:#ffffff,stroke:#e06666,stroke-width:2px;
@@ -357,7 +357,7 @@ graph LR
     classDef opcion fill:#fff2cc,stroke:#d6b656,stroke-width:1.5px;
 
     %% ----------------------------------------------------
-    %% BLOQUE 1: AUTENTICACIÓN (Columna Izquierda)
+    %% BLOQUE 1: AUTENTICACIÓN (Columna Izquierda - Estricta Vertical)
     %% ----------------------------------------------------
     INICIO([INICIO:<br>Iniciar aplicación])
     InitFirebase[Inicializar Firebase]
@@ -374,7 +374,13 @@ graph LR
     SaveFirebase[Guardar en Firebase]
     GoToLogin[Ir a Login]
 
-    %% Conexiones e Inyecciones de alineación vertical
+    %% --- TRUCO DE ALINEACIÓN VERTICAL ---
+    %% Usamos enlaces invisibles para obligar a estos nodos a alinearse verticalmente
+    INICIO ~~~ InitFirebase
+    InitFirebase ~~~ CheckSession
+    CheckSession ~~~ IsAuth
+    
+    %% Conexiones lógicas del bloque
     INICIO --> InitFirebase
     InitFirebase --> CheckSession
     CheckSession --> IsAuth
@@ -422,10 +428,12 @@ graph LR
     
     DoOp --> SaveFirestore
     SaveFirestore --> LoopAdmin
-    LoopAdmin --> AdminPanel
+    
+    %% Retornos del Admin: Usamos flechas de peso 4 para que sean más rectas
+    LoopAdmin ====> AdminPanel
 
     %% ----------------------------------------------------
-    %% BLOQUE 3: PANTALLA HOME Y OPCIONES (Columna Derecha)
+    %% BLOQUE 3: PANTALLA HOME Y OPCIONES (Columna Derecha - Vertical)
     %% ----------------------------------------------------
     Home[Pantalla Home]
     
@@ -441,9 +449,17 @@ graph LR
     Logout[Cerrar sesión]
     ReturnSplash[Volver a Splash/Login]
 
+    %% --- TRUCO DE ALINEACIÓN VERTICAL (DERECHA) ---
+    %% Alineamos el Home con la primera opción y luego todas hacia abajo
+    Home ~~~ Op1
+    Op1 ~~~ Op2
+    Op2 ~~~ Op3
+    Op3 ~~~ Op4
+    Op4 ~~~ Op5
+
     %% Conexiones de la Home y Opciones
     IsAdmin -- NO --> Home
-    LoopAdmin ----> Home
+    LoopAdmin =====> Home
     
     Home --> Op1
     Home --> Op2
@@ -454,18 +470,21 @@ graph LR
     Op5 --> Logout
     Logout --> ReturnSplash
 
-    %% Retornos de las opciones a la Home
-    Op1 --> Home
-    Op2 --> Home
-    Op3 --> Home
-    Op4 --> Home
-    ReturnSplash ----> SplashLogin
+    %% Retornos de las opciones a la Home (Usamos flechas de peso 4)
+    Op1 ====> Home
+    Op2 ====> Home
+    Op3 ====> Home
+    Op4 ====> Home
+    
+    %% Retorno largo al Splash: Usamos peso 6 y líneas angulares
+    ReturnSplash =======> SplashLogin
 
     %% ----------------------------------------------------
-    %% ENLACES E INTERCONEXIONES TRANSVERSALES
+    %% ENLACES E INTERCONEXIONES TRANSVERSALES (PESO ALTO)
     %% ----------------------------------------------------
-    IsAuth -- SÍ ------------> IsAdmin
-    AuthSuccess -- SÍ ------> IsAdmin
+    %% Usamos peso alto (guiones extra) para mantener la distancia entre columnas
+    IsAuth -- SÍ --------------------> IsAdmin
+    AuthSuccess -- SÍ --------------> IsAdmin
 
     %% ----------------------------------------------------
     %% ASIGNACIÓN DE ESTILOS
