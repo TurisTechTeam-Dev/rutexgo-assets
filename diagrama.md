@@ -260,3 +260,42 @@ flowchart TD
     U --> AE[Cerrar sesión]
     AE --> F
 ```
+
+---
+
+```mermaid
+flowchart LR
+  %% Agrupaciones
+  subgraph Sistema_RuteX_Go["Sistema RuteX Go"]
+    style Sistema_RuteX_Go fill:#fff8e6,stroke:#e6c07a,stroke-width:1px
+    app["Aplicación Móvil<br/>Flutter"]
+  end
+
+  subgraph Servicios_Externos["Servicios Externos (Firebase & APIs)"]
+    style Servicios_Externos fill:#eef6ff,stroke:#9fbfff,stroke-width:1px
+    auth["Firebase Auth<br/>Email / Google"]
+    firestore["Cloud Firestore<br/>Base de Datos NoSQL"]
+    storage["Cloud Storage<br/>Multimedia / Fotos"]
+    maps["APIs de Mapas<br/>Google Maps / OSM"]
+  end
+
+  %% Actores
+  Turista((Turista))
+  Administrador((Administrador))
+
+  %% Relaciones actor -> sistema
+  Turista -- "Interacción UI" --> app
+  Administrador -- "Gestión de Contenido" --> app
+
+  %% Relaciones app -> servicios externos (con etiquetas)
+  app -- "Validación Acceso" --> auth
+  app -- "Consulta Rutas / Quizzes" --> firestore
+  app -- "CRUD Ciudades / Rutas / POIs" --> firestore
+  app -- "Subida de Imágenes" --> storage
+  app -- "Carga Mapas Turísticos" --> maps
+  app -- "Localización de Puntos" --> maps
+
+  %% Alineación sugerida
+  classDef actor fill:#ffffff,stroke:#cfcfcf;
+  class Turista,Administrador actor;
+```
