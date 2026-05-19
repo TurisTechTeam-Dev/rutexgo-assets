@@ -1,43 +1,51 @@
 ```mermaid
 sequenceDiagram
     actor Usuario
-    participant CitySelectionScreen
-    participant RouteSelectionScreen
-    participant RoutesUseCases
-    participant RoutesRepository
+    participant MissionScannerScreen
+    participant MobileScanner
+    participant MissionUseCases
+    participant MissionRepository
     participant Firestore
+    participant MonumentInfoScreen
+    participant QuizScreen
+    participant RouteResultScreen
 
-    Usuario->>CitySelectionScreen: Explorar ciudades
-    CitySelectionScreen->>RoutesUseCases: getCities()
-    RoutesUseCases->>RoutesRepository: Consultar ciudades
-    RoutesRepository->>Firestore: Obtener lista de ciudades
-    Firestore-->>RoutesRepository: Ciudades
-    RoutesRepository-->>RoutesUseCases: Lista de ciudades
-    RoutesUseCases-->>CitySelectionScreen: Ciudades cargadas
-    CitySelectionScreen->>CitySelectionScreen: Mostrar ciudades
+    Usuario->>MissionScannerScreen: Abre escáner QR
+    MissionScannerScreen->>MobileScanner: Activar escáner
+    MobileScanner-->>MissionScannerScreen: Escáner listo
 
-    Usuario->>CitySelectionScreen: Selecciona una ciudad
-    CitySelectionScreen->>RouteSelectionScreen: Navegar con cityKeys
-    RouteSelectionScreen->>RoutesUseCases: getRoutesByCity(cityKeys)
-    RoutesUseCases->>RoutesRepository: Consultar rutas
-    RoutesRepository->>Firestore: Obtener rutas de la ciudad
-    Firestore-->>RoutesRepository: Rutas
-    RoutesRepository-->>RoutesUseCases: Lista de rutas
-    RoutesUseCases->>RoutesUseCases: Calcular disponibilidad
-    RoutesUseCases-->>RouteSelectionScreen: Rutas con disponibilidad
-    RouteSelectionScreen->>RouteSelectionScreen: Mostrar rutas disponibles
+    Usuario->>MobileScanner: Escanea código QR
+    MobileScanner-->>MissionScannerScreen: Código QR detectado
+    MissionScannerScreen->>MissionUseCases: validateQRCode(qrCode)
+    MissionUseCases->>MissionRepository: Buscar punto asociado
+    MissionRepository->>Firestore: Consultar por QR code
+    Firestore-->>MissionRepository: Punto de interés
+    MissionRepository-->>MissionUseCases: Datos del punto
 
-    alt Seleccionar ruta
-        Usuario->>RouteSelectionScreen: Selecciona una ruta
-        RouteSelectionScreen->>RoutesUseCases: getRouteDetails(routeId)
-        RoutesUseCases->>RoutesRepository: Obtener detalles
-        RoutesRepository->>Firestore: Cargar puntos de interés
-        Firestore-->>RoutesRepository: POIs
-        RoutesRepository-->>RoutesUseCases: Detalles completos
-        RoutesUseCases-->>RouteSelectionScreen: Datos de ruta
-        RouteSelectionScreen->>RouteSelectionScreen: Mostrar detalles
-        Usuario->>RouteSelectionScreen: Comenzar ruta
-        RouteSelectionScreen->>MapNavigationScreen: Navegar
+    alt Verificación de punto
+        MissionUseCases->>MissionRepository: Verificar si ya completado
+        MissionRepository->>Firestore: Consultar progreso del usuario
+        Firestore-->>MissionRepository: Estado del progreso
+        MissionRepository-->>MissionUseCases: Ya completado / Nuevo
+    end
+
+    MissionUseCases-->>MissionScannerScreen: Validación completa
+    MissionScannerScreen->>MonumentInfoScreen: Navegar
+    Usuario->>MonumentInfoScreen: Ve información del monumento
+    Usuario->>MonumentInfoScreen: Continúa misión
+    MonumentInfoScreen->>QuizScreen: Navegar
+
+    alt Completar misión
+        Usuario->>QuizScreen: Completa el quiz
+        QuizScreen->>MissionUseCases: submitQuiz(answers)
+        MissionUseCases->>MissionRepository: Guardar progreso
+        MissionRepository->>Firestore: Actualizar estado de misión
+        Firestore-->>MissionRepository: Éxito
+        MissionRepository-->>MissionUseCases: Progreso guardado
+        MissionUseCases-->>QuizScreen: Éxito
+        QuizScreen->>RouteResultScreen: Mostrar resultado
+        Usuario->>RouteResultScreen: Ve el resultado
+        RouteResultScreen->>MissionScannerScreen: Volver a escanear
     end
 ```
 
