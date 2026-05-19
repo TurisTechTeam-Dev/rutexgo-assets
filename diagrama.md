@@ -347,94 +347,96 @@ flowchart TB
 ---
 
 ```mermaid
-flowchart TD
-    A[INICIO]
-    A1[Iniciar aplicacion]
-    B[Inicializar Firebase]
-    C[Verificar sesion de usuario]
-    D{Hay usuario autenticado}
+flowchart LR
+  %% --- COLUMNA IZQUIERDA: INICIO / AUTH ---
+  subgraph IZQ[" "]
+    direction TB
+    S1["INICIO\nIniciar aplicacion"]
+    S2["Inicializar Firebase"]
+    S3["Verificar sesion de usuario"]
+    D1{"¿Hay usuario\nautenticado?"}
 
-    E[Mostrar pantalla Splash/Login]
-    F{Usuario quiere registrarse}
-    G[Mostrar opciones de login]
-    G1[Iniciar sesion con email y contrasena]
-    G2[Iniciar sesion con Google]
-    G3[Recuperar contrasena]
+    Splash["Mostrar pantalla\nSplash / Login"]
+    RegQ{"¿Usuario quiere\nregistrarse?"}
+    RegForm["Pantalla de registro\nIngresar datos (nombre, usuario, email, contrasena)"]
+    RegSave["Guardar en Firebase"]
+    IrLogin["Ir a Login"]
 
-    H{Autenticacion exitosa}
-    I[Mostrar error]
+    LoginOpts["Opciones de login:\n- Email/Contrasena\n- Google\n- Recuperar contrasena"]
+    AuthResult{"¿Autenticacion\nexitosa?"}
+    Error["Mostrar error"]
+  end
 
-    R[Pantalla de Registro]
-    R1[Ingresar datos]
-    R2[Guardar en Firebase]
-    R3[Ir a Login]
+  S1 --> S2 --> S3 --> D1
+  D1 -- "No" --> Splash
+  D1 -- "Si" --> RoleCheck
 
-    J{Es usuario web y es administrador}
-    K[Pantalla de Panel de Administracion]
-    L{Que desea gestionar}
-    M[Ciudades CRUD]
-    N[Rutas CRUD]
-    O[Puntos de interes CRUD]
-    P[Misiones CRUD]
-    Q[Realizar operacion]
-    S[Guardar cambios en Firestore o Storage]
-    T[Volver a seleccionar opcion o cerrar sesion]
+  Splash --> RegQ
+  RegQ -- "Si" --> RegForm --> RegSave --> IrLogin --> LoginOpts
+  RegQ -- "No" --> LoginOpts
 
-    U[Pantalla Home]
+  LoginOpts --> AuthResult
+  AuthResult -- "No" --> Error
+  AuthResult -- "Si" --> RoleCheck
 
-    V1[Opcion 1 Ver perfil]
-    V2[Opcion 2 Explorar rutas]
-    V3[Opcion 3 Realizar mision]
-    V4[Opcion 4 Ver diario del explorador]
-    V5[Opcion 5 Cerrar sesion]
+  %% --- COLUMNA CENTRAL: ADMIN / OPERACIONES ---
+  subgraph CTR[" "]
+    direction TB
+    RoleCheck{"¿Es usuario web\ny es administrador?"}
+    AdminPanel["Pantalla de Panel\nde Administracion"]
+    ManageQ{"¿Que desea\ngestionar?"}
+    Cities["Ciudades\n(CRUD)"]
+    Routes["Rutas\n(CRUD)"]
+    POIs["Puntos de interes\n(CRUD)"]
+    Missions["Misiones\n(CRUD)"]
+    DoOp["Realizar operacion"]
+    SaveChanges["Guardar cambios\nen Firestore / Storage"]
+    BackSelect["Volver a seleccionar\nopcion o cerrar sesion"]
+  end
 
-    X[Cerrar sesion]
-    Y[Volver a Splash/Login]
+  RoleCheck -- "Si" --> AdminPanel
+  RoleCheck -- "No" --> Home
 
-    A --> A1 --> B --> C --> D
-    D -- Si --> J
-    D -- No --> E
+  AdminPanel --> ManageQ
+  ManageQ --> Cities
+  ManageQ --> Routes
+  ManageQ --> POIs
+  ManageQ --> Missions
 
-    E --> F
-    F -- Si --> R
-    F -- No --> G
+  Cities --> DoOp
+  Routes --> DoOp
+  POIs --> DoOp
+  Missions --> DoOp
 
-    G --> G1
-    G --> G2
-    G --> G3
+  DoOp --> SaveChanges --> BackSelect
+  BackSelect --> AdminPanel
+  BackSelect --> Logout
 
-    G1 --> H
-    G2 --> H
-    G3 --> H
+  %% --- COLUMNA DERECHA: HOME / OPCIONES USUARIO ---
+  subgraph DER[" "]
+    direction TB
+    Home["Pantalla Home"]
+    Opt1["Opcion 1\nVer perfil\n- Cargar datos\n- Actualizar nombre/avatar"]
+    Opt2["Opcion 2\nExplorar rutas\n- Seleccionar ciudad\n- Ver rutas\n- Iniciar mision"]
+    Opt3["Opcion 3\nRealizar mision\n- Escanear QR\n- Validar punto\n- Completar mision\n- Guardar progreso"]
+    Opt4["Opcion 4\nVer diario del explorador\n- Cargar rutas completadas\n- Añadir fotos\n- Generar PDF"]
+    Opt5["Opcion 5\nCerrar sesion"]
+    Logout["Cerrar sesion"]
+    BackToSplash["Volver a Splash / Login"]
+  end
 
-    H -- Si --> J
-    H -- No --> I
+  Home --> Opt1
+  Home --> Opt2
+  Home --> Opt3
+  Home --> Opt4
+  Home --> Opt5
+  Opt5 --> Logout --> BackToSplash
 
-    R --> R1 --> R2 --> R3 --> G
+  %% --- CONEXIONES TRANSVERSALES ---
+  %% desde autenticacion exitosa o ya autenticado se comprueba rol (RoleCheck)
+  RoleCheck --- AdminPanel
+  RoleCheck --- Home
 
-    J -- Si --> K
-    J -- No --> U
-
-    K --> L
-    L --> M
-    L --> N
-    L --> O
-    L --> P
-
-    M --> Q
-    N --> Q
-    O --> Q
-    P --> Q
-
-    Q --> S --> T
-    T --> K
-    T --> V5
-
-    U --> V1
-    U --> V2
-    U --> V3
-    U --> V4
-    U --> V5
-
-    V5 --> X --> Y
+  %% desde la pantalla Home se puede volver al panel si es admin (flecha visual)
+  AdminPanel -- "Ir a Home" --> Home
 ```
