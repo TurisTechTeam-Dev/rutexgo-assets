@@ -234,74 +234,106 @@ flowchart TD
 ## Diagrama de Casos de Uso
 
 ```mermaid
-flowchart LR
-    actor Usuario as U
-    actor Administrador as A
+graph TD
+    %% Configuración de Estilos Globales (Fondo blanco y limpio)
+    classDef actorStyle fill:#ffffff,stroke:#333333,stroke-width:2px,font-weight:bold;
+    classDef caseStyle fill:#ffffff,stroke:#333333,stroke-width:1.5px;
+    classDef subCaseStyle fill:#ffffff,stroke:#666666,stroke-width:1px,stroke-dasharray: 3 3;
+    classDef systemStyle fill:#ffffff,stroke:#004477,stroke-width:2px,font-weight:bold;
 
-    rectangle "RuteX Go" {
-        (Autenticarse) as UC1
-        (Gestionar perfil) as UC2
-        (Explorar rutas) as UC3
-        (Realizar misión) as UC4
-        (Consultar diario del explorador) as UC5
-        (Administrar contenido) as UC6
+    %% Actores
+    Usuario((Usuario)):::actorStyle
+    Administrador((Administrador)):::actorStyle
 
-        (Iniciar sesión) as UC1a
-        (Registrarse) as UC1b
-        (Iniciar sesión con Google) as UC1c
-        (Recuperar contraseña) as UC1d
+    %% Límite del Sistema
+    subgraph Sistema [RuteX Go]
+        
+        %% Casos de Uso Principales
+        Autenticarse([Autenticarse]):::caseStyle
+        GestionarPerfil([Gestionar Perfil]):::caseStyle
+        ExplorarRutas([Explorar Rutas]):::caseStyle
+        RealizarMision([Realizar Misión]):::caseStyle
+        ConsultarDiario([Consultar Diario<br>del Explorador]):::caseStyle
+        AdministrarContenido([Administrar Contenido]):::caseStyle
 
-        (Ver información personal) as UC2a
-        (Actualizar datos de perfil) as UC2b
+        %% Subcasos - Autenticarse
+        IniciarSesion([Iniciar Sesión]):::subCaseStyle
+        Registrarse([Registrarse]):::subCaseStyle
+        IniciarGoogle([Iniciar Sesión<br>con Google]):::subCaseStyle
+        RecuperarContrasena([Recuperar Contraseña]):::subCaseStyle
 
-        (Seleccionar ciudad) as UC3a
-        (Seleccionar ruta) as UC3b
-        (Consultar detalles de ruta) as UC3c
+        %% Subcasos - Gestionar Perfil
+        VerInfo([Ver Información<br>Personal]):::subCaseStyle
+        ActualizarDatos([Actualizar Datos<br>de Perfil]):::subCaseStyle
 
-        (Escanear punto de interés) as UC4a
-        (Completar reto de ruta) as UC4b
-        (Consultar progreso) as UC4c
+        %% Subcasos - Explorar Rutas
+        SeleccionarCiudad([Seleccionar Ciudad]):::subCaseStyle
+        SeleccionarRuta([Seleccionar Ruta]):::subCaseStyle
+        ConsultarDetalles([Consultar Detalles<br>de Ruta]):::subCaseStyle
 
-        (Seleccionar rutas completadas) as UC5a
-        (Añadir recuerdos al diario) as UC5b
-        (Generar diario) as UC5c
+        %% Subcasos - Realizar Misión
+        EscanearPOI([Escanear Punto<br>de Interés]):::subCaseStyle
+        CompletarReto([Completar Reto<br>de Ruta]):::subCaseStyle
+        ConsultarProgreso([Consultar Progreso]):::subCaseStyle
 
-        (Gestionar ciudades) as UC6a
-        (Gestionar rutas) as UC6b
-        (Gestionar puntos de interés) as UC6c
-        (Gestionar misiones) as UC6d
-    }
+        %% Subcasos - Consultar Diario
+        SeleccionarCompletadas([Seleccionar Rutas<br>Completadas]):::subCaseStyle
+        AnadirRecuerdos([Añadir Recuerdos<br>al Diario]):::subCaseStyle
+        GenerarDiario([Generar Diario]):::subCaseStyle
 
-    U --> UC1
-    U --> UC2
-    U --> UC3
-    U --> UC4
-    U --> UC5
+        %% Subcasos - Administrar Contenido
+        GestionarCiudades([Gestionar Ciudades]):::subCaseStyle
+        GestionarRutasAdmin([Gestionar Rutas]):::subCaseStyle
+        GestionarPOI([Gestionar Puntos<br>de Interés]):::subCaseStyle
+        GestionarMisiones([Gestionar Misiones]):::subCaseStyle
 
-    A --> UC6
+    end
 
-    UC1 ..> UC1a : <<include>>
-    UC1 ..> UC1b : <<include>>
-    UC1 ..> UC1c : <<extend>>
-    UC1 ..> UC1d : <<extend>>
+    %% Relaciones de Actores con Casos de Uso Principales
+    Usuario --> Autenticarse
+    Usuario --> GestionarPerfil
+    Usuario --> ExplorarRutas
+    Usuario --> RealizarMision
+    Usuario --> ConsultarDiario
 
-    UC2 ..> UC2a : <<include>>
-    UC2 ..> UC2b : <<include>>
+    Administrador --> Autenticarse
+    Administrador --> GestionarPerfil
+    Administrador --> ExplorarRutas
+    Administrador --> RealizarMision
+    Administrador --> ConsultarDiario
+    Administrador --> AdministrarContenido
 
-    UC3 ..> UC3a : <<include>>
-    UC3 ..> UC3b : <<include>>
-    UC3 ..> UC3c : <<include>>
+    %% Relaciones de Inclusión / Extensión (Autenticarse)
+    Autenticarse -.->|«include»| IniciarSesion
+    Autenticarse -.->|«include»| Registrarse
+    Autenticarse -.->|«include»| IniciarGoogle
+    Autenticarse -.->|«extend»| RecuperarContrasena
 
-    UC4 ..> UC4a : <<include>>
-    UC4 ..> UC4b : <<include>>
-    UC4 ..> UC4c : <<include>>
+    %% Relaciones de Inclusión / Extensión (Gestionar Perfil)
+    GestionarPerfil -.->|«include»| VerInfo
+    GestionarPerfil -.->|«extend»| ActualizarDatos
 
-    UC5 ..> UC5a : <<include>>
-    UC5 ..> UC5b : <<include>>
-    UC5 ..> UC5c : <<include>>
+    %% Relaciones de Inclusión / Extensión (Explorar Rutas)
+    ExplorarRutas -.->|«include»| SeleccionarCiudad
+    ExplorarRutas -.->|«include»| SeleccionarRuta
+    ExplorarRutas -.->|«extend»| ConsultarDetalles
 
-    UC6 ..> UC6a : <<include>>
-    UC6 ..> UC6b : <<include>>
-    UC6 ..> UC6c : <<include>>
-    UC6 ..> UC6d : <<include>>
+    %% Relaciones de Inclusión / Extensión (Realizar Misión)
+    RealizarMision -.->|«include»| EscanearPOI
+    RealizarMision -.->|«include»| CompletarReto
+    RealizarMision -.->|«extend»| ConsultarProgreso
+
+    %% Relaciones de Inclusión / Extensión (Consultar Diario)
+    ConsultarDiario -.->|«include»| SeleccionarCompletadas
+    ConsultarDiario -.->|«extend»| AnadirRecuerdos
+    ConsultarDiario -.->|«include»| GenerarDiario
+
+    %% Relaciones de Inclusión (Administrar Contenido)
+    AdministrarContenido -.->|«include»| GestionarCiudades
+    AdministrarContenido -.->|«include»| GestionarRutasAdmin
+    AdministrarContenido -.->|«include»| GestionarPOI
+    AdministrarContenido -.->|«include»| GestionarMisiones
+
+    %% Aplicación de Estilo de Contenedor Sistema
+    style Sistema fill:#ffffff,stroke:#333333,stroke-width:1px;
 ```
