@@ -348,85 +348,94 @@ flowchart TB
 
 ```mermaid
 flowchart TD
-  %% --- INICIO / AUTH ---
-  A([INICIO: Iniciar aplicación])
-  B[Inicializar Firebase]
-  C[Verificar sesión de usuario]
-  D{¿Hay usuario autenticado?}
-  E[Mostrar pantalla Splash/Login]
-  F{¿Usuario quiere registrarse?}
-  G[Mostrar opciones de login: Iniciar sesión con email/contraseña, Iniciar sesión con Google, Recuperar contraseña]
-  H{¿Autenticación exitosa?}
-  I[Mostrar error]
+  A[INICIO]
+  B[Iniciar aplicacion]
+  C[Inicializar Firebase]
+  D[Verificar sesion de usuario]
+  E{Hay usuario autenticado}
 
-  %% --- REGISTRO ---
-  subgraph REG["Pantalla de Registro"]
-    R1[Ingresar datos (nombre, usuario, email, contraseña)]
-    R2[Guardar en Firebase]
-    R3[Ir a Login]
-    R1 --> R2 --> R3
-  end
+  F[Mostrar Splash o Login]
+  G{Usuario quiere registrarse}
 
-  %% --- DECISIÓN DE ROL ---
-  J{¿Es usuario web y es administrador?}
-  K[Pantalla de Panel de Administración]
+  H[Mostrar opciones de login]
+  H1[Email y contraseña]
+  H2[Google]
+  H3[Recuperar contraseña]
 
-  %% --- ADMIN ---
-  L{¿Qué desea gestionar?}
-  M[Ciudades (CRUD)]
-  N[Rutas (CRUD)]
-  O[Puntos de interés (CRUD)]
-  P[Misiones (CRUD)]
-  Q[Realizar operación]
-  S[Guardar cambios en Firestore/Storage]
-  T[Volver a seleccionar opción o cerrar sesión]
+  I{Autenticacion exitosa}
+  J[Mostrar error]
 
-  %% --- HOME / USUARIO FINAL ---
-  U[Pantalla Home]
+  K[Pantalla de registro]
+  K1[Ingresar datos]
+  K2[Guardar en Firebase]
+  K3[Ir a Login]
 
-  subgraph OPCIONES["Opciones de Usuario"]
-    O1[Opción 1: Ver perfil. Cargar datos del usuario. Mostrar información personal. Opción para actualizar nombre/avatar]
-    O2[Opción 2: Explorar rutas. Seleccionar ciudad. Ver rutas disponibles de esa ciudad. Seleccionar una ruta. Ver detalles y disponibilidad de la ruta. Opción para iniciar misión]
-    O3[Opción 3: Realizar misión. Ir a escanear QR. Escanear código QR del punto de interés. Validar que es el punto correcto. Mostrar información del monumento. Completar misión/reto. Hacer quiz si aplica. Guardar progreso en Firestore]
-    O4[Opción 4: Ver diario del explorador. Cargar rutas completadas. Seleccionar rutas para incluir en diario. Añadir fotos a cada ruta. Vista previa del diario. Generar y descargar PDF]
-    O5[Opción 5: Cerrar sesión]
-  end
+  L{Es usuario web y es administrador}
+  M[Pantalla de panel de administracion]
+  N{Que desea gestionar}
 
-  X[Cerrar sesión]
-  Y[Volver a Splash/Login]
+  O[Ciudades]
+  P[Rutas]
+  Q[Puntos de interes]
+  R[Misiones]
+  S[Realizar operacion]
+  T[Guardar cambios en Firestore o Storage]
+  U[Volver a seleccionar opcion o cerrar sesion]
 
-  %% --- CONEXIONES PRINCIPALES ---
-  A --> B --> C --> D
-  D -- Sí --> J
-  D -- No --> E
-  E --> F
-  F -- Sí --> R1
-  F -- No --> G
-  G --> H
-  H -- Sí --> J
-  H -- No --> I
+  V[Pantalla Home]
 
-  %% --- ADMIN FLUJO ---
-  J -- Sí --> K
-  K --> L
-  L --> M
-  L --> N
-  L --> O
-  L --> P
-  M --> Q
+  W[Ver perfil]
+  X[Explorar rutas]
+  Y[Realizar mision]
+  Z[Ver diario del explorador]
+  AA[Cerrar sesion]
+
+  AB[Cerrar sesion]
+  AC[Volver a Splash o Login]
+
+  A --> B --> C --> D --> E
+  E -- Si --> L
+  E -- No --> F
+
+  F --> G
+  G -- Si --> K
+  G -- No --> H
+
+  H --> H1
+  H --> H2
+  H --> H3
+
+  H1 --> I
+  H2 --> I
+  H3 --> I
+
+  I -- Si --> L
+  I -- No --> J
+
+  K --> K1 --> K2 --> K3 --> H
+
+  L -- Si --> M
+  L -- No --> V
+
+  M --> N
+  N --> O
+  N --> P
   N --> Q
-  O --> Q
-  P --> Q
-  Q --> S --> T
-  T --> K
-  T --> O5
+  N --> R
 
-  %% --- USUARIO NORMAL ---
-  J -- No --> U
-  U --> O1
-  U --> O2
-  U --> O3
-  U --> O4
-  U --> O5
-  O5 --> X --> Y
+  O --> S
+  P --> S
+  Q --> S
+  R --> S
+
+  S --> T --> U --> M
+  U --> AA
+
+  V --> W
+  V --> X
+  V --> Y
+  V --> Z
+  V --> AA
+
+  AA --> AB --> AC
 ```
