@@ -1,3 +1,120 @@
+```mermaid
+graph LR
+    subgraph SISTEMA["Sistema: RuteX Go"]
+        direction TB
+        
+        UC1["Autenticarse"]
+        UC1a["Registrarse"]
+        UC1b["Iniciar sesión"]
+        UC1c["Iniciar sesión con Google"]
+        UC1d["Recuperar contraseña"]
+        
+        UC2["Gestionar perfil"]
+        UC2a["Ver información personal"]
+        UC2b["Actualizar datos de perfil"]
+        
+        UC3["Explorar rutas"]
+        UC3a["Seleccionar ciudad"]
+        UC3b["Seleccionar ruta"]
+        UC3c["Consultar detalles de ruta"]
+        
+        UC4["Realizar misión"]
+        UC4a["Escanear punto de interés"]
+        UC4b["Completar reto de ruta"]
+        UC4c["Consultar progreso"]
+        
+        UC5["Consultar diario del explorador"]
+        UC5a["Seleccionar rutas completadas"]
+        UC5b["Añadir recuerdos al diario"]
+        UC5c["Generar diario"]
+        
+        UC6["Administrar contenido"]
+        UC6a["Gestionar ciudades"]
+        UC6b["Gestionar rutas"]
+        UC6c["Gestionar puntos de interés"]
+        UC6d["Gestionar misiones"]
+    end
+    
+    USUARIO["👤 Actor: Usuario"]
+    ADMIN["🔑 Actor: Administrador"]
+    
+    USUARIO --> UC1
+    USUARIO --> UC2
+    USUARIO --> UC3
+    USUARIO --> UC4
+    USUARIO --> UC5
+    
+    ADMIN --> UC1
+    ADMIN --> UC2
+    ADMIN --> UC3
+    ADMIN --> UC4
+    ADMIN --> UC5
+    ADMIN --> UC6
+    
+    UC1 --> UC1a
+    UC1 --> UC1b
+    UC1 --> UC1c
+    UC1 --> UC1d
+    
+    UC2 --> UC2a
+    UC2 --> UC2b
+    
+    UC3 --> UC3a
+    UC3 --> UC3b
+    UC3 --> UC3c
+    
+    UC4 --> UC4a
+    UC4 --> UC4b
+    UC4 --> UC4c
+    
+    UC5 --> UC5a
+    UC5 --> UC5b
+    UC5 --> UC5c
+    
+    UC6 --> UC6a
+    UC6 --> UC6b
+    UC6 --> UC6c
+    UC6 --> UC6d
+    
+    style SISTEMA fill:#f9f9f9,stroke:#333,stroke-width:3px
+    style USUARIO fill:#3498db,stroke:#2c3e50,color:#fff,stroke-width:2px
+    style ADMIN fill:#e74c3c,stroke:#2c3e50,color:#fff,stroke-width:2px
+    
+    style UC1 fill:#fff0f0,stroke:#c0392b,stroke-width:2px
+    style UC2 fill:#f0f8ff,stroke:#2980b9,stroke-width:2px
+    style UC3 fill:#f0fff0,stroke:#27ae60,stroke-width:2px
+    style UC4 fill:#fffff0,stroke:#f39c12,stroke-width:2px
+    style UC5 fill:#f8f0ff,stroke:#8e44ad,stroke-width:2px
+    style UC6 fill:#fff0f8,stroke:#c2185b,stroke-width:2px
+    
+    style UC1a fill:#ffe6e6,stroke:#c0392b
+    style UC1b fill:#ffe6e6,stroke:#c0392b
+    style UC1c fill:#ffe6e6,stroke:#c0392b
+    style UC1d fill:#ffe6e6,stroke:#c0392b
+    
+    style UC2a fill:#e6f3ff,stroke:#2980b9
+    style UC2b fill:#e6f3ff,stroke:#2980b9
+    
+    style UC3a fill:#e6ffe6,stroke:#27ae60
+    style UC3b fill:#e6ffe6,stroke:#27ae60
+    style UC3c fill:#e6ffe6,stroke:#27ae60
+    
+    style UC4a fill:#fff9e6,stroke:#f39c12
+    style UC4b fill:#fff9e6,stroke:#f39c12
+    style UC4c fill:#fff9e6,stroke:#f39c12
+    
+    style UC5a fill:#f3e6ff,stroke:#8e44ad
+    style UC5b fill:#f3e6ff,stroke:#8e44ad
+    style UC5c fill:#f3e6ff,stroke:#8e44ad
+    
+    style UC6a fill:#ffe6f3,stroke:#c2185b
+    style UC6b fill:#ffe6f3,stroke:#c2185b
+    style UC6c fill:#ffe6f3,stroke:#c2185b
+    style UC6d fill:#ffe6f3,stroke:#c2185b
+```
+
+
+
 ***Diagrama de Secuencia 1***
 ```mermaid
 sequenceDiagram
