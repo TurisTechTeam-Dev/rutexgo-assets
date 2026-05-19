@@ -349,46 +349,46 @@ flowchart TB
 ```mermaid
 flowchart TD
   %% --- INICIO / AUTH ---
-  A([INICIO:<br/>Iniciar aplicación])
+  A([INICIO: Iniciar aplicación])
   B[Inicializar Firebase]
   C[Verificar sesión de usuario]
   D{¿Hay usuario autenticado?}
   E[Mostrar pantalla Splash/Login]
   F{¿Usuario quiere registrarse?}
-  G[Mostrar opciones de login:<br/>- Iniciar sesión con email/contraseña<br/>- Iniciar sesión con Google<br/>- Recuperar contraseña]
+  G[Mostrar opciones de login: Iniciar sesión con email/contraseña, Iniciar sesión con Google, Recuperar contraseña]
   H{¿Autenticación exitosa?}
   I[Mostrar error]
 
   %% --- REGISTRO ---
   subgraph REG["Pantalla de Registro"]
-    R1[Ingresar datos<br/>(nombre, usuario, email, contraseña)]
+    R1[Ingresar datos (nombre, usuario, email, contraseña)]
     R2[Guardar en Firebase]
     R3[Ir a Login]
     R1 --> R2 --> R3
   end
 
   %% --- DECISIÓN DE ROL ---
-  J{¿Es usuario web y<br/>es administrador?}
+  J{¿Es usuario web y es administrador?}
   K[Pantalla de Panel de Administración]
 
   %% --- ADMIN ---
   L{¿Qué desea gestionar?}
-  M[Ciudades<br/>(CRUD)]
-  N[Rutas<br/>(CRUD)]
-  O[Puntos de interés<br/>(CRUD)]
-  P[Misiones<br/>(CRUD)]
+  M[Ciudades (CRUD)]
+  N[Rutas (CRUD)]
+  O[Puntos de interés (CRUD)]
+  P[Misiones (CRUD)]
   Q[Realizar operación]
-  S[Guardar cambios en<br/>Firestore/Storage]
-  T[Volver a seleccionar<br/>opción o cerrar sesión]
+  S[Guardar cambios en Firestore/Storage]
+  T[Volver a seleccionar opción o cerrar sesión]
 
   %% --- HOME / USUARIO FINAL ---
   U[Pantalla Home]
 
   subgraph OPCIONES["Opciones de Usuario"]
-    O1[Opción 1: Ver perfil<br/><br/>- Cargar datos del usuario<br/>- Mostrar información personal<br/>- Opción para actualizar nombre/avatar]
-    O2[Opción 2: Explorar rutas<br/><br/>- Seleccionar ciudad<br/>- Ver rutas disponibles de esa ciudad<br/>- Seleccionar una ruta<br/>- Ver detalles y disponibilidad de la ruta<br/>- Opción para iniciar misión]
-    O3[Opción 3: Realizar misión<br/><br/>- Ir a escanear QR<br/>- Escanear código QR del punto de interés<br/>- Validar que es el punto correcto<br/>- Mostrar información del monumento<br/>- Completar misión/reto<br/>- Hacer quiz si aplica<br/>- Guardar progreso en Firestore]
-    O4[Opción 4: Ver diario del explorador<br/><br/>- Cargar rutas completadas<br/>- Seleccionar rutas para incluir en diario<br/>- Añadir fotos a cada ruta<br/>- Vista previa del diario<br/>- Generar y descargar PDF]
+    O1[Opción 1: Ver perfil. Cargar datos del usuario. Mostrar información personal. Opción para actualizar nombre/avatar]
+    O2[Opción 2: Explorar rutas. Seleccionar ciudad. Ver rutas disponibles de esa ciudad. Seleccionar una ruta. Ver detalles y disponibilidad de la ruta. Opción para iniciar misión]
+    O3[Opción 3: Realizar misión. Ir a escanear QR. Escanear código QR del punto de interés. Validar que es el punto correcto. Mostrar información del monumento. Completar misión/reto. Hacer quiz si aplica. Guardar progreso en Firestore]
+    O4[Opción 4: Ver diario del explorador. Cargar rutas completadas. Seleccionar rutas para incluir en diario. Añadir fotos a cada ruta. Vista previa del diario. Generar y descargar PDF]
     O5[Opción 5: Cerrar sesión]
   end
 
