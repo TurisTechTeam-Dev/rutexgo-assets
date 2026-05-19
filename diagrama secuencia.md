@@ -234,98 +234,52 @@ flowchart TD
 ## Diagrama de Casos de Uso
 
 ```mermaid
-graph TB
-    subgraph Sistema["🏛️ RuteX Go"]
+graph TD
+    A1["👤 Usuario"]
+    A2["🔑 Administrador"]
+    
+    subgraph SYS["RuteX Go"]
         direction TB
         
-        subgraph Autenticacion["🔐 Autenticación"]
-            UC1["Registrarse"]
-            UC2["Iniciar sesión"]
-            UC3["Iniciar sesión con Google"]
-            UC4["Recuperar contraseña"]
-            UC5["Cerrar sesión"]
-        end
+        UC1["Registrarse"]
+        UC2["Iniciar sesión"]
+        UC3["Iniciar sesión con Google"]
+        UC4["Recuperar contraseña"]
         
-        subgraph Perfil["👤 Perfil y Datos"]
-            UC6["Ver perfil"]
-            UC7["Actualizar nombre de usuario"]
-            UC8["Actualizar avatar"]
-            UC9["Solicitar cambio de email"]
-            UC10["Cambiar contraseña"]
-        end
+        UC5["Ver perfil"]
+        UC6["Actualizar perfil"]
         
-        subgraph Exploracion["🗺️ Exploración de Rutas"]
-            UC11["Seleccionar ciudad"]
-            UC12["Seleccionar ruta"]
-            UC13["Consultar detalles de ruta"]
-            UC14["Ver disponibilidad de ruta"]
-        end
+        UC7["Seleccionar ciudad"]
+        UC8["Seleccionar ruta"]
+        UC9["Consultar detalles"]
         
-        subgraph Mision["🎯 Misiones y Puntos de Interés"]
-            UC15["Escanear QR"]
-            UC16["Ver información del monumento"]
-            UC17["Completar reto de ruta"]
-            UC18["Hacer quiz"]
-            UC19["Registrar progreso"]
-            UC20["Ver navegación en mapa"]
-        end
+        UC10["Escanear QR"]
+        UC11["Ver monumento"]
+        UC12["Completar misión"]
+        UC13["Hacer quiz"]
         
-        subgraph Diario["📔 Diario del Explorador"]
-            UC21["Consultar rutas completadas"]
-            UC22["Seleccionar rutas para diario"]
-            UC23["Añadir fotos al diario"]
-            UC24["Generar diario en PDF"]
-        end
+        UC14["Ver diario"]
+        UC15["Generar PDF"]
         
-        subgraph Admin["⚙️ Panel de Administración"]
-            UC25["Gestionar ciudades"]
-            UC26["Gestionar rutas"]
-            UC27["Gestionar puntos de interés"]
-            UC28["Gestionar misiones"]
-            UC29["Subir archivos e imágenes"]
-        end
+        UC16["Gestionar contenido"]
     end
     
-    subgraph Actores["👥 Actores"]
-        A1["👤 Usuario"]
-        A2["🔑 Administrador"]
-    end
-    
-    %% Usuario - Autenticación
     A1 --> UC1
     A1 --> UC2
     A1 --> UC3
     A1 --> UC4
     A1 --> UC5
-    
-    %% Usuario - Perfil
     A1 --> UC6
     A1 --> UC7
     A1 --> UC8
     A1 --> UC9
     A1 --> UC10
-    
-    %% Usuario - Exploración
     A1 --> UC11
     A1 --> UC12
     A1 --> UC13
     A1 --> UC14
-    
-    %% Usuario - Misiones
     A1 --> UC15
-    A1 --> UC16
-    A1 --> UC17
-    A1 --> UC18
-    A1 --> UC19
-    A1 --> UC20
     
-    %% Usuario - Diario
-    A1 --> UC21
-    A1 --> UC22
-    A1 --> UC23
-    A1 --> UC24
-    
-    %% Administrador - Todos los casos del usuario
     A2 --> UC1
     A2 --> UC2
     A2 --> UC3
@@ -342,30 +296,30 @@ graph TB
     A2 --> UC14
     A2 --> UC15
     A2 --> UC16
-    A2 --> UC17
-    A2 --> UC18
-    A2 --> UC19
-    A2 --> UC20
-    A2 --> UC21
-    A2 --> UC22
-    A2 --> UC23
-    A2 --> UC24
     
-    %% Administrador - Panel Admin (exclusivo)
-    A2 --> UC25
-    A2 --> UC26
-    A2 --> UC27
-    A2 --> UC28
-    A2 --> UC29
+    style SYS fill:#f0f4ff,stroke:#2c3e50,stroke-width:3px
+    style A1 fill:#3498db,stroke:#2c3e50,color:#fff,stroke-width:2px
+    style A2 fill:#e74c3c,stroke:#2c3e50,color:#fff,stroke-width:2px
     
-    style Sistema fill:#f0f4ff,stroke:#2c3e50,stroke-width:3px
-    style Autenticacion fill:#ffe6e6,stroke:#c0392b
-    style Perfil fill:#e6f3ff,stroke:#2980b9
-    style Exploracion fill:#e6ffe6,stroke:#27ae60
-    style Mision fill:#fff9e6,stroke:#f39c12
-    style Diario fill:#f3e6ff,stroke:#8e44ad
-    style Admin fill:#ffe6f3,stroke:#c2185b
-    style Actores fill:#f5f5f5,stroke:#34495e
-    style A1 fill:#3498db,stroke:#2c3e50,color:#fff
-    style A2 fill:#e74c3c,stroke:#2c3e50,color:#fff
+    style UC1 fill:#ffe6e6,stroke:#c0392b
+    style UC2 fill:#ffe6e6,stroke:#c0392b
+    style UC3 fill:#ffe6e6,stroke:#c0392b
+    style UC4 fill:#ffe6e6,stroke:#c0392b
+    
+    style UC5 fill:#e6f3ff,stroke:#2980b9
+    style UC6 fill:#e6f3ff,stroke:#2980b9
+    
+    style UC7 fill:#e6ffe6,stroke:#27ae60
+    style UC8 fill:#e6ffe6,stroke:#27ae60
+    style UC9 fill:#e6ffe6,stroke:#27ae60
+    
+    style UC10 fill:#fff9e6,stroke:#f39c12
+    style UC11 fill:#fff9e6,stroke:#f39c12
+    style UC12 fill:#fff9e6,stroke:#f39c12
+    style UC13 fill:#fff9e6,stroke:#f39c12
+    
+    style UC14 fill:#f3e6ff,stroke:#8e44ad
+    style UC15 fill:#f3e6ff,stroke:#8e44ad
+    
+    style UC16 fill:#ffe6f3,stroke:#c2185b
 ```
