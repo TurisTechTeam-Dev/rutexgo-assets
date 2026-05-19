@@ -347,96 +347,74 @@ flowchart TB
 ---
 
 ```mermaid
-flowchart LR
-  %% --- COLUMNA IZQUIERDA: INICIO / AUTH ---
-  subgraph IZQ[" "]
-    direction TB
-    S1["INICIO\nIniciar aplicacion"]
-    S2["Inicializar Firebase"]
-    S3["Verificar sesion de usuario"]
-    D1{"¿Hay usuario\nautenticado?"}
+graph TD
+    %% Inicio y Autenticación
+    INICIO([INICIO: Iniciar aplicación]) --> InitFirebase[Inicializar Firebase]
+    InitFirebase --> CheckSession[Verificar sesión de usuario]
+    CheckSession --> IsAuth{¿Hay usuario autenticado?}
 
-    Splash["Mostrar pantalla\nSplash / Login"]
-    RegQ{"¿Usuario quiere\nregistrarse?"}
-    RegForm["Pantalla de registro\nIngresar datos (nombre, usuario, email, contrasena)"]
-    RegSave["Guardar en Firebase"]
-    IrLogin["Ir a Login"]
+    %% Flujo de No Autenticado
+    IsAuth -- NO --> SplashLogin[Mostrar pantalla Splash/Login]
+    SplashLogin --> WantRegister{¿Usuario quiere registrarse?}
+    
+    WantRegister -- SÍ --> PantallaRegistro[Pantalla de Registro<br>Ingresar datos: nombre, usuario, email, contraseña]
+    PantallaRegistro --> SaveFirebase[Guardar en Firebase]
+    SaveFirebase --> GoToLogin[Ir a Login]
+    GoToLogin --> LoginOptions
+    
+    WantRegister -- NO --> LoginOptions[Mostrar opciones de login:<br>- Iniciar sesión con email/contraseña<br>- Iniciar sesión con Google<br>- Recuperar contraseña]
+    LoginOptions --> AuthSuccess{¿Autenticación exitosa?}
+    AuthSuccess -- NO --> ShowError[Mostrar error]
+    
+    %% Flujo de Autenticado / Login Exitoso
+    IsAuth -- SÍ --> IsAdmin{¿Es usuario web Y<br>es administrador?}
+    AuthSuccess -- SÍ --> IsAdmin
 
-    LoginOpts["Opciones de login:\n- Email/Contrasena\n- Google\n- Recuperar contrasena"]
-    AuthResult{"¿Autenticacion\nexitosa?"}
-    Error["Mostrar error"]
-  end
+    %% Flujo Administrador
+    IsAdmin -- SÍ --> AdminPanel[Pantalla de Panel de Administración]
+    AdminPanel --> WhatManage{¿Qué desea gestionar?}
+    
+    WhatManage --> Ciudades[Ciudades<br>CRUD]
+    WhatManage --> Rutas[Rutas<br>CRUD]
+    WhatManage --> POI[Puntos de interés<br>CRUD]
+    WhatManage --> Misiones[Misiones<br>CRUD]
+    
+    Ciudades --> DoOp[Realizar operación]
+    Rutas --> DoOp
+    POI --> DoOp
+    Misiones --> DoOp
+    
+    DoOp --> SaveFirestore[Guardar cambios en Firestore/Storage]
+    SaveFirestore --> LoopAdmin[Volver a seleccionar opción o cerrar sesión]
+    LoopAdmin --> AdminPanel
 
-  S1 --> S2 --> S3 --> D1
-  D1 -- "No" --> Splash
-  D1 -- "Si" --> RoleCheck
+    %% Flujo Usuario Estándar (Pantalla Home)
+    IsAdmin -- NO --> Home[Pantalla Home]
+    
+    %% Opciones de la Home
+    Home --> Op1[Opción 1: Ver perfil]
+    Home --> Op2[Opción 2: Explorar rutas]
+    Home --> Op3[Opción 3: Realizar misión]
+    Home --> Op4[Opción 4: Ver diario del explorador]
+    Home --> Op5[Opción 5: Cerrar sesión]
 
-  Splash --> RegQ
-  RegQ -- "Si" --> RegForm --> RegSave --> IrLogin --> LoginOpts
-  RegQ -- "No" --> LoginOpts
+    %% Detalles Opción 1
+    Op1 --> Op1_Detalles[Cargar datos del usuario<br>Mostrar información personal<br>Opción para actualizar nombre/avatar]
+    Op1_Detalles --> Home
 
-  LoginOpts --> AuthResult
-  AuthResult -- "No" --> Error
-  AuthResult -- "Si" --> RoleCheck
+    %% Detalles Opción 2
+    Op2 --> Op2_Detalles[Seleccionar ciudad<br>Ver rutas disponibles de esa ciudad<br>Seleccionar una ruta<br>Ver detalles y disponibilidad de la ruta<br>Opción para iniciar misión]
+    Op2_Detalles --> Home
 
-  %% --- COLUMNA CENTRAL: ADMIN / OPERACIONES ---
-  subgraph CTR[" "]
-    direction TB
-    RoleCheck{"¿Es usuario web\ny es administrador?"}
-    AdminPanel["Pantalla de Panel\nde Administracion"]
-    ManageQ{"¿Que desea\ngestionar?"}
-    Cities["Ciudades\n(CRUD)"]
-    Routes["Rutas\n(CRUD)"]
-    POIs["Puntos de interes\n(CRUD)"]
-    Missions["Misiones\n(CRUD)"]
-    DoOp["Realizar operacion"]
-    SaveChanges["Guardar cambios\nen Firestore / Storage"]
-    BackSelect["Volver a seleccionar\nopcion o cerrar sesion"]
-  end
+    %% Detalles Opción 3
+    Op3 --> Op3_Detalles[Ir a escáner QR<br>Escanear código QR del punto de interés<br>Validar que es el punto correcto<br>Mostrar información del monumento<br>Completar misión/reto<br>Hacer quiz si aplica<br>Guardar progreso en Firestore]
+    Op3_Detalles --> Home
 
-  RoleCheck -- "Si" --> AdminPanel
-  RoleCheck -- "No" --> Home
+    %% Detalles Opción 4
+    Op4 --> Op4_Detalles[Cargar rutas completadas<br>Seleccionar rutas para incluir en diario<br>Añadir fotos a cada ruta<br>Vista previa del diario<br>Generar y descargar PDF]
+    Op4_Detalles --> Home
 
-  AdminPanel --> ManageQ
-  ManageQ --> Cities
-  ManageQ --> Routes
-  ManageQ --> POIs
-  ManageQ --> Missions
-
-  Cities --> DoOp
-  Routes --> DoOp
-  POIs --> DoOp
-  Missions --> DoOp
-
-  DoOp --> SaveChanges --> BackSelect
-  BackSelect --> AdminPanel
-  BackSelect --> Logout
-
-  %% --- COLUMNA DERECHA: HOME / OPCIONES USUARIO ---
-  subgraph DER[" "]
-    direction TB
-    Home["Pantalla Home"]
-    Opt1["Opcion 1\nVer perfil\n- Cargar datos\n- Actualizar nombre/avatar"]
-    Opt2["Opcion 2\nExplorar rutas\n- Seleccionar ciudad\n- Ver rutas\n- Iniciar mision"]
-    Opt3["Opcion 3\nRealizar mision\n- Escanear QR\n- Validar punto\n- Completar mision\n- Guardar progreso"]
-    Opt4["Opcion 4\nVer diario del explorador\n- Cargar rutas completadas\n- Añadir fotos\n- Generar PDF"]
-    Opt5["Opcion 5\nCerrar sesion"]
-    Logout["Cerrar sesion"]
-    BackToSplash["Volver a Splash / Login"]
-  end
-
-  Home --> Opt1
-  Home --> Opt2
-  Home --> Opt3
-  Home --> Opt4
-  Home --> Opt5
-  Opt5 --> Logout --> BackToSplash
-
-  %% --- CONEXIONES TRANSVERSALES ---
-  %% desde autenticacion exitosa o ya autenticado se comprueba rol (RoleCheck)
-  RoleCheck --- AdminPanel
-  RoleCheck --- Home
-
-  %% desde la pantalla Home se puede volver al panel si es admin (flecha visual)
-  AdminPanel -- "Ir a Home" --> Home
+    %% Detalles Opción 5
+    Op5 --> Logout[Cerrar sesión]
+    Logout --> ReturnSplash[Volver a Splash/Login]
 ```
