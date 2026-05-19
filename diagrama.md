@@ -211,26 +211,52 @@ erDiagram
 
 ```mermaid
 flowchart TD
-    A([Inicio]) --> B[Inicializar aplicación]
-    B --> C[Verificar sesión]
-    C --> D{¿Usuario autenticado?}
+    A([Inicio de la app]) --> B[Inicializar Firebase]
+    B --> C[MaterialApp]
+    C --> D[AuthWrapper]
 
-    D -- No --> E[Pantalla de acceso]
-    E --> F[Registro / Inicio de sesión]
-    F --> C
+    D --> E{¿Hay usuario autenticado?}
 
-    D -- Sí --> G{¿Es administrador y accede desde web?}
-    G -- Sí --> H[Panel de administración]
-    G -- No --> I[Aplicación principal]
+    E -- No --> F[SplashScreen]
+    F --> G[LoginScreen]
+    G --> H{¿Registro?}
+    H -- Sí --> I[RegisterScreen]
+    I --> J[Crear cuenta]
+    J --> K[HomeScreen]
+    H -- No --> L[Iniciar sesión]
+    L --> M{¿Login correcto?}
+    M -- No --> G
+    M -- Sí --> N{¿Es admin y está en web?}
 
-    I --> J[Perfil]
-    I --> K[Rutas]
-    I --> L[Misiones]
-    I --> M[Diario]
-    I --> N[Cerrar sesión]
-    N --> E
+    E -- Sí --> N
 
-    H --> O[Gestión de contenido]
-    H --> P[Cerrar sesión]
-    P --> E
+    N -- Sí --> O[AdminPanelScreen]
+    O --> P[Gestionar ciudades]
+    O --> Q[Gestionar rutas]
+    O --> R[Gestionar puntos de interés]
+    O --> S[Gestionar misiones]
+    O --> T[Cerrar sesión]
+    T --> F
+
+    N -- No --> U[SplashScreen]
+    U --> K[HomeScreen]
+
+    K --> V[ProfileScreen]
+    K --> W[CitySelectionScreen]
+    K --> X[ExplorerDiaryScreen]
+    K --> Y[Cerrar sesión]
+
+    V --> K
+    W --> Z[RouteSelectionScreen]
+    Z --> AA[MapNavigationScreen]
+    Z --> AB[MissionScannerScreen]
+
+    AB --> AC[MonumentInfoScreen]
+    AC --> AD[QuizScreen]
+    AD --> AE[RouteResultScreen]
+    AE --> K
+
+    AA --> AB
+    X --> K
+    Y --> F
 ```
