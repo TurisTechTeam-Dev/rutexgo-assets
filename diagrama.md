@@ -1,47 +1,43 @@
 ```mermaid
 sequenceDiagram
     actor Usuario
-    participant HomeScreen
-    participant AuthUseCases
-    participant ProfileUseCases
-    participant HomeDataCache
-    participant ProfileRepository
+    participant CitySelectionScreen
+    participant RouteSelectionScreen
+    participant RoutesUseCases
+    participant RoutesRepository
     participant Firestore
 
-    Usuario->>HomeScreen: Entra en la app
-    HomeScreen->>AuthUseCases: getCurrentUser()
-    AuthUseCases-->>HomeScreen: Usuario actual
-    HomeScreen->>ProfileUseCases: getHomeData(uid)
-    ProfileUseCases->>ProfileRepository: Consultar datos
-    ProfileRepository->>Firestore: Obtener datos del usuario
-    Firestore-->>ProfileRepository: Datos recibidos
-    ProfileRepository-->>ProfileUseCases: HomeData
-    ProfileUseCases-->>HomeScreen: HomeData
-    HomeScreen->>HomeDataCache: Guardar en caché
-    HomeScreen->>HomeScreen: Mostrar Home con datos
+    Usuario->>CitySelectionScreen: Explorar ciudades
+    CitySelectionScreen->>RoutesUseCases: getCities()
+    RoutesUseCases->>RoutesRepository: Consultar ciudades
+    RoutesRepository->>Firestore: Obtener lista de ciudades
+    Firestore-->>RoutesRepository: Ciudades
+    RoutesRepository-->>RoutesUseCases: Lista de ciudades
+    RoutesUseCases-->>CitySelectionScreen: Ciudades cargadas
+    CitySelectionScreen->>CitySelectionScreen: Mostrar ciudades
 
-    alt Conexión online exitosa
-        HomeScreen->>HomeScreen: Mostrar datos en línea
-    else Conexión fallida - Cargar desde caché
-        HomeScreen->>ProfileRepository: getHomeData(uid) - timeout
-        ProfileRepository-->>HomeScreen: Error de conexión
-        HomeScreen->>HomeDataCache: Leer desde caché
-        HomeDataCache-->>HomeScreen: Datos en caché
-        HomeScreen->>HomeScreen: Mostrar Home offline
-    end
+    Usuario->>CitySelectionScreen: Selecciona una ciudad
+    CitySelectionScreen->>RouteSelectionScreen: Navegar con cityKeys
+    RouteSelectionScreen->>RoutesUseCases: getRoutesByCity(cityKeys)
+    RoutesUseCases->>RoutesRepository: Consultar rutas
+    RoutesRepository->>Firestore: Obtener rutas de la ciudad
+    Firestore-->>RoutesRepository: Rutas
+    RoutesRepository-->>RoutesUseCases: Lista de rutas
+    RoutesUseCases->>RoutesUseCases: Calcular disponibilidad
+    RoutesUseCases-->>RouteSelectionScreen: Rutas con disponibilidad
+    RouteSelectionScreen->>RouteSelectionScreen: Mostrar rutas disponibles
 
-    alt Actualizar perfil
-        Usuario->>HomeScreen: Abre ProfileScreen
-        HomeScreen->>ProfileScreen: Navegar
-        Usuario->>ProfileScreen: Edita nombre/avatar
-        ProfileScreen->>ProfileUseCases: updateUsername() / uploadAvatar()
-        ProfileUseCases->>ProfileRepository: Guardar cambios
-        ProfileRepository->>Firestore: Actualizar datos
-        Firestore-->>ProfileRepository: Éxito
-        ProfileRepository-->>ProfileUseCases: Datos actualizados
-        ProfileUseCases-->>ProfileScreen: Éxito
-        ProfileScreen->>ProfileScreen: Refrescar datos
-        ProfileScreen->>HomeScreen: Volver a Home
+    alt Seleccionar ruta
+        Usuario->>RouteSelectionScreen: Selecciona una ruta
+        RouteSelectionScreen->>RoutesUseCases: getRouteDetails(routeId)
+        RoutesUseCases->>RoutesRepository: Obtener detalles
+        RoutesRepository->>Firestore: Cargar puntos de interés
+        Firestore-->>RoutesRepository: POIs
+        RoutesRepository-->>RoutesUseCases: Detalles completos
+        RoutesUseCases-->>RouteSelectionScreen: Datos de ruta
+        RouteSelectionScreen->>RouteSelectionScreen: Mostrar detalles
+        Usuario->>RouteSelectionScreen: Comenzar ruta
+        RouteSelectionScreen->>MapNavigationScreen: Navegar
     end
 ```
 
