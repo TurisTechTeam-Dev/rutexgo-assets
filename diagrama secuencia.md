@@ -234,92 +234,63 @@ flowchart TD
 ## Diagrama de Casos de Uso
 
 ```mermaid
-graph TD
+graph TB
     A1["👤 Usuario"]
     A2["🔑 Administrador"]
     
-    subgraph SYS["RuteX Go"]
-        direction TB
-        
+    subgraph AUTH["🔐 Autenticación"]
         UC1["Registrarse"]
         UC2["Iniciar sesión"]
-        UC3["Iniciar sesión con Google"]
+        UC3["Iniciar sesión Google"]
         UC4["Recuperar contraseña"]
-        
+    end
+    
+    subgraph PROF["👤 Perfil"]
         UC5["Ver perfil"]
         UC6["Actualizar perfil"]
-        
+    end
+    
+    subgraph ROUT["🗺️ Rutas"]
         UC7["Seleccionar ciudad"]
         UC8["Seleccionar ruta"]
-        UC9["Consultar detalles"]
-        
+        UC9["Ver detalles"]
+    end
+    
+    subgraph MIS["🎯 Misiones"]
         UC10["Escanear QR"]
         UC11["Ver monumento"]
         UC12["Completar misión"]
         UC13["Hacer quiz"]
-        
+    end
+    
+    subgraph DIA["📔 Diario"]
         UC14["Ver diario"]
         UC15["Generar PDF"]
-        
+    end
+    
+    subgraph ADM["⚙️ Admin"]
         UC16["Gestionar contenido"]
     end
     
-    A1 --> UC1
-    A1 --> UC2
-    A1 --> UC3
-    A1 --> UC4
-    A1 --> UC5
-    A1 --> UC6
-    A1 --> UC7
-    A1 --> UC8
-    A1 --> UC9
-    A1 --> UC10
-    A1 --> UC11
-    A1 --> UC12
-    A1 --> UC13
-    A1 --> UC14
-    A1 --> UC15
+    A1 --> AUTH
+    A1 --> PROF
+    A1 --> ROUT
+    A1 --> MIS
+    A1 --> DIA
     
-    A2 --> UC1
-    A2 --> UC2
-    A2 --> UC3
-    A2 --> UC4
-    A2 --> UC5
-    A2 --> UC6
-    A2 --> UC7
-    A2 --> UC8
-    A2 --> UC9
-    A2 --> UC10
-    A2 --> UC11
-    A2 --> UC12
-    A2 --> UC13
-    A2 --> UC14
-    A2 --> UC15
-    A2 --> UC16
+    A2 --> AUTH
+    A2 --> PROF
+    A2 --> ROUT
+    A2 --> MIS
+    A2 --> DIA
+    A2 --> ADM
     
-    style SYS fill:#f0f4ff,stroke:#2c3e50,stroke-width:3px
     style A1 fill:#3498db,stroke:#2c3e50,color:#fff,stroke-width:2px
     style A2 fill:#e74c3c,stroke:#2c3e50,color:#fff,stroke-width:2px
-    
-    style UC1 fill:#ffe6e6,stroke:#c0392b
-    style UC2 fill:#ffe6e6,stroke:#c0392b
-    style UC3 fill:#ffe6e6,stroke:#c0392b
-    style UC4 fill:#ffe6e6,stroke:#c0392b
-    
-    style UC5 fill:#e6f3ff,stroke:#2980b9
-    style UC6 fill:#e6f3ff,stroke:#2980b9
-    
-    style UC7 fill:#e6ffe6,stroke:#27ae60
-    style UC8 fill:#e6ffe6,stroke:#27ae60
-    style UC9 fill:#e6ffe6,stroke:#27ae60
-    
-    style UC10 fill:#fff9e6,stroke:#f39c12
-    style UC11 fill:#fff9e6,stroke:#f39c12
-    style UC12 fill:#fff9e6,stroke:#f39c12
-    style UC13 fill:#fff9e6,stroke:#f39c12
-    
-    style UC14 fill:#f3e6ff,stroke:#8e44ad
-    style UC15 fill:#f3e6ff,stroke:#8e44ad
-    
-    style UC16 fill:#ffe6f3,stroke:#c2185b
+    style AUTH fill:#ffe6e6,stroke:#c0392b
+    style PROF fill:#e6f3ff,stroke:#2980b9
+    style ROUT fill:#e6ffe6,stroke:#27ae60
+    style MIS fill:#fff9e6,stroke:#f39c12
+    style DIA fill:#f3e6ff,stroke:#8e44ad
+    style ADM fill:#ffe6f3,stroke:#c2185b
 ```
