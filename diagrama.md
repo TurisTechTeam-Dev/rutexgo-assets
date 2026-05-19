@@ -299,3 +299,47 @@ flowchart LR
   classDef actor fill:#ffffff,stroke:#cfcfcf;
   class Turista,Administrador actor;
 ```
+
+---
+
+```mermaid
+flowchart TB
+  %% Actor superior
+  actor((Turista / Admin))
+
+  %% Dispositivo móvil (contenedor)
+  subgraph Dispositivo_Móvil["Dispositivo Móvil (App Flutter)"]
+    style Dispositivo_Móvil fill:#fffce6,stroke:#e6d89a,stroke-width:1px
+    UI["Capa de Interfaz<br/>Widgets / UI UX"]
+    Logic["Lógica de Negocio<br/>Providers / Casos de Uso"]
+    Data["Capa de Datos<br/>Repositorios / SDK Firebase"]
+  end
+
+  %% APIs de mapas (a la derecha)
+  Maps["APIs de Mapas<br/>Google Maps / OSM"]
+
+  %% Servicios Firebase (contenedor inferior)
+  subgraph Servicios_Firebase["Servicios Firebase (BaaS)"]
+    style Servicios_Firebase fill:#f7fff3,stroke:#cfe8c6,stroke-width:1px
+    Auth["Firebase Auth<br/>Autenticación"]
+    Firestore[(Cloud Firestore<br/>Base de Datos NoSQL)]
+    Storage["Cloud Storage<br/>Repositorio Imágenes"]
+  end
+
+  %% Conexiones principales
+  actor -->|Usa la interfaz| UI
+  UI -->|Llama a| Logic
+  Logic -->|Solicita datos a| Data
+  UI -->|Visualiza mapas| Maps
+
+  %% Conexiones desde capa de datos a servicios
+  Data -->|Protocolo HTTPS| Auth
+  Data -->|Sincronización RealTime| Firestore
+  Data -->|Carga de archivos| Storage
+
+  %% Estilos de nodos
+  classDef actorStyle fill:#f3f0ff,stroke:#c8bfff,stroke-width:1px;
+  classDef boxStyle fill:#f2efff,stroke:#d6c9ff,stroke-width:1px;
+  class actor actorStyle;
+  class UI,Logic,Data,Auth,Storage boxStyle;
+```
