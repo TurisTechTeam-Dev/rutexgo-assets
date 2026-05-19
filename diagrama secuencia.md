@@ -234,106 +234,138 @@ flowchart TD
 ## Diagrama de Casos de Uso
 
 ```mermaid
-graph TD
-    %% Configuración de Estilos Globales (Fondo blanco y limpio)
-    classDef actorStyle fill:#ffffff,stroke:#333333,stroke-width:2px,font-weight:bold;
-    classDef caseStyle fill:#ffffff,stroke:#333333,stroke-width:1.5px;
-    classDef subCaseStyle fill:#ffffff,stroke:#666666,stroke-width:1px,stroke-dasharray: 3 3;
-    classDef systemStyle fill:#ffffff,stroke:#004477,stroke-width:2px,font-weight:bold;
-
-    %% Actores
-    Usuario((Usuario)):::actorStyle
-    Administrador((Administrador)):::actorStyle
-
-    %% Límite del Sistema
-    subgraph Sistema [RuteX Go]
+graph TB
+    subgraph Sistema["🏛️ RuteX Go"]
+        direction TB
         
-        %% Casos de Uso Principales
-        Autenticarse([Autenticarse]):::caseStyle
-        GestionarPerfil([Gestionar Perfil]):::caseStyle
-        ExplorarRutas([Explorar Rutas]):::caseStyle
-        RealizarMision([Realizar Misión]):::caseStyle
-        ConsultarDiario([Consultar Diario<br>del Explorador]):::caseStyle
-        AdministrarContenido([Administrar Contenido]):::caseStyle
-
-        %% Subcasos - Autenticarse
-        IniciarSesion([Iniciar Sesión]):::subCaseStyle
-        Registrarse([Registrarse]):::subCaseStyle
-        IniciarGoogle([Iniciar Sesión<br>con Google]):::subCaseStyle
-        RecuperarContrasena([Recuperar Contraseña]):::subCaseStyle
-
-        %% Subcasos - Gestionar Perfil
-        VerInfo([Ver Información<br>Personal]):::subCaseStyle
-        ActualizarDatos([Actualizar Datos<br>de Perfil]):::subCaseStyle
-
-        %% Subcasos - Explorar Rutas
-        SeleccionarCiudad([Seleccionar Ciudad]):::subCaseStyle
-        SeleccionarRuta([Seleccionar Ruta]):::subCaseStyle
-        ConsultarDetalles([Consultar Detalles<br>de Ruta]):::subCaseStyle
-
-        %% Subcasos - Realizar Misión
-        EscanearPOI([Escanear Punto<br>de Interés]):::subCaseStyle
-        CompletarReto([Completar Reto<br>de Ruta]):::subCaseStyle
-        ConsultarProgreso([Consultar Progreso]):::subCaseStyle
-
-        %% Subcasos - Consultar Diario
-        SeleccionarCompletadas([Seleccionar Rutas<br>Completadas]):::subCaseStyle
-        AnadirRecuerdos([Añadir Recuerdos<br>al Diario]):::subCaseStyle
-        GenerarDiario([Generar Diario]):::subCaseStyle
-
-        %% Subcasos - Administrar Contenido
-        GestionarCiudades([Gestionar Ciudades]):::subCaseStyle
-        GestionarRutasAdmin([Gestionar Rutas]):::subCaseStyle
-        GestionarPOI([Gestionar Puntos<br>de Interés]):::subCaseStyle
-        GestionarMisiones([Gestionar Misiones]):::subCaseStyle
-
+        subgraph Autenticacion["🔐 Autenticación"]
+            UC1["Registrarse"]
+            UC2["Iniciar sesión"]
+            UC3["Iniciar sesión con Google"]
+            UC4["Recuperar contraseña"]
+            UC5["Cerrar sesión"]
+        end
+        
+        subgraph Perfil["👤 Perfil y Datos"]
+            UC6["Ver perfil"]
+            UC7["Actualizar nombre de usuario"]
+            UC8["Actualizar avatar"]
+            UC9["Solicitar cambio de email"]
+            UC10["Cambiar contraseña"]
+        end
+        
+        subgraph Exploracion["🗺️ Exploración de Rutas"]
+            UC11["Seleccionar ciudad"]
+            UC12["Seleccionar ruta"]
+            UC13["Consultar detalles de ruta"]
+            UC14["Ver disponibilidad de ruta"]
+        end
+        
+        subgraph Mision["🎯 Misiones y Puntos de Interés"]
+            UC15["Escanear QR"]
+            UC16["Ver información del monumento"]
+            UC17["Completar reto de ruta"]
+            UC18["Hacer quiz"]
+            UC19["Registrar progreso"]
+            UC20["Ver navegación en mapa"]
+        end
+        
+        subgraph Diario["📔 Diario del Explorador"]
+            UC21["Consultar rutas completadas"]
+            UC22["Seleccionar rutas para diario"]
+            UC23["Añadir fotos al diario"]
+            UC24["Generar diario en PDF"]
+        end
+        
+        subgraph Admin["⚙️ Panel de Administración"]
+            UC25["Gestionar ciudades"]
+            UC26["Gestionar rutas"]
+            UC27["Gestionar puntos de interés"]
+            UC28["Gestionar misiones"]
+            UC29["Subir archivos e imágenes"]
+        end
     end
-
-    %% Relaciones de Actores con Casos de Uso Principales
-    Usuario --> Autenticarse
-    Usuario --> GestionarPerfil
-    Usuario --> ExplorarRutas
-    Usuario --> RealizarMision
-    Usuario --> ConsultarDiario
-
-    Administrador --> Autenticarse
-    Administrador --> GestionarPerfil
-    Administrador --> ExplorarRutas
-    Administrador --> RealizarMision
-    Administrador --> ConsultarDiario
-    Administrador --> AdministrarContenido
-
-    %% Relaciones de Inclusión / Extensión (Autenticarse)
-    Autenticarse -.->|«include»| IniciarSesion
-    Autenticarse -.->|«include»| Registrarse
-    Autenticarse -.->|«include»| IniciarGoogle
-    Autenticarse -.->|«extend»| RecuperarContrasena
-
-    %% Relaciones de Inclusión / Extensión (Gestionar Perfil)
-    GestionarPerfil -.->|«include»| VerInfo
-    GestionarPerfil -.->|«extend»| ActualizarDatos
-
-    %% Relaciones de Inclusión / Extensión (Explorar Rutas)
-    ExplorarRutas -.->|«include»| SeleccionarCiudad
-    ExplorarRutas -.->|«include»| SeleccionarRuta
-    ExplorarRutas -.->|«extend»| ConsultarDetalles
-
-    %% Relaciones de Inclusión / Extensión (Realizar Misión)
-    RealizarMision -.->|«include»| EscanearPOI
-    RealizarMision -.->|«include»| CompletarReto
-    RealizarMision -.->|«extend»| ConsultarProgreso
-
-    %% Relaciones de Inclusión / Extensión (Consultar Diario)
-    ConsultarDiario -.->|«include»| SeleccionarCompletadas
-    ConsultarDiario -.->|«extend»| AnadirRecuerdos
-    ConsultarDiario -.->|«include»| GenerarDiario
-
-    %% Relaciones de Inclusión (Administrar Contenido)
-    AdministrarContenido -.->|«include»| GestionarCiudades
-    AdministrarContenido -.->|«include»| GestionarRutasAdmin
-    AdministrarContenido -.->|«include»| GestionarPOI
-    AdministrarContenido -.->|«include»| GestionarMisiones
-
-    %% Aplicación de Estilo de Contenedor Sistema
-    style Sistema fill:#ffffff,stroke:#333333,stroke-width:1px;
+    
+    subgraph Actores["👥 Actores"]
+        A1["👤 Usuario"]
+        A2["🔑 Administrador"]
+    end
+    
+    %% Usuario - Autenticación
+    A1 --> UC1
+    A1 --> UC2
+    A1 --> UC3
+    A1 --> UC4
+    A1 --> UC5
+    
+    %% Usuario - Perfil
+    A1 --> UC6
+    A1 --> UC7
+    A1 --> UC8
+    A1 --> UC9
+    A1 --> UC10
+    
+    %% Usuario - Exploración
+    A1 --> UC11
+    A1 --> UC12
+    A1 --> UC13
+    A1 --> UC14
+    
+    %% Usuario - Misiones
+    A1 --> UC15
+    A1 --> UC16
+    A1 --> UC17
+    A1 --> UC18
+    A1 --> UC19
+    A1 --> UC20
+    
+    %% Usuario - Diario
+    A1 --> UC21
+    A1 --> UC22
+    A1 --> UC23
+    A1 --> UC24
+    
+    %% Administrador - Todos los casos del usuario
+    A2 --> UC1
+    A2 --> UC2
+    A2 --> UC3
+    A2 --> UC4
+    A2 --> UC5
+    A2 --> UC6
+    A2 --> UC7
+    A2 --> UC8
+    A2 --> UC9
+    A2 --> UC10
+    A2 --> UC11
+    A2 --> UC12
+    A2 --> UC13
+    A2 --> UC14
+    A2 --> UC15
+    A2 --> UC16
+    A2 --> UC17
+    A2 --> UC18
+    A2 --> UC19
+    A2 --> UC20
+    A2 --> UC21
+    A2 --> UC22
+    A2 --> UC23
+    A2 --> UC24
+    
+    %% Administrador - Panel Admin (exclusivo)
+    A2 --> UC25
+    A2 --> UC26
+    A2 --> UC27
+    A2 --> UC28
+    A2 --> UC29
+    
+    style Sistema fill:#f0f4ff,stroke:#2c3e50,stroke-width:3px
+    style Autenticacion fill:#ffe6e6,stroke:#c0392b
+    style Perfil fill:#e6f3ff,stroke:#2980b9
+    style Exploracion fill:#e6ffe6,stroke:#27ae60
+    style Mision fill:#fff9e6,stroke:#f39c12
+    style Diario fill:#f3e6ff,stroke:#8e44ad
+    style Admin fill:#ffe6f3,stroke:#c2185b
+    style Actores fill:#f5f5f5,stroke:#34495e
+    style A1 fill:#3498db,stroke:#2c3e50,color:#fff
+    style A2 fill:#e74c3c,stroke:#2c3e50,color:#fff
 ```
