@@ -347,48 +347,94 @@ flowchart TB
 ---
 
 ```mermaid
-flowchart LR
-    A((Turista / Admin))
+flowchart TD
+    A[INICIO]
+    A1[Iniciar aplicacion]
+    B[Inicializar Firebase]
+    C[Verificar sesion de usuario]
+    D{Hay usuario autenticado}
 
-    subgraph M1["Dispositivo Movil App Flutter"]
-        direction TB
-        B[Capa de Interfaz]
-        C[Widgets UI UX]
-        D[Llamar a]
-        E[Logica de Negocio]
-        F[Providers y Casos de Uso]
-        G[Solicita datos a]
-        H[Capa de Datos]
-        I[Repositorios y SDK Firebase]
-    end
+    E[Mostrar pantalla Splash/Login]
+    F{Usuario quiere registrarse}
+    G[Mostrar opciones de login]
+    G1[Iniciar sesion con email y contrasena]
+    G2[Iniciar sesion con Google]
+    G3[Recuperar contrasena]
 
-    J[APIs de Mapas]
-    J1[Google Maps OSM]
+    H{Autenticacion exitosa}
+    I[Mostrar error]
 
-    subgraph M2["Servicios Firebase BaaS"]
-        direction TB
-        K[Firebase Auth]
-        K1[Autenticacion]
-        L[Cloud Firestore]
-        L1[Base de Datos NoSQL]
-        M[Cloud Storage]
-        M1[Repositorio Imagenes]
-    end
+    R[Pantalla de Registro]
+    R1[Ingresar datos]
+    R2[Guardar en Firebase]
+    R3[Ir a Login]
 
-    A -->|Usa la interfaz| B
-    B --> C
-    C --> D --> E
-    E --> F --> G --> H --> I
+    J{Es usuario web y es administrador}
+    K[Pantalla de Panel de Administracion]
+    L{Que desea gestionar}
+    M[Ciudades CRUD]
+    N[Rutas CRUD]
+    O[Puntos de interes CRUD]
+    P[Misiones CRUD]
+    Q[Realizar operacion]
+    S[Guardar cambios en Firestore o Storage]
+    T[Volver a seleccionar opcion o cerrar sesion]
 
-    C -->|Visualiza mapas| J
-    J --> J1
+    U[Pantalla Home]
 
-    I -->|Protocolo HTTPS| K
-    K --> K1
+    V1[Opcion 1 Ver perfil]
+    V2[Opcion 2 Explorar rutas]
+    V3[Opcion 3 Realizar mision]
+    V4[Opcion 4 Ver diario del explorador]
+    V5[Opcion 5 Cerrar sesion]
 
-    I -->|Sincronizacion RealTime| L
-    L --> L1
+    X[Cerrar sesion]
+    Y[Volver a Splash/Login]
 
-    I -->|Carga de archivos| M
-    M --> M1
+    A --> A1 --> B --> C --> D
+    D -- Si --> J
+    D -- No --> E
+
+    E --> F
+    F -- Si --> R
+    F -- No --> G
+
+    G --> G1
+    G --> G2
+    G --> G3
+
+    G1 --> H
+    G2 --> H
+    G3 --> H
+
+    H -- Si --> J
+    H -- No --> I
+
+    R --> R1 --> R2 --> R3 --> G
+
+    J -- Si --> K
+    J -- No --> U
+
+    K --> L
+    L --> M
+    L --> N
+    L --> O
+    L --> P
+
+    M --> Q
+    N --> Q
+    O --> Q
+    P --> Q
+
+    Q --> S --> T
+    T --> K
+    T --> V5
+
+    U --> V1
+    U --> V2
+    U --> V3
+    U --> V4
+    U --> V5
+
+    V5 --> X --> Y
 ```
