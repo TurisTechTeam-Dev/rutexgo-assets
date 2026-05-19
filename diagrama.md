@@ -1,46 +1,42 @@
 ```mermaid
 sequenceDiagram
     actor Usuario
-    participant HomeScreen
+    participant LoginScreen
     participant AuthUseCases
-    participant ProfileUseCases
-    participant HomeDataCache
-    participant ProfileRepository
+    participant AuthRepository
+    participant Firebase Auth
     participant Firestore
 
-    Usuario->>HomeScreen: Entra en la app
-    HomeScreen->>AuthUseCases: getCurrentUser()
-    AuthUseCases-->>HomeScreen: Usuario actual
-    HomeScreen->>ProfileUseCases: getHomeData(uid)
-    ProfileUseCases->>ProfileRepository: Consultar datos
-    ProfileRepository->>Firestore: Obtener datos del usuario
-    Firestore-->>ProfileRepository: Datos recibidos
-    ProfileRepository-->>ProfileUseCases: HomeData
-    ProfileUseCases-->>HomeScreen: HomeData
-    HomeScreen->>HomeDataCache: Guardar en caché
-    HomeScreen->>HomeScreen: Mostrar Home con datos
+    Usuario->>LoginScreen: Introduce email y contraseña
+    LoginScreen->>AuthUseCases: login(email, password)
+    AuthUseCases->>AuthRepository: Delegar autenticación
+    AuthRepository->>Firebase Auth: Autenticar
+    Firebase Auth-->>AuthRepository: Usuario autenticado
+    AuthRepository->>Firestore: Consultar si es admin
+    Firestore-->>AuthRepository: Rol del usuario
+    AuthRepository-->>AuthUseCases: Usuario + rol
+    AuthUseCases-->>LoginScreen: Éxito
+    LoginScreen->>LoginScreen: Navegar a Home o AdminPanel
 
-    Note over HomeScreen,Firestore: Flujo offline
-    rect rgb(200, 150, 255)
-        HomeScreen->>ProfileRepository: getHomeData(uid) - timeout
-        ProfileRepository-->>HomeScreen: Error de conexión
-        HomeScreen->>HomeDataCache: Leer desde caché
-        HomeDataCache-->>HomeScreen: Datos en caché
-        HomeScreen->>HomeScreen: Mostrar Home offline
+    alt Login con Google
+        Usuario->>LoginScreen: Pulsa "Iniciar con Google"
+        LoginScreen->>AuthUseCases: loginWithGoogle()
+        AuthUseCases->>AuthRepository: Delegar
+        AuthRepository->>Firebase Auth: Google Sign In
+        Firebase Auth-->>AuthRepository: Token
+        AuthRepository-->>AuthUseCases: Usuario
+        AuthUseCases-->>LoginScreen: Éxito
+        LoginScreen->>LoginScreen: Navegar a Home o AdminPanel
+    else Recuperar contraseña
+        Usuario->>LoginScreen: Pulsa recuperar contraseña
+        LoginScreen->>AuthUseCases: recoverPassword(email)
+        AuthUseCases->>AuthRepository: Enviar correo
+        AuthRepository->>Firebase Auth: Generar enlace
+        Firebase Auth-->>AuthRepository: Enlace generado
+        AuthRepository-->>AuthUseCases: Éxito
+        AuthUseCases-->>LoginScreen: Correo enviado
+        LoginScreen->>LoginScreen: Mostrar mensaje
     end
-
-    Note over HomeScreen,Firestore: Actualizar perfil
-    Usuario->>HomeScreen: Abre ProfileScreen
-    HomeScreen->>ProfileScreen: Navegar
-    Usuario->>ProfileScreen: Edita nombre/avatar
-    ProfileScreen->>ProfileUseCases: updateUsername() / uploadAvatar()
-    ProfileUseCases->>ProfileRepository: Guardar cambios
-    ProfileRepository->>Firestore: Actualizar datos
-    Firestore-->>ProfileRepository: Éxito
-    ProfileRepository-->>ProfileUseCases: Datos actualizados
-    ProfileUseCases-->>ProfileScreen: Éxito
-    ProfileScreen->>ProfileScreen: Refrescar datos
-    ProfileScreen->>HomeScreen: Volver a Home
 ```
 
 
