@@ -215,25 +215,22 @@ flowchart TD
     B --> C[Verificar sesión]
     C --> D{¿Usuario autenticado?}
 
-    D -- No --> E[Pantalla Login]
-    E --> F{¿Registro o acceso?}
-    F -- Registro --> G[Registro de usuario]
-    F -- Acceso --> H[Login]
-    G --> H
-    H --> C
+    D -- No --> E[Pantalla de acceso]
+    E --> F[Registro / Inicio de sesión]
+    F --> C
 
-    D -- Sí --> I{¿Es administrador?}
-    I -- Sí --> J[Panel de administración]
-    I -- No --> K[Pantalla principal]
+    D -- Sí --> G{¿Es administrador y accede desde web?}
+    G -- Sí --> H[Panel de administración]
+    G -- No --> I[Aplicación principal]
 
-    J --> L[Gestionar contenido]
-    J --> M[Cerrar sesión]
-    M --> E
+    I --> J[Perfil]
+    I --> K[Rutas]
+    I --> L[Misiones]
+    I --> M[Diario]
+    I --> N[Cerrar sesión]
+    N --> E
 
-    K --> N[Perfil]
-    K --> O[Rutas]
-    K --> P[Misiones]
-    K --> Q[Diario]
-    K --> R[Cerrar sesión]
-    R --> E
+    H --> O[Gestión de contenido]
+    H --> P[Cerrar sesión]
+    P --> E
 ```
