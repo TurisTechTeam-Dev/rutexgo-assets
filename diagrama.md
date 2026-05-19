@@ -1,52 +1,42 @@
 ```mermaid
 sequenceDiagram
     actor Usuario
-    participant AuthWrapper
-    participant LoginScreen as Pantalla de inicio de sesión
-    participant RegisterScreen as Pantalla de registro
-    participant AuthUseCases as Casos de uso de autenticación
-    participant HomeScreen as Pantalla principal
-    participant CitySelectionScreen as Selector de ciudades
-    participant RoutesUseCases as Casos de uso de rutas
-    participant RouteSelectionScreen as Selector de rutas
-    participant MapNavigationScreen as Pantalla de navegación
+    participant LoginScreen
+    participant AuthUseCases
+    participant AuthRepository
+    participant Firebase Auth
+    participant Firestore
 
-    Usuario->>AuthWrapper: Abrir la aplicación
-    AuthWrapper->>AuthWrapper: Verificar estado de autenticación
+    Usuario->>LoginScreen: Introduce email y contraseña
+    LoginScreen->>AuthUseCases: login(email, password)
+    AuthUseCases->>AuthRepository: Delegar autenticación
+    AuthRepository->>Firebase Auth: Autenticar
+    Firebase Auth-->>AuthRepository: Usuario autenticado
+    AuthRepository->>Firestore: Consultar si es admin
+    Firestore-->>AuthRepository: Rol del usuario
+    AuthRepository-->>AuthUseCases: Usuario + rol
+    AuthUseCases-->>LoginScreen: Éxito
+    LoginScreen->>LoginScreen: Navegar a Home o AdminPanel
 
-    alt Usuario no autenticado
-        AuthWrapper->>LoginScreen: Mostrar pantalla de inicio de sesión
-        Usuario->>LoginScreen: Introducir credenciales o acceder al registro
+    Note over Usuario,Firebase Auth: Flujo alternativo: login con Google
+    Usuario->>LoginScreen: Pulsa "Iniciar con Google"
+    LoginScreen->>AuthUseCases: loginWithGoogle()
+    AuthUseCases->>AuthRepository: Delegar
+    AuthRepository->>Firebase Auth: Google Sign In
+    Firebase Auth-->>AuthRepository: Token
+    AuthRepository-->>AuthUseCases: Usuario
+    AuthUseCases-->>LoginScreen: Éxito
+    LoginScreen->>LoginScreen: Navegar a Home o AdminPanel
 
-        alt Inicio de sesión
-            LoginScreen->>AuthUseCases: login(email, password)
-            AuthUseCases-->>LoginScreen: Usuario autenticado
-            LoginScreen->>AuthUseCases: checkAdminStatus(uid)
-            AuthUseCases-->>LoginScreen: Resultado de validación
-            LoginScreen->>HomeScreen: Navegar a la pantalla principal
-        else Registro de usuario
-            LoginScreen->>RegisterScreen: Abrir pantalla de registro
-            Usuario->>RegisterScreen: Completar formulario de registro
-            RegisterScreen->>AuthUseCases: register(name, username, email, password)
-            AuthUseCases-->>RegisterScreen: Registro completado
-            RegisterScreen->>HomeScreen: Navegar a la pantalla principal
-        end
-    else Usuario autenticado
-        AuthWrapper->>HomeScreen: Acceder directamente a la pantalla principal
-    end
-
-    Usuario->>HomeScreen: Solicitar exploración de ciudades
-    HomeScreen->>CitySelectionScreen: Abrir selector de ciudades
-    CitySelectionScreen->>RoutesUseCases: getCities()
-    RoutesUseCases-->>CitySelectionScreen: Lista de ciudades disponibles
-
-    Usuario->>CitySelectionScreen: Seleccionar ciudad
-    CitySelectionScreen->>RouteSelectionScreen: Abrir selector de rutas
-    RouteSelectionScreen->>RoutesUseCases: getRoutesByCity() / getRoutesByCityKeys()
-    RoutesUseCases-->>RouteSelectionScreen: Rutas asociadas a la ciudad
-
-    Usuario->>RouteSelectionScreen: Seleccionar ruta
-    RouteSelectionScreen->>MapNavigationScreen: Abrir pantalla de navegación
+    Note over Usuario,Firebase Auth: Flujo alternativo: recuperar contraseña
+    Usuario->>LoginScreen: Pulsa recuperar contraseña
+    LoginScreen->>AuthUseCases: recoverPassword(email)
+    AuthUseCases->>AuthRepository: Enviar correo
+    AuthRepository->>Firebase Auth: Generar enlace
+    Firebase Auth-->>AuthRepository: Enlace generado
+    AuthRepository-->>AuthUseCases: Éxito
+    AuthUseCases-->>LoginScreen: Correo enviado
+    LoginScreen->>LoginScreen: Mostrar mensaje
 ```
 
 
