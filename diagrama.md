@@ -349,15 +349,15 @@ flowchart TB
 ```mermaid
 graph LR
     %% ----------------------------------------------------
-    %% CONFIGURACIÓN DE ESTILOS (Colores fieles al original)
+    %% CONFIGURACIÓN DE ESTILOS
     %% ----------------------------------------------------
-    classDef default fill:#ffffff,stroke:#333333,stroke-width:1.5px,round:5px;
+    classDef default fill:#ffffff,stroke:#333333,stroke-width:1.5px;
     classDef decision fill:#ffffff,stroke:#e06666,stroke-width:2px;
     classDef inicio fill:#ffffff,stroke:#333333,stroke-width:1.5px;
     classDef opcion fill:#fff2cc,stroke:#d6b656,stroke-width:1.5px;
 
     %% ----------------------------------------------------
-    %% BLOQUE 1: AUTENTICACIÓN (Columna Izquierda - Vertical)
+    %% BLOQUE 1: AUTENTICACIÓN (Columna Izquierda)
     %% ----------------------------------------------------
     INICIO([INICIO:<br>Iniciar aplicación])
     InitFirebase[Inicializar Firebase]
@@ -365,16 +365,16 @@ graph LR
     IsAuth{¿Hay usuario<br>autenticado?}
     SplashLogin[Mostrar pantalla<br>Splash/Login]
     WantRegister{¿Usuario quiere<br>registrarse?}
-    LoginOptions[Mostrar opciones de login:<br>- Iniciar sesión con email/contraseña<br>- Iniciar sesión con Google<br>- Recuperar contraseña]
+    LoginOptions["Mostrar opciones de login:<br>- Iniciar sesión con email/contraseña<br>- Iniciar sesión con Google<br>- Recuperar contraseña"]
     AuthSuccess{¿Autenticación<br>exitosa?}
     ShowError[Mostrar error]
 
-    %% Sub-flujo de Registro (Caja al lado del login)
-    PantallaRegistro[<b>Pantalla de Registro</b><br><br>Ingresar datos (nombre,<br>usuario, email, contraseña)]
+    %% Sub-flujo de Registro
+    PantallaRegistro["<b>Pantalla de Registro</b><br><br>Ingresar datos (nombre,<br>usuario, email, contraseña)"]
     SaveFirebase[Guardar en Firebase]
     GoToLogin[Ir a Login]
 
-    %% Conexiones e Inyecciones de alineación vertical estricta
+    %% Conexiones e Inyecciones de alineación vertical
     INICIO --> InitFirebase
     InitFirebase --> CheckSession
     CheckSession --> IsAuth
@@ -397,10 +397,10 @@ graph LR
     AdminPanel[Pantalla de Panel de<br>Administración]
     WhatManage{¿Qué desea<br>gestionar?}
     
-    Ciudades[Ciudades<br>(CRUD)]
-    Rutas[Rutas<br>(CRUD)]
-    POI[Puntos de<br>interés (CRUD)]
-    Misiones[Misiones<br>(CRUD)]
+    Ciudades["Ciudades<br>(CRUD)"]
+    Rutas["Rutas<br>(CRUD)"]
+    POI["Puntos de<br>interés (CRUD)"]
+    Misiones["Misiones<br>(CRUD)"]
     
     DoOp[Realizar operación]
     SaveFirestore[Guardar cambios en<br>Firestore/Storage]
@@ -429,13 +429,13 @@ graph LR
     %% ----------------------------------------------------
     Home[Pantalla Home]
     
-    Op1[<b>Opción 1: Ver perfil</b><br><hr>Cargar datos del usuario<br>Mostrar información personal<br>Opción para actualizar nombre/avatar]
+    Op1["<b>Opción 1: Ver perfil</b><br><br>Cargar datos del usuario<br>Mostrar información personal<br>Opción para actualizar nombre/avatar"]
     
-    Op2[<b>Opción 2: Explorar rutas</b><br><hr>Seleccionar ciudad<br>Ver rutas disponibles de esa ciudad<br>Seleccionar una ruta<br>Ver detalles y disponibilidad de la ruta<br>Opción para iniciar misión]
+    Op2["<b>Opción 2: Explorar rutas</b><br><br>Seleccionar ciudad<br>Ver rutas disponibles de esa ciudad<br>Seleccionar una ruta<br>Ver detalles y disponibilidad de la ruta<br>Opción para iniciar misión"]
     
-    Op3[<b>Opción 3: Realizar misión</b><br><hr>Ir a escáner QR<br>Escanear código QR del punto de interés<br>Validar que es el punto correcto<br>Mostrar información del monumento<br>Completar misión/reto<br>Hacer quiz si aplica<br>Guardar progreso en Firestore]
+    Op3["<b>Opción 3: Realizar misión</b><br><br>Ir a escáner QR<br>Escanear código QR del punto de interés<br>Validar que es el punto correcto<br>Mostrar información del monumento<br>Completar misión/reto<br>Hacer quiz si aplica<br>Guardar progreso en Firestore"]
     
-    Op4[<b>Opción 4: Ver diario del explorador</b><br><hr>Cargar rutas completadas<br>Seleccionar rutas para incluir en diario<br>Añadir fotos a cada ruta<br>Vista previa del diario<br>Generar y descargar PDF]
+    Op4["<b>Opción 4: Ver diario del explorador</b><br><br>Cargar rutas completadas<br>Seleccionar rutas para incluir en diario<br>Añadir fotos a cada ruta<br>Vista previa del diario<br>Generar y descargar PDF"]
     
     Op5[Opción 5: Cerrar sesión]
     Logout[Cerrar sesión]
