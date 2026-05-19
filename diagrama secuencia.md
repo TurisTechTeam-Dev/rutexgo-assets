@@ -234,63 +234,72 @@ flowchart TD
 ## Diagrama de Casos de Uso
 
 ```mermaid
-graph TB
-    A1["👤 Usuario"]
-    A2["🔑 Administrador"]
-    
-    subgraph AUTH["🔐 Autenticación"]
-        UC1["Registrarse"]
-        UC2["Iniciar sesión"]
-        UC3["Iniciar sesión Google"]
-        UC4["Recuperar contraseña"]
+graph LR
+    %% Definición de Actores
+    Usuario((Usuario))
+    Admin((Administrador))
+
+    %% Definición de Secciones (Subgraphs para agrupar)
+    subgraph UC1 [1. Autenticarse]
+        direction TB
+        A1(Iniciar sesión)
+        A2(Registrarse)
+        A3(Iniciar sesión con Google)
+        A4(Recuperar contraseña)
     end
-    
-    subgraph PROF["👤 Perfil"]
-        UC5["Ver perfil"]
-        UC6["Actualizar perfil"]
+
+    subgraph UC2 [2. Gestionar perfil]
+        direction TB
+        B1(Ver información personal)
+        B2(Actualizar datos de perfil)
     end
-    
-    subgraph ROUT["🗺️ Rutas"]
-        UC7["Seleccionar ciudad"]
-        UC8["Seleccionar ruta"]
-        UC9["Ver detalles"]
+
+    subgraph UC3 [3. Explorar rutas]
+        direction TB
+        C1(Seleccionar ciudad)
+        C2(Seleccionar ruta)
+        C3(Consultar detalles de ruta)
     end
-    
-    subgraph MIS["🎯 Misiones"]
-        UC10["Escanear QR"]
-        UC11["Ver monumento"]
-        UC12["Completar misión"]
-        UC13["Hacer quiz"]
+
+    subgraph UC4 [4. Realizar misión]
+        direction TB
+        D1(Escanear punto de interés)
+        D2(Completar reto de ruta)
+        D3(Consultar progreso)
     end
-    
-    subgraph DIA["📔 Diario"]
-        UC14["Ver diario"]
-        UC15["Generar PDF"]
+
+    subgraph UC5 [5. Consultar diario]
+        direction TB
+        E1(Seleccionar rutas completadas)
+        E2(Añadir recuerdos al diario)
+        E3(Generar diario)
     end
-    
-    subgraph ADM["⚙️ Admin"]
-        UC16["Gestionar contenido"]
+
+    subgraph UC6 [6. Administrar contenido]
+        direction TB
+        F1(Gestionar ciudades)
+        F2(Gestionar rutas)
+        F3(Gestionar puntos de interés)
+        F4(Gestionar misiones)
     end
-    
-    A1 --> AUTH
-    A1 --> PROF
-    A1 --> ROUT
-    A1 --> MIS
-    A1 --> DIA
-    
-    A2 --> AUTH
-    A2 --> PROF
-    A2 --> ROUT
-    A2 --> MIS
-    A2 --> DIA
-    A2 --> ADM
-    
-    style A1 fill:#3498db,stroke:#2c3e50,color:#fff,stroke-width:2px
-    style A2 fill:#e74c3c,stroke:#2c3e50,color:#fff,stroke-width:2px
-    style AUTH fill:#ffe6e6,stroke:#c0392b
-    style PROF fill:#e6f3ff,stroke:#2980b9
-    style ROUT fill:#e6ffe6,stroke:#27ae60
-    style MIS fill:#fff9e6,stroke:#f39c12
-    style DIA fill:#f3e6ff,stroke:#8e44ad
-    style ADM fill:#ffe6f3,stroke:#c2185b
+
+    %% Relaciones Usuario
+    Usuario --- UC1
+    Usuario --- UC2
+    Usuario --- UC3
+    Usuario --- UC4
+    Usuario --- UC5
+
+    %% Relaciones Administrador
+    Admin --- UC1
+    Admin --- UC3
+    Admin --- UC6
+
+    %% Estilos para que se vean más estéticos
+    style UC1 fill:#e1f5fe,stroke:#01579b
+    style UC2 fill:#e1f5fe,stroke:#01579b
+    style UC3 fill:#e1f5fe,stroke:#01579b
+    style UC4 fill:#e1f5fe,stroke:#01579b
+    style UC5 fill:#e1f5fe,stroke:#01579b
+    style UC6 fill:#e1f5fe,stroke:#01579b
 ```
