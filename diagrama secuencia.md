@@ -1,36 +1,35 @@
 ```mermaid
-flowchart TD
+graph TD
     %% Roles
     Admin[Administrador]
-    Usuario[Usuario]
+    User[Usuario]
 
-    %% Jerarquía
-    Admin -->|Gestiona| Usuario
+    %% Jerarquía: El admin es un tipo de usuario
+    Admin -->|Tiene rol de| User
 
-    %% Panel Exclusivo
-    Panel[6. Panel de Administración]
-    Admin -->|Acceso Exclusivo| Panel
-
-    %% Casos de Uso Normales
-    subgraph Normales [Casos de Uso Normales]
-        U1[1. Autenticarse]
-        U2[2. Gestionar perfil]
-        U3[3. Explorar rutas]
-        U4[4. Realizar misión]
-        U5[5. Consultar diario]
+    %% Casos de Uso Generales (Para ambos)
+    subgraph General [Casos de Uso Generales]
+        direction TB
+        UC1[1. Autenticarse]
+        UC2[2. Gestionar perfil]
+        UC3[3. Explorar rutas]
+        UC4[4. Realizar misión]
+        UC5[5. Consultar diario]
     end
 
-    %% Accesos del Usuario
-    Usuario --> U1
-    Usuario --> U2
-    Usuario --> U3
-    Usuario --> U4
-    Usuario --> U5
+    %% Acceso Exclusivo
+    subgraph Exclusivo [Acceso Exclusivo Admin]
+        UC6[6. Administrar contenido]
+    end
 
-    %% Estilos para diferenciar
-    style Panel fill:#ffebee,stroke:#c62828,stroke-width:2px
-    style Admin fill:#e3f2fd,stroke:#1565c0
-    style Usuario fill:#e8f5e9,stroke:#2e7d32
+    %% Conexiones
+    User --> General
+    Admin --> Exclusivo
+
+    %% Estilos
+    style Admin fill:#fff3e0,stroke:#f57c00
+    style User fill:#e3f2fd,stroke:#1565c0
+    style Exclusivo fill:#ffebee,stroke:#c62828
 ```
 
 
